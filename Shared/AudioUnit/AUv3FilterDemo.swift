@@ -157,12 +157,10 @@ public class AUv3FilterDemo: AUAudioUnit {
     }
 
     public override func allocateRenderResources() throws {
-        try super.allocateRenderResources()
-
         if kernelAdapter.outputBus.format.channelCount != kernelAdapter.inputBus.format.channelCount {
             throw NSError(domain: NSOSStatusErrorDomain, code: Int(kAudioUnitErr_FailedInitialization), userInfo: nil)
         }
-
+        try super.allocateRenderResources()
         kernelAdapter.allocateRenderResources()
     }
 
