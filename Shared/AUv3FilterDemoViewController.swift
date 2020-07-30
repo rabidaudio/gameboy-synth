@@ -83,6 +83,8 @@ public class AUv3FilterDemoViewController: AUViewController {
     public override func viewDidLoad() {
         super.viewDidLoad()
         
+        preferredContentSize = CGSize(width: 800, height: 500)
+        
         view.addSubview(expandedView)
         expandedView.pinToSuperviewEdges()
 

@@ -293,7 +293,7 @@ Finally, in the extension’s Info.plist file, set the Audio Unit’s factory ob
 
 
 [1]:	https://developer.apple.com/library/archive/documentation/General/Conceptual/ExtensibilityPG
-[2]:	https://developer.apple.com/documentation/audiotoolbox/incorporating_audio_effects_and_instruments
+[2]:	https://developer.apple.com/documentation/audiotoolbox/audio_unit_v3_plug-ins/incorporating_audio_effects_and_instruments
 [3]:	https://developer.apple.com/documentation/audiotoolbox/auaudiounit
 [4]:	https://developer.apple.com/documentation/audiotoolbox/auaudiounitfactory
 [5]:	https://developer.apple.com/documentation/audiotoolbox/auaudiounitfactory/1440321-createaudiounit
@@ -309,6 +309,6 @@ Finally, in the extension’s Info.plist file, set the Audio Unit’s factory ob
 [15]:	https://developer.apple.com/documentation/audiotoolbox/auaudiounit/1387630-fullstatefordocument
 [16]:	https://developer.apple.com/documentation/audiotoolbox/audiocomponentinstantiationoptions/1410490-loadinprocess
 [17]:	https://developer.apple.com/documentation/appkit/nsviewcontroller/1434481-init
-[18]:	https://developer.apple.com/documentation/audiotoolbox/incorporating_audio_effects_and_instruments
+[18]:	https://developer.apple.com/documentation/audiotoolbox/audio_unit_v3_plug-ins/incorporating_audio_effects_and_instruments
 
 [image-1]:	Documentation/graph.png "plug-in User Interface"
