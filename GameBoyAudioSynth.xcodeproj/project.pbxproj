@@ -7,34 +7,52 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0B9F825925C535F700EFC784 /* Gb_Apu_State.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0B9F824B25C535F700EFC784 /* Gb_Apu_State.cpp */; };
-		0B9F825A25C535F700EFC784 /* Gb_Apu_State.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0B9F824B25C535F700EFC784 /* Gb_Apu_State.cpp */; };
-		0B9F825B25C535F700EFC784 /* blargg_common.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B9F824C25C535F700EFC784 /* blargg_common.h */; };
-		0B9F825C25C535F700EFC784 /* blargg_common.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B9F824C25C535F700EFC784 /* blargg_common.h */; };
-		0B9F825D25C535F700EFC784 /* Multi_Buffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0B9F824D25C535F700EFC784 /* Multi_Buffer.cpp */; };
-		0B9F825E25C535F700EFC784 /* Multi_Buffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0B9F824D25C535F700EFC784 /* Multi_Buffer.cpp */; };
-		0B9F825F25C535F700EFC784 /* Effects_Buffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0B9F824E25C535F700EFC784 /* Effects_Buffer.cpp */; };
-		0B9F826025C535F700EFC784 /* Effects_Buffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0B9F824E25C535F700EFC784 /* Effects_Buffer.cpp */; };
-		0B9F826125C535F700EFC784 /* Gb_Oscs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0B9F824F25C535F700EFC784 /* Gb_Oscs.cpp */; };
-		0B9F826225C535F700EFC784 /* Gb_Oscs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0B9F824F25C535F700EFC784 /* Gb_Oscs.cpp */; };
-		0B9F826325C535F700EFC784 /* Blip_Buffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0B9F825025C535F700EFC784 /* Blip_Buffer.cpp */; };
-		0B9F826425C535F700EFC784 /* Blip_Buffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0B9F825025C535F700EFC784 /* Blip_Buffer.cpp */; };
-		0B9F826525C535F700EFC784 /* Multi_Buffer.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B9F825125C535F700EFC784 /* Multi_Buffer.h */; };
-		0B9F826625C535F700EFC784 /* Multi_Buffer.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B9F825125C535F700EFC784 /* Multi_Buffer.h */; };
-		0B9F826725C535F700EFC784 /* Gb_Apu.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0B9F825225C535F700EFC784 /* Gb_Apu.cpp */; };
-		0B9F826825C535F700EFC784 /* Gb_Apu.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0B9F825225C535F700EFC784 /* Gb_Apu.cpp */; };
-		0B9F826925C535F700EFC784 /* blargg_config.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B9F825325C535F700EFC784 /* blargg_config.h */; };
-		0B9F826A25C535F700EFC784 /* blargg_config.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B9F825325C535F700EFC784 /* blargg_config.h */; };
-		0B9F826B25C535F700EFC784 /* Effects_Buffer.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B9F825425C535F700EFC784 /* Effects_Buffer.h */; };
-		0B9F826C25C535F700EFC784 /* Effects_Buffer.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B9F825425C535F700EFC784 /* Effects_Buffer.h */; };
-		0B9F826D25C535F700EFC784 /* Gb_Oscs.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B9F825525C535F700EFC784 /* Gb_Oscs.h */; };
-		0B9F826E25C535F700EFC784 /* Gb_Oscs.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B9F825525C535F700EFC784 /* Gb_Oscs.h */; };
-		0B9F826F25C535F700EFC784 /* Gb_Apu.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B9F825625C535F700EFC784 /* Gb_Apu.h */; };
-		0B9F827025C535F700EFC784 /* Gb_Apu.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B9F825625C535F700EFC784 /* Gb_Apu.h */; };
-		0B9F827125C535F700EFC784 /* Blip_Buffer.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B9F825725C535F700EFC784 /* Blip_Buffer.h */; };
-		0B9F827225C535F700EFC784 /* Blip_Buffer.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B9F825725C535F700EFC784 /* Blip_Buffer.h */; };
-		0B9F827325C535F700EFC784 /* blargg_source.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B9F825825C535F700EFC784 /* blargg_source.h */; };
-		0B9F827425C535F700EFC784 /* blargg_source.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B9F825825C535F700EFC784 /* blargg_source.h */; };
+		0B9F82A525C5FA7C00EFC784 /* notes.txt in Resources */ = {isa = PBXBuildFile; fileRef = 0B9F828625C5FA7B00EFC784 /* notes.txt */; };
+		0B9F82A625C5FA7C00EFC784 /* notes.txt in Resources */ = {isa = PBXBuildFile; fileRef = 0B9F828625C5FA7B00EFC784 /* notes.txt */; };
+		0B9F82A725C5FA7C00EFC784 /* static_assert.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 0B9F828825C5FA7B00EFC784 /* static_assert.hpp */; };
+		0B9F82A825C5FA7C00EFC784 /* static_assert.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 0B9F828825C5FA7B00EFC784 /* static_assert.hpp */; };
+		0B9F82A925C5FA7C00EFC784 /* config.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 0B9F828925C5FA7B00EFC784 /* config.hpp */; };
+		0B9F82AA25C5FA7C00EFC784 /* config.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 0B9F828925C5FA7B00EFC784 /* config.hpp */; };
+		0B9F82AB25C5FA7C00EFC784 /* cstdint.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 0B9F828A25C5FA7B00EFC784 /* cstdint.hpp */; };
+		0B9F82AC25C5FA7C00EFC784 /* cstdint.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 0B9F828A25C5FA7B00EFC784 /* cstdint.hpp */; };
+		0B9F82AD25C5FA7C00EFC784 /* Basic_Gb_Apu.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B9F828B25C5FA7B00EFC784 /* Basic_Gb_Apu.h */; };
+		0B9F82AE25C5FA7C00EFC784 /* Basic_Gb_Apu.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B9F828B25C5FA7B00EFC784 /* Basic_Gb_Apu.h */; };
+		0B9F82B125C5FA7C00EFC784 /* blargg_common.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B9F828E25C5FA7B00EFC784 /* blargg_common.h */; };
+		0B9F82B225C5FA7C00EFC784 /* blargg_common.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B9F828E25C5FA7B00EFC784 /* blargg_common.h */; };
+		0B9F82B325C5FA7C00EFC784 /* Multi_Buffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0B9F828F25C5FA7B00EFC784 /* Multi_Buffer.cpp */; };
+		0B9F82B425C5FA7C00EFC784 /* Multi_Buffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0B9F828F25C5FA7B00EFC784 /* Multi_Buffer.cpp */; };
+		0B9F82B525C5FA7C00EFC784 /* Gb_Oscs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0B9F829025C5FA7B00EFC784 /* Gb_Oscs.cpp */; };
+		0B9F82B625C5FA7C00EFC784 /* Gb_Oscs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0B9F829025C5FA7B00EFC784 /* Gb_Oscs.cpp */; };
+		0B9F82B725C5FA7C00EFC784 /* Blip_Buffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0B9F829125C5FA7B00EFC784 /* Blip_Buffer.cpp */; };
+		0B9F82B825C5FA7C00EFC784 /* Blip_Buffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0B9F829125C5FA7B00EFC784 /* Blip_Buffer.cpp */; };
+		0B9F82B925C5FA7C00EFC784 /* Multi_Buffer.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B9F829225C5FA7B00EFC784 /* Multi_Buffer.h */; };
+		0B9F82BA25C5FA7C00EFC784 /* Multi_Buffer.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B9F829225C5FA7B00EFC784 /* Multi_Buffer.h */; };
+		0B9F82BB25C5FA7C00EFC784 /* Gb_Apu.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0B9F829325C5FA7B00EFC784 /* Gb_Apu.cpp */; };
+		0B9F82BC25C5FA7C00EFC784 /* Gb_Apu.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0B9F829325C5FA7B00EFC784 /* Gb_Apu.cpp */; };
+		0B9F82BD25C5FA7C00EFC784 /* Gb_Oscs.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B9F829425C5FA7B00EFC784 /* Gb_Oscs.h */; };
+		0B9F82BE25C5FA7C00EFC784 /* Gb_Oscs.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B9F829425C5FA7B00EFC784 /* Gb_Oscs.h */; };
+		0B9F82BF25C5FA7C00EFC784 /* Gb_Apu.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B9F829525C5FA7B00EFC784 /* Gb_Apu.h */; };
+		0B9F82C025C5FA7C00EFC784 /* Gb_Apu.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B9F829525C5FA7B00EFC784 /* Gb_Apu.h */; };
+		0B9F82C125C5FA7C00EFC784 /* Blip_Synth.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B9F829625C5FA7B00EFC784 /* Blip_Synth.h */; };
+		0B9F82C225C5FA7C00EFC784 /* Blip_Synth.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B9F829625C5FA7B00EFC784 /* Blip_Synth.h */; };
+		0B9F82C325C5FA7C00EFC784 /* Blip_Buffer.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B9F829725C5FA7B00EFC784 /* Blip_Buffer.h */; };
+		0B9F82C425C5FA7C00EFC784 /* Blip_Buffer.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B9F829725C5FA7B00EFC784 /* Blip_Buffer.h */; };
+		0B9F82C525C5FA7C00EFC784 /* blargg_source.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B9F829825C5FA7B00EFC784 /* blargg_source.h */; };
+		0B9F82C625C5FA7C00EFC784 /* blargg_source.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B9F829825C5FA7B00EFC784 /* blargg_source.h */; };
+		0B9F82C725C5FA7C00EFC784 /* Basic_Gb_Apu.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0B9F829925C5FA7B00EFC784 /* Basic_Gb_Apu.cpp */; };
+		0B9F82C825C5FA7C00EFC784 /* Basic_Gb_Apu.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0B9F829925C5FA7B00EFC784 /* Basic_Gb_Apu.cpp */; };
+		0B9F82C925C5FA7C00EFC784 /* changes.txt in Resources */ = {isa = PBXBuildFile; fileRef = 0B9F829A25C5FA7B00EFC784 /* changes.txt */; };
+		0B9F82CA25C5FA7C00EFC784 /* changes.txt in Resources */ = {isa = PBXBuildFile; fileRef = 0B9F829A25C5FA7B00EFC784 /* changes.txt */; };
+		0B9F82CB25C5FA7C00EFC784 /* demo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0B9F829B25C5FA7B00EFC784 /* demo.cpp */; };
+		0B9F82CC25C5FA7C00EFC784 /* demo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0B9F829B25C5FA7B00EFC784 /* demo.cpp */; };
+		0B9F82CF25C5FA7C00EFC784 /* readme.txt in Resources */ = {isa = PBXBuildFile; fileRef = 0B9F829D25C5FA7B00EFC784 /* readme.txt */; };
+		0B9F82D025C5FA7C00EFC784 /* readme.txt in Resources */ = {isa = PBXBuildFile; fileRef = 0B9F829D25C5FA7B00EFC784 /* readme.txt */; };
+		0B9F82D125C5FA7C00EFC784 /* LGPL.txt in Resources */ = {isa = PBXBuildFile; fileRef = 0B9F829E25C5FA7B00EFC784 /* LGPL.txt */; };
+		0B9F82D225C5FA7C00EFC784 /* LGPL.txt in Resources */ = {isa = PBXBuildFile; fileRef = 0B9F829E25C5FA7B00EFC784 /* LGPL.txt */; };
+		0B9F82DB25C5FA7C00EFC784 /* usage.txt in Resources */ = {isa = PBXBuildFile; fileRef = 0B9F82A425C5FA7B00EFC784 /* usage.txt */; };
+		0B9F82DC25C5FA7C00EFC784 /* usage.txt in Resources */ = {isa = PBXBuildFile; fileRef = 0B9F82A425C5FA7B00EFC784 /* usage.txt */; };
+		0B9F82E625C5FF3500EFC784 /* config.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B9F82E525C5FF3500EFC784 /* config.h */; };
+		0B9F82E725C5FF3500EFC784 /* config.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B9F82E525C5FF3500EFC784 /* config.h */; };
 		C4201A2922403120006E4333 /* GameBoyAudioSynthDemoViewControllerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4201A2822403120006E4333 /* GameBoyAudioSynthDemoViewControllerExtension.swift */; };
 		C433F56122404C7C00F1B750 /* GameBoyAudioSynthDemoViewControllerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = C433F56022404C7C00F1B750 /* GameBoyAudioSynthDemoViewControllerExtension.swift */; };
 		C437FE59222367CD008D6C09 /* GameBoyAudioSynthFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C437FE52222367CD008D6C09 /* GameBoyAudioSynthFramework.framework */; };
@@ -175,20 +193,29 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		0B9F824B25C535F700EFC784 /* Gb_Apu_State.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Gb_Apu_State.cpp; sourceTree = "<group>"; };
-		0B9F824C25C535F700EFC784 /* blargg_common.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = blargg_common.h; sourceTree = "<group>"; };
-		0B9F824D25C535F700EFC784 /* Multi_Buffer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Multi_Buffer.cpp; sourceTree = "<group>"; };
-		0B9F824E25C535F700EFC784 /* Effects_Buffer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Effects_Buffer.cpp; sourceTree = "<group>"; };
-		0B9F824F25C535F700EFC784 /* Gb_Oscs.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Gb_Oscs.cpp; sourceTree = "<group>"; };
-		0B9F825025C535F700EFC784 /* Blip_Buffer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Blip_Buffer.cpp; sourceTree = "<group>"; };
-		0B9F825125C535F700EFC784 /* Multi_Buffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Multi_Buffer.h; sourceTree = "<group>"; };
-		0B9F825225C535F700EFC784 /* Gb_Apu.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Gb_Apu.cpp; sourceTree = "<group>"; };
-		0B9F825325C535F700EFC784 /* blargg_config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = blargg_config.h; sourceTree = "<group>"; };
-		0B9F825425C535F700EFC784 /* Effects_Buffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Effects_Buffer.h; sourceTree = "<group>"; };
-		0B9F825525C535F700EFC784 /* Gb_Oscs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Gb_Oscs.h; sourceTree = "<group>"; };
-		0B9F825625C535F700EFC784 /* Gb_Apu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Gb_Apu.h; sourceTree = "<group>"; };
-		0B9F825725C535F700EFC784 /* Blip_Buffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Blip_Buffer.h; sourceTree = "<group>"; };
-		0B9F825825C535F700EFC784 /* blargg_source.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = blargg_source.h; sourceTree = "<group>"; };
+		0B9F828625C5FA7B00EFC784 /* notes.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = notes.txt; sourceTree = "<group>"; };
+		0B9F828825C5FA7B00EFC784 /* static_assert.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = static_assert.hpp; sourceTree = "<group>"; };
+		0B9F828925C5FA7B00EFC784 /* config.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = config.hpp; sourceTree = "<group>"; };
+		0B9F828A25C5FA7B00EFC784 /* cstdint.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = cstdint.hpp; sourceTree = "<group>"; };
+		0B9F828B25C5FA7B00EFC784 /* Basic_Gb_Apu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Basic_Gb_Apu.h; sourceTree = "<group>"; };
+		0B9F828E25C5FA7B00EFC784 /* blargg_common.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = blargg_common.h; sourceTree = "<group>"; };
+		0B9F828F25C5FA7B00EFC784 /* Multi_Buffer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Multi_Buffer.cpp; sourceTree = "<group>"; };
+		0B9F829025C5FA7B00EFC784 /* Gb_Oscs.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Gb_Oscs.cpp; sourceTree = "<group>"; };
+		0B9F829125C5FA7B00EFC784 /* Blip_Buffer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Blip_Buffer.cpp; sourceTree = "<group>"; };
+		0B9F829225C5FA7B00EFC784 /* Multi_Buffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Multi_Buffer.h; sourceTree = "<group>"; };
+		0B9F829325C5FA7B00EFC784 /* Gb_Apu.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Gb_Apu.cpp; sourceTree = "<group>"; };
+		0B9F829425C5FA7B00EFC784 /* Gb_Oscs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Gb_Oscs.h; sourceTree = "<group>"; };
+		0B9F829525C5FA7B00EFC784 /* Gb_Apu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Gb_Apu.h; sourceTree = "<group>"; };
+		0B9F829625C5FA7B00EFC784 /* Blip_Synth.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Blip_Synth.h; sourceTree = "<group>"; };
+		0B9F829725C5FA7B00EFC784 /* Blip_Buffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Blip_Buffer.h; sourceTree = "<group>"; };
+		0B9F829825C5FA7B00EFC784 /* blargg_source.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = blargg_source.h; sourceTree = "<group>"; };
+		0B9F829925C5FA7B00EFC784 /* Basic_Gb_Apu.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Basic_Gb_Apu.cpp; sourceTree = "<group>"; };
+		0B9F829A25C5FA7B00EFC784 /* changes.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = changes.txt; sourceTree = "<group>"; };
+		0B9F829B25C5FA7B00EFC784 /* demo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = demo.cpp; sourceTree = "<group>"; };
+		0B9F829D25C5FA7B00EFC784 /* readme.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = readme.txt; sourceTree = "<group>"; };
+		0B9F829E25C5FA7B00EFC784 /* LGPL.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LGPL.txt; sourceTree = "<group>"; };
+		0B9F82A425C5FA7B00EFC784 /* usage.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = usage.txt; sourceTree = "<group>"; };
+		0B9F82E525C5FF3500EFC784 /* config.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = config.h; sourceTree = "<group>"; };
 		7E56CF207E56CEE000000001 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		C4201A2822403120006E4333 /* GameBoyAudioSynthDemoViewControllerExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameBoyAudioSynthDemoViewControllerExtension.swift; sourceTree = "<group>"; };
 		C433F56022404C7C00F1B750 /* GameBoyAudioSynthDemoViewControllerExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameBoyAudioSynthDemoViewControllerExtension.swift; sourceTree = "<group>"; };
@@ -297,25 +324,49 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		0B9F824A25C535F700EFC784 /* apu */ = {
+		0B9F828525C5FA7B00EFC784 /* Gb_Snd_Emu-0.1.4 */ = {
 			isa = PBXGroup;
 			children = (
-				0B9F824B25C535F700EFC784 /* Gb_Apu_State.cpp */,
-				0B9F824C25C535F700EFC784 /* blargg_common.h */,
-				0B9F824D25C535F700EFC784 /* Multi_Buffer.cpp */,
-				0B9F824E25C535F700EFC784 /* Effects_Buffer.cpp */,
-				0B9F824F25C535F700EFC784 /* Gb_Oscs.cpp */,
-				0B9F825025C535F700EFC784 /* Blip_Buffer.cpp */,
-				0B9F825125C535F700EFC784 /* Multi_Buffer.h */,
-				0B9F825225C535F700EFC784 /* Gb_Apu.cpp */,
-				0B9F825325C535F700EFC784 /* blargg_config.h */,
-				0B9F825425C535F700EFC784 /* Effects_Buffer.h */,
-				0B9F825525C535F700EFC784 /* Gb_Oscs.h */,
-				0B9F825625C535F700EFC784 /* Gb_Apu.h */,
-				0B9F825725C535F700EFC784 /* Blip_Buffer.h */,
-				0B9F825825C535F700EFC784 /* blargg_source.h */,
+				0B9F828625C5FA7B00EFC784 /* notes.txt */,
+				0B9F828725C5FA7B00EFC784 /* boost */,
+				0B9F828B25C5FA7B00EFC784 /* Basic_Gb_Apu.h */,
+				0B9F828D25C5FA7B00EFC784 /* gb_apu */,
+				0B9F829925C5FA7B00EFC784 /* Basic_Gb_Apu.cpp */,
+				0B9F829A25C5FA7B00EFC784 /* changes.txt */,
+				0B9F829B25C5FA7B00EFC784 /* demo.cpp */,
+				0B9F829D25C5FA7B00EFC784 /* readme.txt */,
+				0B9F829E25C5FA7B00EFC784 /* LGPL.txt */,
+				0B9F82A425C5FA7B00EFC784 /* usage.txt */,
 			);
-			path = apu;
+			path = "Gb_Snd_Emu-0.1.4";
+			sourceTree = "<group>";
+		};
+		0B9F828725C5FA7B00EFC784 /* boost */ = {
+			isa = PBXGroup;
+			children = (
+				0B9F828825C5FA7B00EFC784 /* static_assert.hpp */,
+				0B9F828925C5FA7B00EFC784 /* config.hpp */,
+				0B9F828A25C5FA7B00EFC784 /* cstdint.hpp */,
+			);
+			path = boost;
+			sourceTree = "<group>";
+		};
+		0B9F828D25C5FA7B00EFC784 /* gb_apu */ = {
+			isa = PBXGroup;
+			children = (
+				0B9F828E25C5FA7B00EFC784 /* blargg_common.h */,
+				0B9F828F25C5FA7B00EFC784 /* Multi_Buffer.cpp */,
+				0B9F829025C5FA7B00EFC784 /* Gb_Oscs.cpp */,
+				0B9F829125C5FA7B00EFC784 /* Blip_Buffer.cpp */,
+				0B9F829225C5FA7B00EFC784 /* Multi_Buffer.h */,
+				0B9F829325C5FA7B00EFC784 /* Gb_Apu.cpp */,
+				0B9F829425C5FA7B00EFC784 /* Gb_Oscs.h */,
+				0B9F829525C5FA7B00EFC784 /* Gb_Apu.h */,
+				0B9F829625C5FA7B00EFC784 /* Blip_Synth.h */,
+				0B9F829725C5FA7B00EFC784 /* Blip_Buffer.h */,
+				0B9F829825C5FA7B00EFC784 /* blargg_source.h */,
+			);
+			path = gb_apu;
 			sourceTree = "<group>";
 		};
 		C437FE2F2223672C008D6C09 = {
@@ -465,7 +516,7 @@
 		C4BEE7E422236E99001E6B6D /* Support */ = {
 			isa = PBXGroup;
 			children = (
-				0B9F824A25C535F700EFC784 /* apu */,
+				0B9F828525C5FA7B00EFC784 /* Gb_Snd_Emu-0.1.4 */,
 				C4BEE7E822236E99001E6B6D /* BufferedAudioBus.hpp */,
 				C4BEE7E622236E99001E6B6D /* DSPKernel.hpp */,
 				C4BEE7E722236E99001E6B6D /* DSPKernel.mm */,
@@ -473,6 +524,7 @@
 				C4F0049F2239B1E10014E248 /* ApuAdapter.h */,
 				C4F004A02239B1E10014E248 /* ApuAdapter.mm */,
 				C4BEE7E522236E99001E6B6D /* ParameterRamper.hpp */,
+				0B9F82E525C5FF3500EFC784 /* config.h */,
 			);
 			path = Support;
 			sourceTree = "<group>";
@@ -539,20 +591,24 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0B9F826525C535F700EFC784 /* Multi_Buffer.h in Headers */,
+				0B9F82B925C5FA7C00EFC784 /* Multi_Buffer.h in Headers */,
 				C4F004A12239B1E10014E248 /* ApuAdapter.h in Headers */,
-				0B9F827325C535F700EFC784 /* blargg_source.h in Headers */,
+				0B9F82B125C5FA7C00EFC784 /* blargg_common.h in Headers */,
+				0B9F82C325C5FA7C00EFC784 /* Blip_Buffer.h in Headers */,
+				0B9F82E625C5FF3500EFC784 /* config.h in Headers */,
+				0B9F82AD25C5FA7C00EFC784 /* Basic_Gb_Apu.h in Headers */,
 				C4BEE8172223736F001E6B6D /* GameBoyAudioSynthFramework.h in Headers */,
+				0B9F82A725C5FA7C00EFC784 /* static_assert.hpp in Headers */,
 				C4BEE7EF22236F24001E6B6D /* ParameterRamper.hpp in Headers */,
-				0B9F826925C535F700EFC784 /* blargg_config.h in Headers */,
-				0B9F825B25C535F700EFC784 /* blargg_common.h in Headers */,
 				C4BEE7F122236F24001E6B6D /* BufferedAudioBus.hpp in Headers */,
-				0B9F826B25C535F700EFC784 /* Effects_Buffer.h in Headers */,
-				0B9F826F25C535F700EFC784 /* Gb_Apu.h in Headers */,
+				0B9F82AB25C5FA7C00EFC784 /* cstdint.hpp in Headers */,
+				0B9F82BD25C5FA7C00EFC784 /* Gb_Oscs.h in Headers */,
+				0B9F82BF25C5FA7C00EFC784 /* Gb_Apu.h in Headers */,
 				C4BEE7EE22236F24001E6B6D /* FilterDSPKernel.hpp in Headers */,
-				0B9F826D25C535F700EFC784 /* Gb_Oscs.h in Headers */,
+				0B9F82A925C5FA7C00EFC784 /* config.hpp in Headers */,
+				0B9F82C125C5FA7C00EFC784 /* Blip_Synth.h in Headers */,
 				C4BEE7F022236F24001E6B6D /* DSPKernel.hpp in Headers */,
-				0B9F827125C535F700EFC784 /* Blip_Buffer.h in Headers */,
+				0B9F82C525C5FA7C00EFC784 /* blargg_source.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -560,20 +616,24 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0B9F826625C535F700EFC784 /* Multi_Buffer.h in Headers */,
+				0B9F82BA25C5FA7C00EFC784 /* Multi_Buffer.h in Headers */,
 				C4F004A22239B1E10014E248 /* ApuAdapter.h in Headers */,
-				0B9F827425C535F700EFC784 /* blargg_source.h in Headers */,
+				0B9F82B225C5FA7C00EFC784 /* blargg_common.h in Headers */,
+				0B9F82C425C5FA7C00EFC784 /* Blip_Buffer.h in Headers */,
+				0B9F82E725C5FF3500EFC784 /* config.h in Headers */,
+				0B9F82AE25C5FA7C00EFC784 /* Basic_Gb_Apu.h in Headers */,
 				C496341422238CFA001D1F5B /* GameBoyAudioSynthFramework.h in Headers */,
+				0B9F82A825C5FA7C00EFC784 /* static_assert.hpp in Headers */,
 				C4BEE7F322236F27001E6B6D /* ParameterRamper.hpp in Headers */,
-				0B9F826A25C535F700EFC784 /* blargg_config.h in Headers */,
-				0B9F825C25C535F700EFC784 /* blargg_common.h in Headers */,
 				C4BEE7F522236F27001E6B6D /* BufferedAudioBus.hpp in Headers */,
-				0B9F826C25C535F700EFC784 /* Effects_Buffer.h in Headers */,
-				0B9F827025C535F700EFC784 /* Gb_Apu.h in Headers */,
+				0B9F82AC25C5FA7C00EFC784 /* cstdint.hpp in Headers */,
+				0B9F82BE25C5FA7C00EFC784 /* Gb_Oscs.h in Headers */,
+				0B9F82C025C5FA7C00EFC784 /* Gb_Apu.h in Headers */,
 				C4BEE7F222236F27001E6B6D /* FilterDSPKernel.hpp in Headers */,
-				0B9F826E25C535F700EFC784 /* Gb_Oscs.h in Headers */,
+				0B9F82AA25C5FA7C00EFC784 /* config.hpp in Headers */,
+				0B9F82C225C5FA7C00EFC784 /* Blip_Synth.h in Headers */,
 				C4BEE7F422236F27001E6B6D /* DSPKernel.hpp in Headers */,
-				0B9F827225C535F700EFC784 /* Blip_Buffer.h in Headers */,
+				0B9F82C625C5FA7C00EFC784 /* blargg_source.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -780,7 +840,12 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0B9F82D125C5FA7C00EFC784 /* LGPL.txt in Resources */,
+				0B9F82C925C5FA7C00EFC784 /* changes.txt in Resources */,
+				0B9F82A525C5FA7C00EFC784 /* notes.txt in Resources */,
+				0B9F82CF25C5FA7C00EFC784 /* readme.txt in Resources */,
 				C4F07735223ACB91008FFF06 /* Synth.aif in Resources */,
+				0B9F82DB25C5FA7C00EFC784 /* usage.txt in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -805,8 +870,13 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0B9F82D025C5FA7C00EFC784 /* readme.txt in Resources */,
+				0B9F82A625C5FA7C00EFC784 /* notes.txt in Resources */,
 				C46B8B8122418B6000E00B1E /* GameBoyAudioSynthDemoViewController.xib in Resources */,
+				0B9F82DC25C5FA7C00EFC784 /* usage.txt in Resources */,
+				0B9F82CA25C5FA7C00EFC784 /* changes.txt in Resources */,
 				C4F07736223ACB91008FFF06 /* Synth.aif in Resources */,
+				0B9F82D225C5FA7C00EFC784 /* LGPL.txt in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -834,21 +904,21 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0B9F82C725C5FA7C00EFC784 /* Basic_Gb_Apu.cpp in Sources */,
 				C4BEE7F722236F2D001E6B6D /* DSPKernel.mm in Sources */,
 				C4BEE80522236F6F001E6B6D /* ViewExtensions.swift in Sources */,
 				C4F07731223AC4F5008FFF06 /* GameBoyAudioSynthDemoViewController.swift in Sources */,
 				C4F004A62239B2070014E248 /* GameBoyAudioSynthDemo.swift in Sources */,
 				C4BEE7F822236F44001E6B6D /* AudioUnitManager.swift in Sources */,
-				0B9F825F25C535F700EFC784 /* Effects_Buffer.cpp in Sources */,
-				0B9F826125C535F700EFC784 /* Gb_Oscs.cpp in Sources */,
-				0B9F825D25C535F700EFC784 /* Multi_Buffer.cpp in Sources */,
+				0B9F82CB25C5FA7C00EFC784 /* demo.cpp in Sources */,
+				0B9F82B325C5FA7C00EFC784 /* Multi_Buffer.cpp in Sources */,
+				0B9F82BB25C5FA7C00EFC784 /* Gb_Apu.cpp in Sources */,
 				C4A3D65B223FF12A002784D4 /* SimplePlayEngine.swift in Sources */,
-				0B9F826725C535F700EFC784 /* Gb_Apu.cpp in Sources */,
 				C4BEE80322236F6F001E6B6D /* FilterView.swift in Sources */,
 				C4BEE80422236F6F001E6B6D /* TypeAliases.swift in Sources */,
-				0B9F825925C535F700EFC784 /* Gb_Apu_State.cpp in Sources */,
-				0B9F826325C535F700EFC784 /* Blip_Buffer.cpp in Sources */,
+				0B9F82B525C5FA7C00EFC784 /* Gb_Oscs.cpp in Sources */,
 				C4F0772E223AACBB008FFF06 /* GameBoyAudioSynthDemoParameters.swift in Sources */,
+				0B9F82B725C5FA7C00EFC784 /* Blip_Buffer.cpp in Sources */,
 				C4F004A32239B1E10014E248 /* ApuAdapter.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -876,22 +946,22 @@
 			files = (
 				C4BEE7F622236F2C001E6B6D /* DSPKernel.mm in Sources */,
 				C4F0772F223AACBB008FFF06 /* GameBoyAudioSynthDemoParameters.swift in Sources */,
-				0B9F825E25C535F700EFC784 /* Multi_Buffer.cpp in Sources */,
+				0B9F82B425C5FA7C00EFC784 /* Multi_Buffer.cpp in Sources */,
+				0B9F82BC25C5FA7C00EFC784 /* Gb_Apu.cpp in Sources */,
 				C4F07732223AC4F5008FFF06 /* GameBoyAudioSynthDemoViewController.swift in Sources */,
-				0B9F826225C535F700EFC784 /* Gb_Oscs.cpp in Sources */,
 				C4BEE80122236F6E001E6B6D /* ViewExtensions.swift in Sources */,
 				C496341322238CDD001D1F5B /* NSStoryboardExtensions.swift in Sources */,
+				0B9F82C825C5FA7C00EFC784 /* Basic_Gb_Apu.cpp in Sources */,
 				C4BEE7FB22236F46001E6B6D /* AudioUnitManager.swift in Sources */,
 				C496341222238CDD001D1F5B /* NSTextFieldExtensions.swift in Sources */,
 				C4BEE7FF22236F6E001E6B6D /* FilterView.swift in Sources */,
 				C4BEE80022236F6E001E6B6D /* TypeAliases.swift in Sources */,
-				0B9F825A25C535F700EFC784 /* Gb_Apu_State.cpp in Sources */,
-				0B9F826425C535F700EFC784 /* Blip_Buffer.cpp in Sources */,
 				C4F004A72239B2070014E248 /* GameBoyAudioSynthDemo.swift in Sources */,
-				0B9F826025C535F700EFC784 /* Effects_Buffer.cpp in Sources */,
+				0B9F82B625C5FA7C00EFC784 /* Gb_Oscs.cpp in Sources */,
+				0B9F82B825C5FA7C00EFC784 /* Blip_Buffer.cpp in Sources */,
 				C4201A2922403120006E4333 /* GameBoyAudioSynthDemoViewControllerExtension.swift in Sources */,
 				C4A3D65C223FF12A002784D4 /* SimplePlayEngine.swift in Sources */,
-				0B9F826825C535F700EFC784 /* Gb_Apu.cpp in Sources */,
+				0B9F82CC25C5FA7C00EFC784 /* demo.cpp in Sources */,
 				C4F004A42239B1E10014E248 /* ApuAdapter.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

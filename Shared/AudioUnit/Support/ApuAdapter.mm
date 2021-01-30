@@ -9,15 +9,15 @@ Adapter object providing a Swift-accessible interface to the filter's underlying
 #import <CoreAudioKit/AUViewController.h>
 //#import "FilterDSPKernel.hpp"
 //#import "BufferedAudioBus.hpp"
-#import "Gb_Apu.h"
+#import "Basic_Gb_Apu.h"
 #import "ApuAdapter.h"
 
 @implementation ApuAdapter {
     // C++ members need to be ivars; they would be copied on access if they were properties.
 //    FilterDSPKernel  _kernel;
 //    BufferedInputBus _inputBus;
-    Gb_Apu _apu;
-    Blip_Buffer _buffer;
+    Basic_Gb_Apu _apu;
+//    Blip_Buffer _buffer;
     NSMutableData* _data;
     AVAudioPCMBuffer* _outbuf;
     BOOL _bypassed;
@@ -40,21 +40,25 @@ Adapter object providing a Swift-accessible interface to the filter's underlying
         _outbuf = [[AVAudioPCMBuffer alloc] initWithPCMFormat:format frameCapacity:512];
 
         // framCount is 512 converted to ms
-        if (_buffer.set_sample_rate(44100, 44100/512) != 0) {
+//        if (!_buffer.set_sample_rate(44100, 44100/512)) {
+//            return nil;
+//        }
+        // Set sample rate and check for out of memory error
+        if (_apu.set_sample_rate(44100) != blargg_success) {
             return nil;
         }
-        _apu.set_output(&_buffer, nullptr, nullptr, 0);
-        _apu.reset();
     }
     return self;
 }
 
-- (void)write:(unsigned char)value toRegister:(unsigned int)addr at:(int)time {
-    _apu.write_register(time, addr, value);
+- (void)write:(unsigned char)data toRegister:(gb_addr_t)addr {
+//    if ( addr >= _apu.start_addr && addr <= apu.end_addr )
+//    _apu.write_register( addr, data );
 }
 
-- (unsigned char)readFromRegister:(unsigned int)addr at:(int)time {
-    return _apu.read_register(time, addr);
+- (unsigned char)readFromRegister:(gb_addr_t)addr {
+//    return _apu.read_register(addr);
+    return 0x00;
 }
 
 //- (NSArray<NSNumber *> *)magnitudesForFrequencies:(NSArray<NSNumber *> *)frequencies {
@@ -82,7 +86,7 @@ Adapter object providing a Swift-accessible interface to the filter's underlying
 
 - (void)setShouldBypassEffect:(BOOL)bypass {
     _bypassed = bypass;
-    _apu.write_register(0, 0xFF26, (bypass ? 1 : 0) << 7);
+//    _apu.write_register(0xFF26, (bypass ? 1 : 0) << 7);
 }
 
 - (void)allocateRenderResources {
@@ -107,8 +111,8 @@ Adapter object providing a Swift-accessible interface to the filter's underlying
     // Specify captured objects are mutable.
 //    __block FilterDSPKernel *state = &_kernel;
 //    __block BufferedInputBus *input = &_inputBus;
-    __block Gb_Apu *apu = &_apu;
-    __block Blip_Buffer *buffer = &_buffer;
+    __block Basic_Gb_Apu *apu = &_apu;
+//    __block Blip_Buffer *buffer = &_buffer;
     __block blip_sample_t *data = (blip_sample_t*) _data.mutableBytes;
     __block AVAudioPCMBuffer *outbuf = _outbuf;
 
@@ -153,28 +157,50 @@ Adapter object providing a Swift-accessible interface to the filter's underlying
                 outAudioBufferList->mBuffers[i].mData = outbuf.mutableAudioBufferList->mBuffers[i].mData;
             }
         }
-        for (int frameIndex = 0; frameIndex < frameCount; ++frameIndex) {
-            apu->end_frame(2 * GB_APU_OVERCLOCK);
-            buffer->end_frame(2 * GB_APU_OVERCLOCK);
+//        for (int frameIndex = 0; frameIndex < frameCount; ++frameIndex) {
+//            apu->end_frame(2 * GB_APU_OVERCLOCK);
+//            buffer->end_frame(2 * GB_APU_OVERCLOCK);
+//        }
+
+        static int delay;
+        if ( --delay <= 0 )
+        {
+            delay = 12;
+
+            // Start a new random tone
+            int chan = rand() & 0x11;
+            apu->write_register( 0xff26, 0x80 );
+            apu->write_register( 0xff25, chan ? chan : 0x11 );
+            apu->write_register( 0xff11, 0x80 );
+            int freq = (rand() & 0x3ff) + 0x300;
+            apu->write_register( 0xff13, freq & 0xff );
+            apu->write_register( 0xff12, 0xf1 );
+            apu->write_register( 0xff14, (freq >> 8) | 0x80 );
         }
+
+        // Generate 1/60 second of sound into APU's sample buffer
+        apu->end_frame();
+
+        // TODO: while apu->samples_avail() < frameCount
+        long count = apu->read_samples(data, MIN(apu->samples_avail(), frameCount));
+
         // now convert the int16 data into float32 on the way out
         for (int channel = 0; channel < outAudioBufferList->mNumberBuffers; ++channel) {
-            for (int frameIndex = 0; frameIndex < frameCount; ++frameIndex) {
-                AVAudioFrameCount framesRead = 0;
-                while (framesRead < frameCount) {
-                    blip_sample_t *offset = data + framesRead;
-                    long r = buffer->read_samples(offset, frameCount - framesRead);
-                    framesRead += (AVAudioFrameCount) r;
-                }
+            for (int frameIndex = 0; frameIndex < count; ++frameIndex) {
+//                AVAudioFrameCount framesRead = 0;
+//                while (framesRead < frameCount) {
+//                    blip_sample_t *offset = data + framesRead;
+//                    long r = buffer->read_samples(offset, frameCount - framesRead);
+//                    framesRead += (AVAudioFrameCount) r;
+//                }
+
 
                 int frameOffset = frameIndex;
-//                float* in  = (float*)inBufferListPtr->mBuffers[channel].mData  + frameOffset;
                 blip_sample_t* in = data + frameOffset;
                 float* out = (float*)outAudioBufferList->mBuffers[channel].mData + frameOffset;
-                *out = (float)(*in) / 65526;
+                *out = (float)(*in) / 65536;
             }
         }
-//        apu->end_frame(512);
         return noErr;
     };
 }
