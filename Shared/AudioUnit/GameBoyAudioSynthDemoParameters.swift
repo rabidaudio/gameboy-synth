@@ -58,21 +58,21 @@ class GameBoyAudioSynthDemoParameters {
 
     let parameterTree: AUParameterTree
 
-    init(kernelAdapter: FilterDSPKernelAdapter) {
+    init() {
 
         // Create the audio unit's tree of parameters
         parameterTree = AUParameterTree.createTree(withChildren: [cutoffParam,
                                                                   resonanceParam])
 
         // Closure observing all externally-generated parameter value changes.
-        parameterTree.implementorValueObserver = { param, value in
-            kernelAdapter.setParameter(param, value: value)
-        }
-
-        // Closure returning state of requested parameter.
-        parameterTree.implementorValueProvider = { param in
-            return kernelAdapter.value(for: param)
-        }
+//        parameterTree.implementorValueObserver = { param, value in
+//            kernelAdapter.setParameter(param, value: value)
+//        }
+//
+//        // Closure returning state of requested parameter.
+//        parameterTree.implementorValueProvider = { param in
+//            return kernelAdapter.value(for: param)
+//        }
 
         // Closure returning string representation of requested parameter value.
         parameterTree.implementorStringFromValueCallback = { param, value in

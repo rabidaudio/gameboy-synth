@@ -20,30 +20,26 @@ fileprivate extension AUAudioUnitPreset {
 
 public class GameBoyAudioSynthDemo: AUAudioUnit {
 
+    // TODO: may want to turn down the frame count to improve resolution
+    private let frameCount: AUAudioFrameCount = 512
+    private let numChannels: AVAudioChannelCount = 2
+    private let sampleRate: Double = 441000
+
+    private var format: AVAudioFormat {
+        // NOTE: Ideally we'd use standard 16bit int PCM format, but AVAudioPCMBuffer
+        // operates on deinterleaved Float32
+        return AVAudioFormat(standardFormatWithSampleRate: sampleRate, channels: numChannels)!
+    }
+
     private let parameters: GameBoyAudioSynthDemoParameters
-    private let kernelAdapter: FilterDSPKernelAdapter
 
-    lazy private var inputBusArray: AUAudioUnitBusArray = {
-        AUAudioUnitBusArray(audioUnit: self,
-                            busType: .input,
-                            busses: [kernelAdapter.inputBus])
-    }()
-
-    lazy private var outputBusArray: AUAudioUnitBusArray = {
-        AUAudioUnitBusArray(audioUnit: self,
-                            busType: .output,
-                            busses: [kernelAdapter.outputBus])
-    }()
+    private var outputBus: AUAudioUnitBus!
+    private var buffer: AVAudioPCMBuffer!
+    private var outputBusArray: AUAudioUnitBusArray!
 
     // The owning view controller
     weak var viewController: GameBoyAudioSynthDemoViewController?
 
-    /// The filter's input busses
-    public override var inputBusses: AUAudioUnitBusArray {
-        return inputBusArray
-    }
-
-    /// The filter's output busses
     public override var outputBusses: AUAudioUnitBusArray {
         return outputBusArray
     }
@@ -51,7 +47,12 @@ public class GameBoyAudioSynthDemo: AUAudioUnit {
     /// The tree of parameters provided by this AU.
     public override var parameterTree: AUParameterTree? {
         get { return parameters.parameterTree }
-        set { /* The sample doesn't allow this property to be modified. */ }
+        set { /* TODO allow modification */ }
+    }
+
+    public override var maximumFramesToRender: AUAudioFrameCount {
+        get { return frameCount }
+        set { /* TODO allow modification */ }
     }
 
     public override var factoryPresets: [AUAudioUnitPreset] {
@@ -107,76 +108,76 @@ public class GameBoyAudioSynthDemo: AUAudioUnit {
 
     public override init(componentDescription: AudioComponentDescription,
                          options: AudioComponentInstantiationOptions = []) throws {
-
-        // Create adapter to communicate to underlying C++ DSP code
-        kernelAdapter = FilterDSPKernelAdapter()
-        
-        // Create parameters object to control cutoff frequency and resonance
-        parameters = GameBoyAudioSynthDemoParameters(kernelAdapter: kernelAdapter)
-
-        // Init super class
+        parameters = GameBoyAudioSynthDemoParameters()
         try super.init(componentDescription: componentDescription, options: options)
-
-        // Log component description values
-        log(componentDescription)
+        outputBus = try AUAudioUnitBus(format: format)
+        outputBusArray = AUAudioUnitBusArray(audioUnit: self,
+                                                busType: .output,
+                                                busses: [outputBus])
         
         // Set the default preset
         currentPreset = factoryPresets.first
     }
 
-    private func log(_ acd: AudioComponentDescription) {
-
-        let info = ProcessInfo.processInfo
-        print("\nProcess Name: \(info.processName) PID: \(info.processIdentifier)\n")
-
-        let message = """
-        GameBoyAudioSynthDemo (
-                  type: \(acd.componentType.stringValue)
-               subtype: \(acd.componentSubType.stringValue)
-          manufacturer: \(acd.componentManufacturer.stringValue)
-                 flags: \(String(format: "%#010x", acd.componentFlags))
-        )
-        """
-        print(message)
-    }
-
-    // Gets the magnitudes corresponding to the specified frequencies.
-    func magnitudes(forFrequencies frequencies: [Double]) -> [Double] {
-        return kernelAdapter.magnitudes(forFrequencies: frequencies as [NSNumber]).map { $0.doubleValue }
-    }
-
-    public override var maximumFramesToRender: AUAudioFrameCount {
-        get {
-            return kernelAdapter.maximumFramesToRender
-        }
-        set {
-            if !renderResourcesAllocated {
-                kernelAdapter.maximumFramesToRender = newValue
-            }
-        }
-    }
-
     public override func allocateRenderResources() throws {
-        if kernelAdapter.outputBus.format.channelCount != kernelAdapter.inputBus.format.channelCount {
-            throw NSError(domain: NSOSStatusErrorDomain, code: Int(kAudioUnitErr_FailedInitialization), userInfo: nil)
-        }
         try super.allocateRenderResources()
-        kernelAdapter.allocateRenderResources()
+        buffer = AVAudioPCMBuffer(pcmFormat: format, frameCapacity: frameCount)!
     }
 
     public override func deallocateRenderResources() {
         super.deallocateRenderResources()
-        kernelAdapter.deallocateRenderResources()
+        // TODO find some way to dealloc the buffer
+    }
+
+//    private var freq: Float32 = 1000.0
+    private var samples: UInt32 {
+        return UInt32(sampleRate / 1000.0 / 2)
+    }
+
+    var q = false
+
+    // https://developer.apple.com/documentation/audiotoolbox/auinternalrenderblock
+    private func render(
+        actionFlags: UnsafeMutablePointer<AudioUnitRenderActionFlags>,
+        timestamp: UnsafePointer<AudioTimeStamp>,
+        frameCount: AUAudioFrameCount,
+        outputBusNumber: Int,
+        outputData: UnsafeMutablePointer<AudioBufferList>,
+        realtimeEventListHead: UnsafePointer<AURenderEvent>?,
+        pullInputBlock: AURenderPullInputBlock?
+    ) -> AUAudioUnitStatus {
+        let nullPtr = UnsafeMutablePointer<AudioBufferList>(nil)
+        if outputData == nullPtr {
+            // it's supposed to be our responsibility to init the buffer if it's null
+            // but it never seems to be null and the format doesn't sem to match that of `buffer`
+            fatalError("null outputData")
+            // outputData.assign(from: buffer.mutableAudioBufferList, count: 1)
+        }
+        if outputBusNumber != 0 {
+            fatalError("outputbus \(outputBusNumber)")
+        }
+        // mBuffers is an array but Swift's bridging is screwing up so it can't be accessed as an array
+        withUnsafeMutablePointer(to: &outputData.pointee.mBuffers) { bufs in
+            // Note: as an optimization, sets the left and right channels at the same time.
+            // if we ever supported more channels we'll need to make this a loop
+            let lbuf = bufs.pointee
+            let rbuf = bufs.successor().pointee
+            var lptr = lbuf.mData!.assumingMemoryBound(to: Float32.self)
+            var rptr = rbuf.mData!.assumingMemoryBound(to: Float32.self)
+            let value: Float32 = q ? -0.5 : 0.5
+            for _ in 0..<frameCount {
+                lptr.initialize(to: value)
+                lptr = lptr.advanced(by: 1)
+                rptr.initialize(to: value)
+                rptr = rptr.advanced(by: 1)
+            }
+            q = !q
+        }
+        return noErr
     }
 
     public override var internalRenderBlock: AUInternalRenderBlock {
-        return kernelAdapter.internalRenderBlock()
-    }
-
-    // Boolean indicating that this AU can process the input audio in-place
-    // in the input buffer, without requiring a separate output buffer.
-    public override var canProcessInPlace: Bool {
-        return true
+        return self.render
     }
 
     // MARK: View Configurations
@@ -202,16 +203,5 @@ public class GameBoyAudioSynthDemo: AUAudioUnit {
 
     public override func select(_ viewConfiguration: AUAudioUnitViewConfiguration) {
         viewController?.selectViewConfiguration(viewConfiguration)
-    }
-}
-
-extension FourCharCode {
-    var stringValue: String {
-        let value = CFSwapInt32BigToHost(self)
-        let bytes = [0, 8, 16, 24].map { UInt8(value >> $0 & 0x000000FF) }
-        guard let result = String(bytes: bytes, encoding: .utf8) else {
-            return "fail"
-        }
-        return result
     }
 }

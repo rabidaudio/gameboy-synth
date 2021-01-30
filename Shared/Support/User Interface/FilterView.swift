@@ -201,7 +201,7 @@ class FilterView: View {
 
         var location: CGFloat = leftMargin
 
-        let frequencyCount = frequencies?.count ?? 0
+        let frequencyCount = 1 // frequencies?.count ?? 0
 
         let pixelRatio = Int(ceil(width / CGFloat(frequencyCount)))
 

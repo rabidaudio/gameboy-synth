@@ -225,13 +225,14 @@ extension GameBoyAudioSynthDemoViewController: FilterViewDelegate {
     // MARK: FilterViewDelegate
 
     func updateFilterViewFrequencyAndMagnitudes() {
-        guard let audioUnit = audioUnit else { return }
+//        guard let audioUnit = audioUnit else { return }
 
         // Get an array of frequencies from the view.
-        let frequencies = filterView.frequencyDataForDrawing()
+//        let frequencies = filterView.frequencyDataForDrawing()
 
         // Get the corresponding magnitudes from the AU.
-        let magnitudes = audioUnit.magnitudes(forFrequencies: frequencies)
+//        let magnitudes = audioUnit.magnitudes(forFrequencies: frequencies)
+        let magnitudes = [1.0, 1.0]
 
         filterView.setMagnitudes(magnitudes)
     }

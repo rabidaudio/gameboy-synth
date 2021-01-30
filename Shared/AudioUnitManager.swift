@@ -91,9 +91,9 @@ public class AudioUnitManager {
 
         // Ensure that AudioUnit type, subtype, and manufacturer match the extension's Info.plist values
         var componentDescription = AudioComponentDescription()
-        componentDescription.componentType = kAudioUnitType_Effect
-        componentDescription.componentSubType = 0x666c7472 /*'fltr'*/
-        componentDescription.componentManufacturer = 0x44656d6f /*'Demo'*/
+        componentDescription.componentType = kAudioUnitType_MusicDevice // kAudioUnitType_Effect
+        componentDescription.componentSubType = 0x47424153 /*'GBAS'*/
+        componentDescription.componentManufacturer = 0x5F434A4B /*'_CJK'*/
         componentDescription.componentFlags = 0
         componentDescription.componentFlagsMask = 0
 

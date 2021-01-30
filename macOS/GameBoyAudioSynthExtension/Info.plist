@@ -34,21 +34,21 @@
 					<key>description</key>
 					<string>GameBoyAudioSynthDemo</string>
 					<key>manufacturer</key>
-					<string>Demo</string>
+					<string>RabidAudio</string>
 					<key>name</key>
 					<string>Demo: GameBoyAudioSynthDemo</string>
 					<key>sandboxSafe</key>
 					<true/>
 					<key>subtype</key>
-					<string>fltr</string>
+					<string>GBAS</string>
 					<key>tags</key>
 					<array>
-						<string>Effects</string>
+						<string>Synthesizer</string>
 					</array>
 					<key>type</key>
-					<string>aufx</string>
+					<string>aumu</string>
 					<key>version</key>
-					<integer>67072</integer>
+					<real>67072</real>
 				</dict>
 			</array>
 		</dict>
