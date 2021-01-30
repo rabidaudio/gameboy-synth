@@ -7,6 +7,34 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0B9F825925C535F700EFC784 /* Gb_Apu_State.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0B9F824B25C535F700EFC784 /* Gb_Apu_State.cpp */; };
+		0B9F825A25C535F700EFC784 /* Gb_Apu_State.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0B9F824B25C535F700EFC784 /* Gb_Apu_State.cpp */; };
+		0B9F825B25C535F700EFC784 /* blargg_common.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B9F824C25C535F700EFC784 /* blargg_common.h */; };
+		0B9F825C25C535F700EFC784 /* blargg_common.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B9F824C25C535F700EFC784 /* blargg_common.h */; };
+		0B9F825D25C535F700EFC784 /* Multi_Buffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0B9F824D25C535F700EFC784 /* Multi_Buffer.cpp */; };
+		0B9F825E25C535F700EFC784 /* Multi_Buffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0B9F824D25C535F700EFC784 /* Multi_Buffer.cpp */; };
+		0B9F825F25C535F700EFC784 /* Effects_Buffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0B9F824E25C535F700EFC784 /* Effects_Buffer.cpp */; };
+		0B9F826025C535F700EFC784 /* Effects_Buffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0B9F824E25C535F700EFC784 /* Effects_Buffer.cpp */; };
+		0B9F826125C535F700EFC784 /* Gb_Oscs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0B9F824F25C535F700EFC784 /* Gb_Oscs.cpp */; };
+		0B9F826225C535F700EFC784 /* Gb_Oscs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0B9F824F25C535F700EFC784 /* Gb_Oscs.cpp */; };
+		0B9F826325C535F700EFC784 /* Blip_Buffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0B9F825025C535F700EFC784 /* Blip_Buffer.cpp */; };
+		0B9F826425C535F700EFC784 /* Blip_Buffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0B9F825025C535F700EFC784 /* Blip_Buffer.cpp */; };
+		0B9F826525C535F700EFC784 /* Multi_Buffer.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B9F825125C535F700EFC784 /* Multi_Buffer.h */; };
+		0B9F826625C535F700EFC784 /* Multi_Buffer.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B9F825125C535F700EFC784 /* Multi_Buffer.h */; };
+		0B9F826725C535F700EFC784 /* Gb_Apu.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0B9F825225C535F700EFC784 /* Gb_Apu.cpp */; };
+		0B9F826825C535F700EFC784 /* Gb_Apu.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0B9F825225C535F700EFC784 /* Gb_Apu.cpp */; };
+		0B9F826925C535F700EFC784 /* blargg_config.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B9F825325C535F700EFC784 /* blargg_config.h */; };
+		0B9F826A25C535F700EFC784 /* blargg_config.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B9F825325C535F700EFC784 /* blargg_config.h */; };
+		0B9F826B25C535F700EFC784 /* Effects_Buffer.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B9F825425C535F700EFC784 /* Effects_Buffer.h */; };
+		0B9F826C25C535F700EFC784 /* Effects_Buffer.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B9F825425C535F700EFC784 /* Effects_Buffer.h */; };
+		0B9F826D25C535F700EFC784 /* Gb_Oscs.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B9F825525C535F700EFC784 /* Gb_Oscs.h */; };
+		0B9F826E25C535F700EFC784 /* Gb_Oscs.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B9F825525C535F700EFC784 /* Gb_Oscs.h */; };
+		0B9F826F25C535F700EFC784 /* Gb_Apu.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B9F825625C535F700EFC784 /* Gb_Apu.h */; };
+		0B9F827025C535F700EFC784 /* Gb_Apu.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B9F825625C535F700EFC784 /* Gb_Apu.h */; };
+		0B9F827125C535F700EFC784 /* Blip_Buffer.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B9F825725C535F700EFC784 /* Blip_Buffer.h */; };
+		0B9F827225C535F700EFC784 /* Blip_Buffer.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B9F825725C535F700EFC784 /* Blip_Buffer.h */; };
+		0B9F827325C535F700EFC784 /* blargg_source.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B9F825825C535F700EFC784 /* blargg_source.h */; };
+		0B9F827425C535F700EFC784 /* blargg_source.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B9F825825C535F700EFC784 /* blargg_source.h */; };
 		C4201A2922403120006E4333 /* GameBoyAudioSynthDemoViewControllerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4201A2822403120006E4333 /* GameBoyAudioSynthDemoViewControllerExtension.swift */; };
 		C433F56122404C7C00F1B750 /* GameBoyAudioSynthDemoViewControllerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = C433F56022404C7C00F1B750 /* GameBoyAudioSynthDemoViewControllerExtension.swift */; };
 		C437FE59222367CD008D6C09 /* GameBoyAudioSynthFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C437FE52222367CD008D6C09 /* GameBoyAudioSynthFramework.framework */; };
@@ -54,10 +82,10 @@
 		C4BEE8172223736F001E6B6D /* GameBoyAudioSynthFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = C4BEE8162223736F001E6B6D /* GameBoyAudioSynthFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		C4BEE81922237394001E6B6D /* GameBoyAudioSynthFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C437FE52222367CD008D6C09 /* GameBoyAudioSynthFramework.framework */; };
 		C4BEE81A222373A6001E6B6D /* GameBoyAudioSynthFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C437FE8F222368A1008D6C09 /* GameBoyAudioSynthFramework.framework */; };
-		C4F004A12239B1E10014E248 /* FilterDSPKernelAdapter.h in Headers */ = {isa = PBXBuildFile; fileRef = C4F0049F2239B1E10014E248 /* FilterDSPKernelAdapter.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		C4F004A22239B1E10014E248 /* FilterDSPKernelAdapter.h in Headers */ = {isa = PBXBuildFile; fileRef = C4F0049F2239B1E10014E248 /* FilterDSPKernelAdapter.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		C4F004A32239B1E10014E248 /* FilterDSPKernelAdapter.mm in Sources */ = {isa = PBXBuildFile; fileRef = C4F004A02239B1E10014E248 /* FilterDSPKernelAdapter.mm */; };
-		C4F004A42239B1E10014E248 /* FilterDSPKernelAdapter.mm in Sources */ = {isa = PBXBuildFile; fileRef = C4F004A02239B1E10014E248 /* FilterDSPKernelAdapter.mm */; };
+		C4F004A12239B1E10014E248 /* ApuAdapter.h in Headers */ = {isa = PBXBuildFile; fileRef = C4F0049F2239B1E10014E248 /* ApuAdapter.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		C4F004A22239B1E10014E248 /* ApuAdapter.h in Headers */ = {isa = PBXBuildFile; fileRef = C4F0049F2239B1E10014E248 /* ApuAdapter.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		C4F004A32239B1E10014E248 /* ApuAdapter.mm in Sources */ = {isa = PBXBuildFile; fileRef = C4F004A02239B1E10014E248 /* ApuAdapter.mm */; };
+		C4F004A42239B1E10014E248 /* ApuAdapter.mm in Sources */ = {isa = PBXBuildFile; fileRef = C4F004A02239B1E10014E248 /* ApuAdapter.mm */; };
 		C4F004A62239B2070014E248 /* GameBoyAudioSynthDemo.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4F004A52239B2070014E248 /* GameBoyAudioSynthDemo.swift */; };
 		C4F004A72239B2070014E248 /* GameBoyAudioSynthDemo.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4F004A52239B2070014E248 /* GameBoyAudioSynthDemo.swift */; };
 		C4F0772E223AACBB008FFF06 /* GameBoyAudioSynthDemoParameters.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4F0772D223AACBB008FFF06 /* GameBoyAudioSynthDemoParameters.swift */; };
@@ -147,6 +175,20 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		0B9F824B25C535F700EFC784 /* Gb_Apu_State.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Gb_Apu_State.cpp; sourceTree = "<group>"; };
+		0B9F824C25C535F700EFC784 /* blargg_common.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = blargg_common.h; sourceTree = "<group>"; };
+		0B9F824D25C535F700EFC784 /* Multi_Buffer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Multi_Buffer.cpp; sourceTree = "<group>"; };
+		0B9F824E25C535F700EFC784 /* Effects_Buffer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Effects_Buffer.cpp; sourceTree = "<group>"; };
+		0B9F824F25C535F700EFC784 /* Gb_Oscs.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Gb_Oscs.cpp; sourceTree = "<group>"; };
+		0B9F825025C535F700EFC784 /* Blip_Buffer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Blip_Buffer.cpp; sourceTree = "<group>"; };
+		0B9F825125C535F700EFC784 /* Multi_Buffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Multi_Buffer.h; sourceTree = "<group>"; };
+		0B9F825225C535F700EFC784 /* Gb_Apu.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Gb_Apu.cpp; sourceTree = "<group>"; };
+		0B9F825325C535F700EFC784 /* blargg_config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = blargg_config.h; sourceTree = "<group>"; };
+		0B9F825425C535F700EFC784 /* Effects_Buffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Effects_Buffer.h; sourceTree = "<group>"; };
+		0B9F825525C535F700EFC784 /* Gb_Oscs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Gb_Oscs.h; sourceTree = "<group>"; };
+		0B9F825625C535F700EFC784 /* Gb_Apu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Gb_Apu.h; sourceTree = "<group>"; };
+		0B9F825725C535F700EFC784 /* Blip_Buffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Blip_Buffer.h; sourceTree = "<group>"; };
+		0B9F825825C535F700EFC784 /* blargg_source.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = blargg_source.h; sourceTree = "<group>"; };
 		7E56CF207E56CEE000000001 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		C4201A2822403120006E4333 /* GameBoyAudioSynthDemoViewControllerExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameBoyAudioSynthDemoViewControllerExtension.swift; sourceTree = "<group>"; };
 		C433F56022404C7C00F1B750 /* GameBoyAudioSynthDemoViewControllerExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameBoyAudioSynthDemoViewControllerExtension.swift; sourceTree = "<group>"; };
@@ -195,8 +237,8 @@
 		C4BEE81B22237772001E6B6D /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS12.1.sdk/System/Library/Frameworks/MobileCoreServices.framework; sourceTree = DEVELOPER_DIR; };
 		C4C9EAAB2227D79D003FEE1C /* GameBoyAudioSynthDemoViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = GameBoyAudioSynthDemoViewController.xib; sourceTree = "<group>"; };
 		C4CE62D8222601070055FE6B /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
-		C4F0049F2239B1E10014E248 /* FilterDSPKernelAdapter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FilterDSPKernelAdapter.h; sourceTree = "<group>"; };
-		C4F004A02239B1E10014E248 /* FilterDSPKernelAdapter.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = FilterDSPKernelAdapter.mm; sourceTree = "<group>"; };
+		C4F0049F2239B1E10014E248 /* ApuAdapter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ApuAdapter.h; sourceTree = "<group>"; };
+		C4F004A02239B1E10014E248 /* ApuAdapter.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = ApuAdapter.mm; sourceTree = "<group>"; };
 		C4F004A52239B2070014E248 /* GameBoyAudioSynthDemo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameBoyAudioSynthDemo.swift; sourceTree = "<group>"; };
 		C4F0772D223AACBB008FFF06 /* GameBoyAudioSynthDemoParameters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameBoyAudioSynthDemoParameters.swift; sourceTree = "<group>"; };
 		C4F07730223AC4F5008FFF06 /* GameBoyAudioSynthDemoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameBoyAudioSynthDemoViewController.swift; sourceTree = "<group>"; };
@@ -255,6 +297,27 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0B9F824A25C535F700EFC784 /* apu */ = {
+			isa = PBXGroup;
+			children = (
+				0B9F824B25C535F700EFC784 /* Gb_Apu_State.cpp */,
+				0B9F824C25C535F700EFC784 /* blargg_common.h */,
+				0B9F824D25C535F700EFC784 /* Multi_Buffer.cpp */,
+				0B9F824E25C535F700EFC784 /* Effects_Buffer.cpp */,
+				0B9F824F25C535F700EFC784 /* Gb_Oscs.cpp */,
+				0B9F825025C535F700EFC784 /* Blip_Buffer.cpp */,
+				0B9F825125C535F700EFC784 /* Multi_Buffer.h */,
+				0B9F825225C535F700EFC784 /* Gb_Apu.cpp */,
+				0B9F825325C535F700EFC784 /* blargg_config.h */,
+				0B9F825425C535F700EFC784 /* Effects_Buffer.h */,
+				0B9F825525C535F700EFC784 /* Gb_Oscs.h */,
+				0B9F825625C535F700EFC784 /* Gb_Apu.h */,
+				0B9F825725C535F700EFC784 /* Blip_Buffer.h */,
+				0B9F825825C535F700EFC784 /* blargg_source.h */,
+			);
+			path = apu;
+			sourceTree = "<group>";
+		};
 		C437FE2F2223672C008D6C09 = {
 			isa = PBXGroup;
 			children = (
@@ -402,12 +465,13 @@
 		C4BEE7E422236E99001E6B6D /* Support */ = {
 			isa = PBXGroup;
 			children = (
+				0B9F824A25C535F700EFC784 /* apu */,
 				C4BEE7E822236E99001E6B6D /* BufferedAudioBus.hpp */,
 				C4BEE7E622236E99001E6B6D /* DSPKernel.hpp */,
 				C4BEE7E722236E99001E6B6D /* DSPKernel.mm */,
 				C4BEE7E322236E99001E6B6D /* FilterDSPKernel.hpp */,
-				C4F0049F2239B1E10014E248 /* FilterDSPKernelAdapter.h */,
-				C4F004A02239B1E10014E248 /* FilterDSPKernelAdapter.mm */,
+				C4F0049F2239B1E10014E248 /* ApuAdapter.h */,
+				C4F004A02239B1E10014E248 /* ApuAdapter.mm */,
 				C4BEE7E522236E99001E6B6D /* ParameterRamper.hpp */,
 			);
 			path = Support;
@@ -475,12 +539,20 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C4F004A12239B1E10014E248 /* FilterDSPKernelAdapter.h in Headers */,
+				0B9F826525C535F700EFC784 /* Multi_Buffer.h in Headers */,
+				C4F004A12239B1E10014E248 /* ApuAdapter.h in Headers */,
+				0B9F827325C535F700EFC784 /* blargg_source.h in Headers */,
 				C4BEE8172223736F001E6B6D /* GameBoyAudioSynthFramework.h in Headers */,
 				C4BEE7EF22236F24001E6B6D /* ParameterRamper.hpp in Headers */,
+				0B9F826925C535F700EFC784 /* blargg_config.h in Headers */,
+				0B9F825B25C535F700EFC784 /* blargg_common.h in Headers */,
 				C4BEE7F122236F24001E6B6D /* BufferedAudioBus.hpp in Headers */,
+				0B9F826B25C535F700EFC784 /* Effects_Buffer.h in Headers */,
+				0B9F826F25C535F700EFC784 /* Gb_Apu.h in Headers */,
 				C4BEE7EE22236F24001E6B6D /* FilterDSPKernel.hpp in Headers */,
+				0B9F826D25C535F700EFC784 /* Gb_Oscs.h in Headers */,
 				C4BEE7F022236F24001E6B6D /* DSPKernel.hpp in Headers */,
+				0B9F827125C535F700EFC784 /* Blip_Buffer.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -488,12 +560,20 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C4F004A22239B1E10014E248 /* FilterDSPKernelAdapter.h in Headers */,
+				0B9F826625C535F700EFC784 /* Multi_Buffer.h in Headers */,
+				C4F004A22239B1E10014E248 /* ApuAdapter.h in Headers */,
+				0B9F827425C535F700EFC784 /* blargg_source.h in Headers */,
 				C496341422238CFA001D1F5B /* GameBoyAudioSynthFramework.h in Headers */,
 				C4BEE7F322236F27001E6B6D /* ParameterRamper.hpp in Headers */,
+				0B9F826A25C535F700EFC784 /* blargg_config.h in Headers */,
+				0B9F825C25C535F700EFC784 /* blargg_common.h in Headers */,
 				C4BEE7F522236F27001E6B6D /* BufferedAudioBus.hpp in Headers */,
+				0B9F826C25C535F700EFC784 /* Effects_Buffer.h in Headers */,
+				0B9F827025C535F700EFC784 /* Gb_Apu.h in Headers */,
 				C4BEE7F222236F27001E6B6D /* FilterDSPKernel.hpp in Headers */,
+				0B9F826E25C535F700EFC784 /* Gb_Oscs.h in Headers */,
 				C4BEE7F422236F27001E6B6D /* DSPKernel.hpp in Headers */,
+				0B9F827225C535F700EFC784 /* Blip_Buffer.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -759,11 +839,17 @@
 				C4F07731223AC4F5008FFF06 /* GameBoyAudioSynthDemoViewController.swift in Sources */,
 				C4F004A62239B2070014E248 /* GameBoyAudioSynthDemo.swift in Sources */,
 				C4BEE7F822236F44001E6B6D /* AudioUnitManager.swift in Sources */,
+				0B9F825F25C535F700EFC784 /* Effects_Buffer.cpp in Sources */,
+				0B9F826125C535F700EFC784 /* Gb_Oscs.cpp in Sources */,
+				0B9F825D25C535F700EFC784 /* Multi_Buffer.cpp in Sources */,
 				C4A3D65B223FF12A002784D4 /* SimplePlayEngine.swift in Sources */,
+				0B9F826725C535F700EFC784 /* Gb_Apu.cpp in Sources */,
 				C4BEE80322236F6F001E6B6D /* FilterView.swift in Sources */,
 				C4BEE80422236F6F001E6B6D /* TypeAliases.swift in Sources */,
+				0B9F825925C535F700EFC784 /* Gb_Apu_State.cpp in Sources */,
+				0B9F826325C535F700EFC784 /* Blip_Buffer.cpp in Sources */,
 				C4F0772E223AACBB008FFF06 /* GameBoyAudioSynthDemoParameters.swift in Sources */,
-				C4F004A32239B1E10014E248 /* FilterDSPKernelAdapter.mm in Sources */,
+				C4F004A32239B1E10014E248 /* ApuAdapter.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -790,17 +876,23 @@
 			files = (
 				C4BEE7F622236F2C001E6B6D /* DSPKernel.mm in Sources */,
 				C4F0772F223AACBB008FFF06 /* GameBoyAudioSynthDemoParameters.swift in Sources */,
+				0B9F825E25C535F700EFC784 /* Multi_Buffer.cpp in Sources */,
 				C4F07732223AC4F5008FFF06 /* GameBoyAudioSynthDemoViewController.swift in Sources */,
+				0B9F826225C535F700EFC784 /* Gb_Oscs.cpp in Sources */,
 				C4BEE80122236F6E001E6B6D /* ViewExtensions.swift in Sources */,
 				C496341322238CDD001D1F5B /* NSStoryboardExtensions.swift in Sources */,
 				C4BEE7FB22236F46001E6B6D /* AudioUnitManager.swift in Sources */,
 				C496341222238CDD001D1F5B /* NSTextFieldExtensions.swift in Sources */,
 				C4BEE7FF22236F6E001E6B6D /* FilterView.swift in Sources */,
 				C4BEE80022236F6E001E6B6D /* TypeAliases.swift in Sources */,
+				0B9F825A25C535F700EFC784 /* Gb_Apu_State.cpp in Sources */,
+				0B9F826425C535F700EFC784 /* Blip_Buffer.cpp in Sources */,
 				C4F004A72239B2070014E248 /* GameBoyAudioSynthDemo.swift in Sources */,
+				0B9F826025C535F700EFC784 /* Effects_Buffer.cpp in Sources */,
 				C4201A2922403120006E4333 /* GameBoyAudioSynthDemoViewControllerExtension.swift in Sources */,
 				C4A3D65C223FF12A002784D4 /* SimplePlayEngine.swift in Sources */,
-				C4F004A42239B1E10014E248 /* FilterDSPKernelAdapter.mm in Sources */,
+				0B9F826825C535F700EFC784 /* Gb_Apu.cpp in Sources */,
+				C4F004A42239B1E10014E248 /* ApuAdapter.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
