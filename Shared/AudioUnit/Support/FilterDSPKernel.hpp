@@ -2,7 +2,7 @@
 See LICENSE folder for this sample’s licensing information.
 
 Abstract:
-A DSPKernel subclass implementing the realtime signal processing portion of the AUv3FilterDemo audio unit.
+A DSPKernel subclass implementing the realtime signal processing portion of the GameBoyAudioSynthDemo audio unit.
 */
 #ifndef FilterDSPKernel_hpp
 #define FilterDSPKernel_hpp

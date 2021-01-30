@@ -2,7 +2,7 @@
 See LICENSE folder for this sample’s licensing information.
 
 Abstract:
-Non-UI controller object used to manage the interaction with the AUv3FilterDemo audio unit.
+Non-UI controller object used to manage the interaction with the GameBoyAudioSynthDemo audio unit.
 */
 
 import Foundation
@@ -30,7 +30,7 @@ public protocol AUManagerDelegate: AnyObject {
 public class AudioUnitManager {
 
     /// The user-selected audio unit.
-    private var audioUnit: AUv3FilterDemo?
+    private var audioUnit: GameBoyAudioSynthDemo?
 
     public weak var delegate: AUManagerDelegate? {
         didSet {
@@ -39,7 +39,7 @@ public class AudioUnitManager {
         }
     }
 
-    public private(set) var viewController: AUv3FilterDemoViewController!
+    public private(set) var viewController: GameBoyAudioSynthDemoViewController!
 
     public var cutoffValue: Float = 0.0 {
         didSet {
@@ -86,7 +86,7 @@ public class AudioUnitManager {
     // A token for our registration to observe parameter value changes.
     private var parameterObserverToken: AUParameterObserverToken!
 
-    // The AudioComponentDescription matching the AUv3FilterExtension Info.plist
+    // The AudioComponentDescription matching the GameBoyAudioSynthExtension Info.plist
     private var componentDescription: AudioComponentDescription = {
 
         // Ensure that AudioUnit type, subtype, and manufacturer match the extension's Info.plist values
@@ -100,19 +100,19 @@ public class AudioUnitManager {
         return componentDescription
     }()
 
-    private let componentName = "Demo: AUv3FilterDemo"
+    private let componentName = "Demo: GameBoyAudioSynth"
 
     public init() {
 
         viewController = loadViewController()
 
         /*
-         Register our `AUAudioUnit` subclass, `AUv3FilterDemo`, to make it able
+         Register our `AUAudioUnit` subclass, `GameBoyAudioSynthDemo`, to make it able
          to be instantiated via its component description.
 
          Note that this registration is local to this process.
          */
-        AUAudioUnit.registerSubclass(AUv3FilterDemo.self,
+        AUAudioUnit.registerSubclass(GameBoyAudioSynthDemo.self,
                                      as: componentDescription,
                                      name: componentName,
                                      version: UInt32.max)
@@ -121,28 +121,28 @@ public class AudioUnitManager {
             guard error == nil, let audioUnit = audioUnit else {
                 fatalError("Could not instantiate audio unit: \(String(describing: error))")
             }
-            self.audioUnit = audioUnit.auAudioUnit as? AUv3FilterDemo
+            self.audioUnit = audioUnit.auAudioUnit as? GameBoyAudioSynthDemo
             self.connectParametersToControls()
             self.playEngine.connect(avAudioUnit: audioUnit)
         }
     }
 
     // Loads the audio unit's view controller from the extension bundle.
-    private func loadViewController() -> AUv3FilterDemoViewController {
+    private func loadViewController() -> GameBoyAudioSynthDemoViewController {
         // Locate the app extension's bundle in the main app's PlugIns directory
-        guard let url = Bundle.main.builtInPlugInsURL?.appendingPathComponent("AUv3FilterExtension.appex"),
+        guard let url = Bundle.main.builtInPlugInsURL?.appendingPathComponent("GameBoyAudioSynthExtension.appex"),
             let appexBundle = Bundle(url: url) else {
                 fatalError("Could not find app extension bundle URL.")
         }
 
         #if os(iOS)
         let storyboard = Storyboard(name: "MainInterface", bundle: appexBundle)
-        guard let controller = storyboard.instantiateInitialViewController() as? AUv3FilterDemoViewController else {
-            fatalError("Unable to instantiate AUv3FilterDemoViewController")
+        guard let controller = storyboard.instantiateInitialViewController() as? GameBoyAudioSynthDemoViewController else {
+            fatalError("Unable to instantiate GameBoyAudioSynthDemoViewController")
         }
         return controller
         #elseif os(macOS)
-        return AUv3FilterDemoViewController(nibName: "AUv3FilterDemoViewController", bundle: appexBundle)
+        return GameBoyAudioSynthDemoViewController(nibName: "GameBoyAudioSynthDemoViewController", bundle: appexBundle)
         #endif
     }
 
@@ -153,14 +153,14 @@ public class AudioUnitManager {
     private func connectParametersToControls() {
 
         guard let audioUnit = audioUnit else {
-            fatalError("Couldn't locate AUv3FilterDemo")
+            fatalError("Couldn't locate GameBoyAudioSynthDemo")
         }
 
         viewController.audioUnit = audioUnit
 
         // Find our parameters by their identifiers.
         guard let parameterTree = audioUnit.parameterTree else {
-            fatalError("AUv3FilterDemo does not define any parameters.")
+            fatalError("GameBoyAudioSynthDemo does not define any parameters.")
         }
 
         cutoffParameter = parameterTree.value(forKey: "cutoff") as? AUParameter

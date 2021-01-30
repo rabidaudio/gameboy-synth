@@ -7,7 +7,7 @@ Adapter object providing a Swift-accessible interface to the filter's underlying
 
 #import <AudioToolbox/AudioToolbox.h>
 
-@class AUv3FilterDemoViewController;
+@class GameBoyAudioSynthDemoViewController;
 
 NS_ASSUME_NONNULL_BEGIN
 
