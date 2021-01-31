@@ -28,9 +28,6 @@ static int const sampleRate = 44100;
 - (instancetype)init {
 
     if (self = [super init]) {
-        // TODO: should we match the frames for the 60fps of the APU?
-        // NOTE: Ideally we'd use standard 16bit int PCM format, but AVAudioPCMBuffer
-        // operates on deinterleaved Float32
         AVAudioFormat* format = [[AVAudioFormat alloc] initStandardFormatWithSampleRate:sampleRate channels:channels];
         _buffer.init(format, channels);
         // Set sample rate and check for out of memory error
@@ -105,22 +102,6 @@ static int const sampleRate = 44100;
         }
         // whichever buffer we're using, make sure PCMBuffer has the pointer to it
         buffer->mutableAudioBufferList = outAudioBufferList;
-
-        static int delay;
-        if ( --delay <= 0 )
-        {
-            delay = 12;
-
-            // Start a new random tone
-            int chan = rand() & 0x11;
-            apu->write_register( 0xff26, 0x80 );
-            apu->write_register( 0xff25, chan ? chan : 0x11 );
-            apu->write_register( 0xff11, 0x80 );
-            int freq = (rand() & 0x3ff) + 0x300;
-            apu->write_register( 0xff13, freq & 0xff );
-            apu->write_register( 0xff12, 0xf1 );
-            apu->write_register( 0xff14, (freq >> 8) | 0x80 );
-        }
 
         // Generate 1/60 second of sound into APU's sample buffer
         while (apu->samples_avail() < frameCount) {

@@ -15,9 +15,19 @@
 #include <stdio.h>
 
 // Reusable non-ObjC class, accessible from render thread.
+// NOTE: Ideally we'd use standard 16bit int PCM format, but AVAudioPCMBuffer
+// operates on deinterleaved Float32.
+// So instead of a normal double-buffer, we've got to triple-buffer. We use
+// NSMutableData to store the int16 output of the APU, then we convert that to
+// float32 into the AVAudioPCMBuffer.
+// TODO: NSMutableData came from when this logic was in obj-c, but now that
+// we're in C land we are free to malloc instead. I don't know enough about
+// the platform to know the consequences of this either way, so I'm leaving
+// it for now, I don't believe it's hurting anything.
 struct PCMBuffer {
     AUAudioUnitBus* bus = nullptr;
-    AUAudioFrameCount maxFrames = 512;
+
+    AUAudioFrameCount maxFrames;
 
     AVAudioPCMBuffer* float32PcmBuffer = nullptr;
     NSMutableData* int16PcmBuffer = nullptr;
@@ -26,7 +36,9 @@ struct PCMBuffer {
     AVAudioFormat* outFormat = nullptr;
 
     void init(AVAudioFormat* defaultFormat, AVAudioChannelCount maxChannels) {
-        maxFrames = 512;
+        // set the default frameCount to match the 60 fps of the APU.
+        // The OS can request a different frameCount before allocateRenderResources
+        maxFrames = defaultFormat.sampleRate/60;
         outFormat = defaultFormat;
         float32PcmBuffer = nullptr;
         int16PcmBuffer = nullptr;
