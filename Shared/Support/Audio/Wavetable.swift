@@ -14,7 +14,7 @@ typealias Wavetable = [UInt8]
 let sinWavetable: Wavetable = {
     Array(0..<32).map { i in
         let s = sin(2 * Double.pi * Double(i) / 32)
-        return UInt8((s * 8) + 4)
+        return UInt8((s * 8) + 8)
     }
 }()
 

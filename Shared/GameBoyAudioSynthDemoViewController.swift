@@ -152,8 +152,8 @@ public class GameBoyAudioSynthDemoViewController: AUViewController {
         filterView.resonance = resonanceParameter.value
 
         // Set latest text field values
-        frequencyTextField.text = cutoffParameter.string(fromValue: nil)
-        resonanceTextField.text = resonanceParameter.string(fromValue: nil)
+//        frequencyTextField.text = cutoffParameter.string(fromValue: nil)
+//        resonanceTextField.text = resonanceParameter.string(fromValue: nil)
 
         updateFilterViewFrequencyAndMagnitudes()
     }
@@ -167,9 +167,9 @@ public class GameBoyAudioSynthDemoViewController: AUViewController {
     }
 
     func update(parameter: AUParameter, with textField: _TextField) {
-        guard let value = (textField.text as NSString?)?.floatValue else { return }
-        parameter.value = value
-        textField.text = parameter.string(fromValue: nil)
+//        guard let value = (textField.text as NSString?)?.floatValue else { return }
+//        parameter.value = value
+//        textField.text = parameter.string(fromValue: nil)
     }
 
     // MARK: View Configuration Selection

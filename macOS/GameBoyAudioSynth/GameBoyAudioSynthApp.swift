@@ -7,12 +7,13 @@
 //
 
 import SwiftUI
+import GameBoyAudioSynthFramework
 
 @main
 struct GameBoyAudioSynthApp: App {
     var body: some Scene {
         WindowGroup {
-            WavetableDrawView(data: sinWavetable)
+            WavetableDrawView(wavetable: sinWavetable)
         }
     }
 }
