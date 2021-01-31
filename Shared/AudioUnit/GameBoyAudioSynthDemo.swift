@@ -53,12 +53,7 @@ public class GameBoyAudioSynthDemo: AUAudioUnit {
 
     public override var maximumFramesToRender: AUAudioFrameCount {
         get { return apu.maximumFramesToRender }
-        set {
-            /* TODO allow modification */
-//            if newValue != apu.maximumFramesToRender {
-//                fatalError("Cannot change maximumFramesToRender")
-//            }
-        }
+        set { apu.maximumFramesToRender = newValue }
     }
 
     public override var factoryPresets: [AUAudioUnitPreset] {
