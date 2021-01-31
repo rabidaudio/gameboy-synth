@@ -47,8 +47,6 @@
 		0B9F82CC25C5FA7C00EFC784 /* demo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0B9F829B25C5FA7B00EFC784 /* demo.cpp */; };
 		0B9F82CF25C5FA7C00EFC784 /* readme.txt in Resources */ = {isa = PBXBuildFile; fileRef = 0B9F829D25C5FA7B00EFC784 /* readme.txt */; };
 		0B9F82D025C5FA7C00EFC784 /* readme.txt in Resources */ = {isa = PBXBuildFile; fileRef = 0B9F829D25C5FA7B00EFC784 /* readme.txt */; };
-		0B9F82D125C5FA7C00EFC784 /* LGPL.txt in Resources */ = {isa = PBXBuildFile; fileRef = 0B9F829E25C5FA7B00EFC784 /* LGPL.txt */; };
-		0B9F82D225C5FA7C00EFC784 /* LGPL.txt in Resources */ = {isa = PBXBuildFile; fileRef = 0B9F829E25C5FA7B00EFC784 /* LGPL.txt */; };
 		0B9F82DB25C5FA7C00EFC784 /* usage.txt in Resources */ = {isa = PBXBuildFile; fileRef = 0B9F82A425C5FA7B00EFC784 /* usage.txt */; };
 		0B9F82DC25C5FA7C00EFC784 /* usage.txt in Resources */ = {isa = PBXBuildFile; fileRef = 0B9F82A425C5FA7B00EFC784 /* usage.txt */; };
 		0B9F82E625C5FF3500EFC784 /* config.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B9F82E525C5FF3500EFC784 /* config.h */; };
@@ -205,10 +203,10 @@
 		0B9F829A25C5FA7B00EFC784 /* changes.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = changes.txt; sourceTree = "<group>"; };
 		0B9F829B25C5FA7B00EFC784 /* demo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = demo.cpp; sourceTree = "<group>"; };
 		0B9F829D25C5FA7B00EFC784 /* readme.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = readme.txt; sourceTree = "<group>"; };
-		0B9F829E25C5FA7B00EFC784 /* LGPL.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LGPL.txt; sourceTree = "<group>"; };
 		0B9F82A425C5FA7B00EFC784 /* usage.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = usage.txt; sourceTree = "<group>"; };
 		0B9F82E525C5FF3500EFC784 /* config.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = config.h; sourceTree = "<group>"; };
 		0B9F831125C6430D00EFC784 /* PCMBuffer.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = PCMBuffer.hpp; sourceTree = "<group>"; };
+		0B9F832725C65D4F00EFC784 /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		7E56CF207E56CEE000000001 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		C4201A2822403120006E4333 /* GameBoyAudioSynthDemoViewControllerExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameBoyAudioSynthDemoViewControllerExtension.swift; sourceTree = "<group>"; };
 		C433F56022404C7C00F1B750 /* GameBoyAudioSynthDemoViewControllerExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameBoyAudioSynthDemoViewControllerExtension.swift; sourceTree = "<group>"; };
@@ -258,7 +256,6 @@
 		C4F0772D223AACBB008FFF06 /* GameBoyAudioSynthDemoParameters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameBoyAudioSynthDemoParameters.swift; sourceTree = "<group>"; };
 		C4F07730223AC4F5008FFF06 /* GameBoyAudioSynthDemoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameBoyAudioSynthDemoViewController.swift; sourceTree = "<group>"; };
 		C4F07734223ACB91008FFF06 /* Synth.aif */ = {isa = PBXFileReference; lastKnownFileType = file; path = Synth.aif; sourceTree = "<group>"; };
-		C6DC5208287CAC940AAA55F3 /* LICENSE.txt */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = LICENSE.txt; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -323,7 +320,6 @@
 				0B9F829A25C5FA7B00EFC784 /* changes.txt */,
 				0B9F829B25C5FA7B00EFC784 /* demo.cpp */,
 				0B9F829D25C5FA7B00EFC784 /* readme.txt */,
-				0B9F829E25C5FA7B00EFC784 /* LGPL.txt */,
 				0B9F82A425C5FA7B00EFC784 /* usage.txt */,
 			);
 			path = "Gb_Snd_Emu-0.1.4";
@@ -361,13 +357,13 @@
 			isa = PBXGroup;
 			children = (
 				7E56CF207E56CEE000000001 /* README.md */,
+				0B9F832725C65D4F00EFC784 /* LICENSE */,
 				C4BEE79622236A29001E6B6D /* iOS */,
 				C4BEE7B622236A58001E6B6D /* macOS */,
 				C4BEE7D522236E99001E6B6D /* Shared */,
 				C437FE3B222367A6008D6C09 /* Products */,
 				C4BEE81822237394001E6B6D /* Frameworks */,
 				D55DBFD8DA1FC79638BF32E8 /* Configuration */,
-				ECA9FA9DFCF33001E8CD2F51 /* LICENSE */,
 			);
 			sourceTree = "<group>";
 		};
@@ -558,14 +554,6 @@
 			children = (
 			);
 			name = Configuration;
-			sourceTree = "<group>";
-		};
-		ECA9FA9DFCF33001E8CD2F51 /* LICENSE */ = {
-			isa = PBXGroup;
-			children = (
-				C6DC5208287CAC940AAA55F3 /* LICENSE.txt */,
-			);
-			path = LICENSE;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -816,7 +804,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0B9F82D125C5FA7C00EFC784 /* LGPL.txt in Resources */,
 				0B9F82C925C5FA7C00EFC784 /* changes.txt in Resources */,
 				0B9F82A525C5FA7C00EFC784 /* notes.txt in Resources */,
 				0B9F82CF25C5FA7C00EFC784 /* readme.txt in Resources */,
@@ -852,7 +839,6 @@
 				0B9F82DC25C5FA7C00EFC784 /* usage.txt in Resources */,
 				0B9F82CA25C5FA7C00EFC784 /* changes.txt in Resources */,
 				C4F07736223ACB91008FFF06 /* Synth.aif in Resources */,
-				0B9F82D225C5FA7C00EFC784 /* LGPL.txt in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
