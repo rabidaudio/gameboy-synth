@@ -8,24 +8,6 @@
 
 import SwiftUI
 
-class WavetableController: ObservableObject {
-    @Published var wavetable: Wavetable
-    @Published var defaultWavetable: DefaultWavetables {
-        didSet {
-            self.wavetable = defaultWavetable.wavetable
-        }
-    }
-
-    init(wavetable: Wavetable, defaultWavetable: DefaultWavetables = .sine) {
-        self.wavetable = wavetable
-        self.defaultWavetable = defaultWavetable
-    }
-
-    convenience init(defaultWavetable: DefaultWavetables = .sine) {
-        self.init(wavetable: defaultWavetable.wavetable, defaultWavetable: defaultWavetable)
-    }
-}
-
 struct DrawableWavetableView: View {
     @ObservedObject var wavetableController = WavetableController()
 

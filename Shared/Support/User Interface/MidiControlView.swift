@@ -8,15 +8,8 @@
 
 import SwiftUI
 
-struct MidiConfig {
-    var enabled: Bool = false
-    @BoundedTo(1...4) var voice: Int = 1
-    @BoundedTo(1...2) var channel: Int = 1
-    @BoundedTo(-48...48) var transpose: Int = 0
-}
-
 struct MidiControlView: View {
-    @State var config: MidiConfig
+    @Binding var config: MidiConfig
 
     var body: some View {
         HStack(content: {
@@ -48,7 +41,15 @@ struct MidiControlView: View {
 
 struct PMidiControlViewMidiControlView_Previews: PreviewProvider {
     static var previews: some View {
-        MidiControlView(config: MidiConfig())
-        MidiControlView(config: MidiConfig(enabled: true))
+        MidiControlView(config: .constant(MidiConfig()))
+        MidiControlView(config: .constant(MidiConfig(enabled: true)))
+    }
+}
+
+struct MainView : View {
+    @ObservedObject var state: SynthState
+
+    var body: some View {
+        MidiControlView(config: $state.osc1MidiConfig)
     }
 }

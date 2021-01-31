@@ -15,6 +15,8 @@
 		0B10A99525C73D6100491F04 /* MidiControlView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B9F832825C676CD00EFC784 /* MidiControlView.swift */; };
 		0B10A99E25C73D6E00491F04 /* PropertyWrappers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B9F837225C6925300EFC784 /* PropertyWrappers.swift */; };
 		0B10A9A325C73D6F00491F04 /* PropertyWrappers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B9F837225C6925300EFC784 /* PropertyWrappers.swift */; };
+		0B10A9C125C741AC00491F04 /* Controller.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B10A9C025C741AC00491F04 /* Controller.swift */; };
+		0B10A9C225C741AC00491F04 /* Controller.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B10A9C025C741AC00491F04 /* Controller.swift */; };
 		0B9F82A525C5FA7C00EFC784 /* notes.txt in Resources */ = {isa = PBXBuildFile; fileRef = 0B9F828625C5FA7B00EFC784 /* notes.txt */; };
 		0B9F82A625C5FA7C00EFC784 /* notes.txt in Resources */ = {isa = PBXBuildFile; fileRef = 0B9F828625C5FA7B00EFC784 /* notes.txt */; };
 		0B9F82A725C5FA7C00EFC784 /* static_assert.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 0B9F828825C5FA7B00EFC784 /* static_assert.hpp */; };
@@ -94,12 +96,12 @@
 		C4F004A22239B1E10014E248 /* ApuAdapter.h in Headers */ = {isa = PBXBuildFile; fileRef = C4F0049F2239B1E10014E248 /* ApuAdapter.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		C4F004A32239B1E10014E248 /* ApuAdapter.mm in Sources */ = {isa = PBXBuildFile; fileRef = C4F004A02239B1E10014E248 /* ApuAdapter.mm */; };
 		C4F004A42239B1E10014E248 /* ApuAdapter.mm in Sources */ = {isa = PBXBuildFile; fileRef = C4F004A02239B1E10014E248 /* ApuAdapter.mm */; };
-		C4F004A62239B2070014E248 /* GameBoyAudioSynthDemo.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4F004A52239B2070014E248 /* GameBoyAudioSynthDemo.swift */; };
-		C4F004A72239B2070014E248 /* GameBoyAudioSynthDemo.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4F004A52239B2070014E248 /* GameBoyAudioSynthDemo.swift */; };
-		C4F0772E223AACBB008FFF06 /* GameBoyAudioSynthDemoParameters.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4F0772D223AACBB008FFF06 /* GameBoyAudioSynthDemoParameters.swift */; };
-		C4F0772F223AACBB008FFF06 /* GameBoyAudioSynthDemoParameters.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4F0772D223AACBB008FFF06 /* GameBoyAudioSynthDemoParameters.swift */; };
-		C4F07731223AC4F5008FFF06 /* GameBoyAudioSynthDemoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4F07730223AC4F5008FFF06 /* GameBoyAudioSynthDemoViewController.swift */; };
-		C4F07732223AC4F5008FFF06 /* GameBoyAudioSynthDemoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4F07730223AC4F5008FFF06 /* GameBoyAudioSynthDemoViewController.swift */; };
+		C4F004A62239B2070014E248 /* GameBoyAudioSynth.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4F004A52239B2070014E248 /* GameBoyAudioSynth.swift */; };
+		C4F004A72239B2070014E248 /* GameBoyAudioSynth.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4F004A52239B2070014E248 /* GameBoyAudioSynth.swift */; };
+		C4F0772E223AACBB008FFF06 /* SynthParameters.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4F0772D223AACBB008FFF06 /* SynthParameters.swift */; };
+		C4F0772F223AACBB008FFF06 /* SynthParameters.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4F0772D223AACBB008FFF06 /* SynthParameters.swift */; };
+		C4F07731223AC4F5008FFF06 /* GameBoyAudioSynthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4F07730223AC4F5008FFF06 /* GameBoyAudioSynthViewController.swift */; };
+		C4F07732223AC4F5008FFF06 /* GameBoyAudioSynthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4F07730223AC4F5008FFF06 /* GameBoyAudioSynthViewController.swift */; };
 		C4F07735223ACB91008FFF06 /* Synth.aif in Resources */ = {isa = PBXBuildFile; fileRef = C4F07734223ACB91008FFF06 /* Synth.aif */; };
 		C4F07736223ACB91008FFF06 /* Synth.aif in Resources */ = {isa = PBXBuildFile; fileRef = C4F07734223ACB91008FFF06 /* Synth.aif */; };
 /* End PBXBuildFile section */
@@ -185,6 +187,7 @@
 /* Begin PBXFileReference section */
 		0B10A95425C72CBE00491F04 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		0B10A97125C737E200491F04 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+		0B10A9C025C741AC00491F04 /* Controller.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Controller.swift; sourceTree = "<group>"; };
 		0B9F828625C5FA7B00EFC784 /* notes.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = notes.txt; sourceTree = "<group>"; };
 		0B9F828825C5FA7B00EFC784 /* static_assert.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = static_assert.hpp; sourceTree = "<group>"; };
 		0B9F828925C5FA7B00EFC784 /* config.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = config.hpp; sourceTree = "<group>"; };
@@ -249,9 +252,9 @@
 		C4CE62D8222601070055FE6B /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		C4F0049F2239B1E10014E248 /* ApuAdapter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ApuAdapter.h; sourceTree = "<group>"; };
 		C4F004A02239B1E10014E248 /* ApuAdapter.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = ApuAdapter.mm; sourceTree = "<group>"; };
-		C4F004A52239B2070014E248 /* GameBoyAudioSynthDemo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameBoyAudioSynthDemo.swift; sourceTree = "<group>"; };
-		C4F0772D223AACBB008FFF06 /* GameBoyAudioSynthDemoParameters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameBoyAudioSynthDemoParameters.swift; sourceTree = "<group>"; };
-		C4F07730223AC4F5008FFF06 /* GameBoyAudioSynthDemoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameBoyAudioSynthDemoViewController.swift; sourceTree = "<group>"; };
+		C4F004A52239B2070014E248 /* GameBoyAudioSynth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameBoyAudioSynth.swift; sourceTree = "<group>"; };
+		C4F0772D223AACBB008FFF06 /* SynthParameters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SynthParameters.swift; sourceTree = "<group>"; };
+		C4F07730223AC4F5008FFF06 /* GameBoyAudioSynthViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameBoyAudioSynthViewController.swift; sourceTree = "<group>"; };
 		C4F07734223ACB91008FFF06 /* Synth.aif */ = {isa = PBXFileReference; lastKnownFileType = file; path = Synth.aif; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -464,7 +467,7 @@
 			isa = PBXGroup;
 			children = (
 				C4BEE7E022236E99001E6B6D /* AudioUnitManager.swift */,
-				C4F07730223AC4F5008FFF06 /* GameBoyAudioSynthDemoViewController.swift */,
+				C4F07730223AC4F5008FFF06 /* GameBoyAudioSynthViewController.swift */,
 				C4BEE7E122236E99001E6B6D /* AudioUnit */,
 				C4F07733223AC506008FFF06 /* Support */,
 			);
@@ -474,8 +477,8 @@
 		C4BEE7E122236E99001E6B6D /* AudioUnit */ = {
 			isa = PBXGroup;
 			children = (
-				C4F004A52239B2070014E248 /* GameBoyAudioSynthDemo.swift */,
-				C4F0772D223AACBB008FFF06 /* GameBoyAudioSynthDemoParameters.swift */,
+				C4F004A52239B2070014E248 /* GameBoyAudioSynth.swift */,
+				C4F0772D223AACBB008FFF06 /* SynthParameters.swift */,
 				C4BEE7E422236E99001E6B6D /* Support */,
 			);
 			path = AudioUnit;
@@ -511,6 +514,7 @@
 				C4F07734223ACB91008FFF06 /* Synth.aif */,
 				C4A3D65A223FF12A002784D4 /* SimplePlayEngine.swift */,
 				0B9F838025C697E900EFC784 /* Wavetable.swift */,
+				0B10A9C025C741AC00491F04 /* Controller.swift */,
 			);
 			path = Audio;
 			sourceTree = "<group>";
@@ -852,9 +856,9 @@
 			files = (
 				0B9F82C725C5FA7C00EFC784 /* Basic_Gb_Apu.cpp in Sources */,
 				0B9F83FD25C6CA3C00EFC784 /* Extensions.swift in Sources */,
-				C4F07731223AC4F5008FFF06 /* GameBoyAudioSynthDemoViewController.swift in Sources */,
+				C4F07731223AC4F5008FFF06 /* GameBoyAudioSynthViewController.swift in Sources */,
 				0B9F838125C697E900EFC784 /* Wavetable.swift in Sources */,
-				C4F004A62239B2070014E248 /* GameBoyAudioSynthDemo.swift in Sources */,
+				C4F004A62239B2070014E248 /* GameBoyAudioSynth.swift in Sources */,
 				C4BEE7F822236F44001E6B6D /* AudioUnitManager.swift in Sources */,
 				0B10A9A325C73D6F00491F04 /* PropertyWrappers.swift in Sources */,
 				0B9F82CB25C5FA7C00EFC784 /* demo.cpp in Sources */,
@@ -863,7 +867,8 @@
 				0B9F82BB25C5FA7C00EFC784 /* Gb_Apu.cpp in Sources */,
 				C4A3D65B223FF12A002784D4 /* SimplePlayEngine.swift in Sources */,
 				0B9F82B525C5FA7C00EFC784 /* Gb_Oscs.cpp in Sources */,
-				C4F0772E223AACBB008FFF06 /* GameBoyAudioSynthDemoParameters.swift in Sources */,
+				C4F0772E223AACBB008FFF06 /* SynthParameters.swift in Sources */,
+				0B10A9C125C741AC00491F04 /* Controller.swift in Sources */,
 				0B9F82B725C5FA7C00EFC784 /* Blip_Buffer.cpp in Sources */,
 				0B10A93C25C7283700491F04 /* DrawableWavetableView.swift in Sources */,
 				C4F004A32239B1E10014E248 /* ApuAdapter.mm in Sources */,
@@ -893,20 +898,21 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C4F0772F223AACBB008FFF06 /* GameBoyAudioSynthDemoParameters.swift in Sources */,
+				C4F0772F223AACBB008FFF06 /* SynthParameters.swift in Sources */,
 				0B9F83FE25C6CA3C00EFC784 /* Extensions.swift in Sources */,
 				0B9F82B425C5FA7C00EFC784 /* Multi_Buffer.cpp in Sources */,
 				0B9F82BC25C5FA7C00EFC784 /* Gb_Apu.cpp in Sources */,
-				C4F07732223AC4F5008FFF06 /* GameBoyAudioSynthDemoViewController.swift in Sources */,
+				C4F07732223AC4F5008FFF06 /* GameBoyAudioSynthViewController.swift in Sources */,
 				0B9F82C825C5FA7C00EFC784 /* Basic_Gb_Apu.cpp in Sources */,
 				0B10A99E25C73D6E00491F04 /* PropertyWrappers.swift in Sources */,
 				C4BEE7FB22236F46001E6B6D /* AudioUnitManager.swift in Sources */,
 				0B9F831525C6430D00EFC784 /* PCMBuffer.hpp in Sources */,
-				C4F004A72239B2070014E248 /* GameBoyAudioSynthDemo.swift in Sources */,
+				C4F004A72239B2070014E248 /* GameBoyAudioSynth.swift in Sources */,
 				0B9F82B625C5FA7C00EFC784 /* Gb_Oscs.cpp in Sources */,
 				0B9F82B825C5FA7C00EFC784 /* Blip_Buffer.cpp in Sources */,
 				C4A3D65C223FF12A002784D4 /* SimplePlayEngine.swift in Sources */,
 				0B9F838225C697E900EFC784 /* Wavetable.swift in Sources */,
+				0B10A9C225C741AC00491F04 /* Controller.swift in Sources */,
 				0B9F82CC25C5FA7C00EFC784 /* demo.cpp in Sources */,
 				0B10A94125C7283800491F04 /* DrawableWavetableView.swift in Sources */,
 				C4F004A42239B1E10014E248 /* ApuAdapter.mm in Sources */,

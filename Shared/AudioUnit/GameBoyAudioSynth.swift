@@ -1,5 +1,5 @@
 //
-//  GameBoyAudioSynthDemo.swift
+//  GameBoyAudioSynth.swift
 //  GameBoyAudioSynth
 //
 //  Created by Charles Julian Knight on 1/31/21.
@@ -19,21 +19,25 @@ fileprivate extension AUAudioUnitPreset {
     }
 }
 
-public class GameBoyAudioSynthDemo: AUAudioUnit {
+public class GameBoyAudioSynth: AUAudioUnit {
 
     private var format: AVAudioFormat {
         return apu.format
     }
 
-    private let parameters: GameBoyAudioSynthDemoParameters
-
+    private var parameters: SynthParameters!
     private let apu = ApuAdapter()
 
     private var outputBus: AUAudioUnitBus!
     private var outputBusArray: AUAudioUnitBusArray!
 
     // The owning view controller
-    weak var viewController: GameBoyAudioSynthDemoViewController?
+    weak var viewController: GameBoyAudioSynthViewController? {
+        didSet {
+            guard let state = viewController?.state else { return }
+            parameters = SynthParameters(state: state)
+        }
+    }
 
     public override var outputBusses: AUAudioUnitBusArray {
         return outputBusArray
@@ -78,24 +82,25 @@ public class GameBoyAudioSynthDemo: AUAudioUnit {
                 _currentPreset = nil
                 return
             }
-            
-            // Factory presets need to always have a number >= 0.
-            if preset.number >= 0 {
-                let values = factoryPresetValues[preset.number]
-                parameters.setParameterValues(cutoff: values.cutoff, resonance: values.resonance)
-                _currentPreset = preset
-            }
-            // User presets are always negative.
-            else {
-                // Attempt to restore the archived state for this user preset.
-                do {
-                    fullStateForDocument = try presetState(for: preset)
-                    // Set the currentPreset after we've successfully restored the state.
-                    _currentPreset = preset
-                } catch {
-                    print("Unable to restore set for preset \(preset.name)")
-                }
-            }
+
+            // TODO: initalize from presets
+//            // Factory presets need to always have a number >= 0.
+//            if preset.number >= 0 {
+//                let values = factoryPresetValues[preset.number]
+//                parameters.setParameterValues(cutoff: values.cutoff, resonance: values.resonance)
+//                _currentPreset = preset
+//            }
+//            // User presets are always negative.
+//            else {
+//                // Attempt to restore the archived state for this user preset.
+//                do {
+//                    fullStateForDocument = try presetState(for: preset)
+//                    // Set the currentPreset after we've successfully restored the state.
+//                    _currentPreset = preset
+//                } catch {
+//                    print("Unable to restore set for preset \(preset.name)")
+//                }
+//            }
         }
     }
     
@@ -106,7 +111,6 @@ public class GameBoyAudioSynthDemo: AUAudioUnit {
 
     public override init(componentDescription: AudioComponentDescription,
                          options: AudioComponentInstantiationOptions = []) throws {
-        parameters = GameBoyAudioSynthDemoParameters()
         try super.init(componentDescription: componentDescription, options: options)
         outputBus = try AUAudioUnitBus(format: format)
         outputBusArray = AUAudioUnitBusArray(audioUnit: self,

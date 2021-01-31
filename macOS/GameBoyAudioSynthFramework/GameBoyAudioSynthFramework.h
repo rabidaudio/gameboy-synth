@@ -15,5 +15,5 @@ FOUNDATION_EXPORT const unsigned char GameBoyAudioSynthFramework_macOSVersionStr
 
 // In this header, you should import all the public headers of your framework using statements like #import <FilterDemoFramework/PublicHeader.h>
 #import <GameBoyAudioSynthFramework/ApuAdapter.h>
-@class GameBoyAudioSynthDemo;
-@class GameBoyAudioSynthDemoViewController;
+@class GameBoyAudioSynth;
+@class GameBoyAudioSynthViewController;

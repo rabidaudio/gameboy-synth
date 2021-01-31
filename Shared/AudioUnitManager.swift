@@ -30,7 +30,7 @@ public protocol AUManagerDelegate: AnyObject {
 public class AudioUnitManager {
 
     /// The user-selected audio unit.
-    private var audioUnit: GameBoyAudioSynthDemo?
+    private var audioUnit: GameBoyAudioSynth?
 
     public weak var delegate: AUManagerDelegate? {
         didSet {
@@ -39,7 +39,7 @@ public class AudioUnitManager {
         }
     }
 
-    public private(set) var viewController: GameBoyAudioSynthDemoViewController!
+    public private(set) var viewController: GameBoyAudioSynthViewController!
 
     public var cutoffValue: Float = 0.0 {
         didSet {
@@ -100,35 +100,29 @@ public class AudioUnitManager {
         return componentDescription
     }()
 
-    private let componentName = "Demo: GameBoyAudioSynth"
+    private let componentName = "GameBoyAudioSynth"
+    private let version: UInt32 = 1
 
     public init() {
-
         viewController = loadViewController()
 
-        /*
-         Register our `AUAudioUnit` subclass, `GameBoyAudioSynthDemo`, to make it able
-         to be instantiated via its component description.
-
-         Note that this registration is local to this process.
-         */
-        AUAudioUnit.registerSubclass(GameBoyAudioSynthDemo.self,
+        AUAudioUnit.registerSubclass(GameBoyAudioSynth.self,
                                      as: componentDescription,
                                      name: componentName,
-                                     version: UInt32.max)
+                                     version: version)
 
         AVAudioUnit.instantiate(with: componentDescription) { audioUnit, error in
             guard error == nil, let audioUnit = audioUnit else {
                 fatalError("Could not instantiate audio unit: \(String(describing: error))")
             }
-            self.audioUnit = audioUnit.auAudioUnit as? GameBoyAudioSynthDemo
+            self.audioUnit = audioUnit.auAudioUnit as? GameBoyAudioSynth
             self.connectParametersToControls()
             self.playEngine.connect(avAudioUnit: audioUnit)
         }
     }
 
     // Loads the audio unit's view controller from the extension bundle.
-    private func loadViewController() -> GameBoyAudioSynthDemoViewController {
+    private func loadViewController() -> GameBoyAudioSynthViewController {
         // Locate the app extension's bundle in the main app's PlugIns directory
         guard let url = Bundle.main.builtInPlugInsURL?.appendingPathComponent("GameBoyAudioSynthExtension.appex"),
             let appexBundle = Bundle(url: url) else {
@@ -143,7 +137,7 @@ public class AudioUnitManager {
 //        }
 //        return controller
         #elseif os(macOS)
-        return GameBoyAudioSynthDemoViewController(nibName: nil, bundle: appexBundle)
+        return GameBoyAudioSynthViewController(nibName: nil, bundle: appexBundle)
         #endif
     }
 
@@ -154,14 +148,14 @@ public class AudioUnitManager {
     private func connectParametersToControls() {
 
         guard let audioUnit = audioUnit else {
-            fatalError("Couldn't locate GameBoyAudioSynthDemo")
+            fatalError("Couldn't locate GameBoyAudioSynth")
         }
 
         viewController.audioUnit = audioUnit
 
         // Find our parameters by their identifiers.
         guard let parameterTree = audioUnit.parameterTree else {
-            fatalError("GameBoyAudioSynthDemo does not define any parameters.")
+            fatalError("GameBoyAudioSynth does not define any parameters.")
         }
 
         cutoffParameter = parameterTree.value(forKey: "cutoff") as? AUParameter
