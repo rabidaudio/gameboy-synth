@@ -15,7 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic) AUAudioFrameCount maximumFramesToRender;
 @property (nonatomic, readonly) AUAudioUnitBus *outputBus;
-@property (nonatomic) AVAudioFormat *format;
+@property (nonatomic, readonly) AVAudioFormat *format;
 
 - (void)write:(unsigned char)value toRegister:(unsigned int)addr;
 - (unsigned char)readFromRegister:(unsigned int)addr;

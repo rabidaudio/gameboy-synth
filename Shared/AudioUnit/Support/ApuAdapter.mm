@@ -13,30 +13,26 @@ Adapter object providing a Swift-accessible interface to the filter's underlying
 #import "ApuAdapter.h"
 #import "PCMBuffer.hpp"
 
+// This obj-c class acts as a wrapper around the Apu and a C struct containing audio buffers.
+// This allows Swift to access the functionality, and avoids Swift/obj-c memory behavior (ARC
+// and whatever else) from making allocations during the render loop.
 @implementation ApuAdapter {
     // C++ members need to be ivars; they would be copied on access if they were properties.
     Basic_Gb_Apu _apu;
-    BufferedAudioBus _buffer;
-//    NSMutableData* _data;
-//    AVAudioPCMBuffer* _outbuf;
-//    AUAudioUnitBus* _outputBus;
-//    AVAudioFormat* _format;
-    AVAudioFrameCount _maxFrameCount;
+    PCMBuffer _buffer;
 }
 
+static int const channels = 2;
 static int const sampleRate = 44100;
 
 - (instancetype)init {
 
     if (self = [super init]) {
         // TODO: should we match the frames for the 60fps of the APU?
-        _maxFrameCount = 512;
         // NOTE: Ideally we'd use standard 16bit int PCM format, but AVAudioPCMBuffer
         // operates on deinterleaved Float32
-        _format = [[AVAudioFormat alloc] initStandardFormatWithSampleRate:sampleRate channels:2];
-//        _outputBus = [[AUAudioUnitBus alloc] initWithFormat:_format error:nil];
-        _buffer.init(_format, 2);
-
+        AVAudioFormat* format = [[AVAudioFormat alloc] initStandardFormatWithSampleRate:sampleRate channels:channels];
+        _buffer.init(format, channels);
         // Set sample rate and check for out of memory error
         if (_apu.set_sample_rate(sampleRate) != blargg_success) {
             return nil;
@@ -54,34 +50,22 @@ static int const sampleRate = 44100;
 }
 
 - (AUAudioFrameCount)maximumFramesToRender {
-    return _maxFrameCount;
+    return _buffer.maxFrames;
 }
 
 - (void)setMaximumFramesToRender:(AUAudioFrameCount)maximumFramesToRender {
-    
-//    if (_data != nullptr && maximumFramesToRender > _maxFrameCount) {
-////        panic("cant change the number of frames after buffer has been allocated");
-//    }
-
-    _maxFrameCount = maximumFramesToRender;
+    _buffer.maxFrames = maximumFramesToRender;
 }
 
 - (AVAudioFormat *)format {
-    return _format;
+    return _buffer.outFormat;
 }
 
 - (void)allocateRenderResources {
-    // TODO: ideally we'd wait to allocate the buffer until here, but the framework calls `internalRenderBlock`
-    // before `allocateRenderResources` so if we do the pointers will be null
-
-//    _data = [NSMutableData dataWithLength:sizeof(blip_sample_t) * _maxFrameCount];
-//    _outbuf = [[AVAudioPCMBuffer alloc] initWithPCMFormat:_format frameCapacity:_maxFrameCount];
-    _buffer.allocateRenderResources(self.maximumFramesToRender);
+    _buffer.allocateRenderResources();
 }
 
 - (void)deallocateRenderResources {
-//    _data = nullptr;
-//    _outbuf = nullptr;
     _buffer.deallocateRenderResources();
 }
 
@@ -96,9 +80,7 @@ static int const sampleRate = 44100;
      */
     // Specify captured objects are mutable.
     __block Basic_Gb_Apu *apu = &_apu;
-    __block BufferedAudioBus *buffer = &_buffer;
-//    __block blip_sample_t *data = (blip_sample_t*) _data.mutableBytes;
-//    __block AVAudioPCMBuffer *outbuf = _outbuf;
+    __block PCMBuffer *buffer = &_buffer;
 
     return ^AUAudioUnitStatus(AudioUnitRenderActionFlags *actionFlags,
                               const AudioTimeStamp       *timestamp,
@@ -121,6 +103,8 @@ static int const sampleRate = 44100;
                 outAudioBufferList->mBuffers[i].mData = buffer->mutableAudioBufferList->mBuffers[i].mData;
             }
         }
+        // whichever buffer we're using, make sure PCMBuffer has the pointer to it
+        buffer->mutableAudioBufferList = outAudioBufferList;
 
         static int delay;
         if ( --delay <= 0 )
@@ -142,18 +126,10 @@ static int const sampleRate = 44100;
         while (apu->samples_avail() < frameCount) {
             apu->end_frame();
         }
-        blip_sample_t *data = (blip_sample_t*) buffer->data.mutableBytes; // TODO: make accessible from struct
+        blip_sample_t *data = buffer->int16Buffer();
         long count = apu->read_samples(data, frameCount);
-
         // now convert the int16 data into float32 on the way out
-        for (int channel = 0; channel < outAudioBufferList->mNumberBuffers; ++channel) {
-            for (int frameIndex = 0; frameIndex < count; ++frameIndex) {
-                int frameOffset = frameIndex;
-                blip_sample_t* in = data + frameOffset;
-                float* out = (float*)outAudioBufferList->mBuffers[channel].mData + frameOffset;
-                *out = (float)(*in) / 65536;
-            }
-        }
+        buffer->convertToFloat32(count);
         return noErr;
     };
 }

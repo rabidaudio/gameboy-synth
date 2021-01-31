@@ -53,8 +53,6 @@
 		0B9F82DC25C5FA7C00EFC784 /* usage.txt in Resources */ = {isa = PBXBuildFile; fileRef = 0B9F82A425C5FA7B00EFC784 /* usage.txt */; };
 		0B9F82E625C5FF3500EFC784 /* config.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B9F82E525C5FF3500EFC784 /* config.h */; };
 		0B9F82E725C5FF3500EFC784 /* config.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B9F82E525C5FF3500EFC784 /* config.h */; };
-		0B9F831225C6430D00EFC784 /* PCMBuffer.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B9F831025C6430D00EFC784 /* PCMBuffer.h */; };
-		0B9F831325C6430D00EFC784 /* PCMBuffer.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B9F831025C6430D00EFC784 /* PCMBuffer.h */; };
 		0B9F831425C6430D00EFC784 /* PCMBuffer.hpp in Sources */ = {isa = PBXBuildFile; fileRef = 0B9F831125C6430D00EFC784 /* PCMBuffer.hpp */; };
 		0B9F831525C6430D00EFC784 /* PCMBuffer.hpp in Sources */ = {isa = PBXBuildFile; fileRef = 0B9F831125C6430D00EFC784 /* PCMBuffer.hpp */; };
 		C4201A2922403120006E4333 /* GameBoyAudioSynthDemoViewControllerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4201A2822403120006E4333 /* GameBoyAudioSynthDemoViewControllerExtension.swift */; };
@@ -210,7 +208,6 @@
 		0B9F829E25C5FA7B00EFC784 /* LGPL.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LGPL.txt; sourceTree = "<group>"; };
 		0B9F82A425C5FA7B00EFC784 /* usage.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = usage.txt; sourceTree = "<group>"; };
 		0B9F82E525C5FF3500EFC784 /* config.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = config.h; sourceTree = "<group>"; };
-		0B9F831025C6430D00EFC784 /* PCMBuffer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PCMBuffer.h; sourceTree = "<group>"; };
 		0B9F831125C6430D00EFC784 /* PCMBuffer.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = PCMBuffer.hpp; sourceTree = "<group>"; };
 		7E56CF207E56CEE000000001 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		C4201A2822403120006E4333 /* GameBoyAudioSynthDemoViewControllerExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameBoyAudioSynthDemoViewControllerExtension.swift; sourceTree = "<group>"; };
@@ -511,7 +508,6 @@
 				C4F0049F2239B1E10014E248 /* ApuAdapter.h */,
 				C4F004A02239B1E10014E248 /* ApuAdapter.mm */,
 				0B9F82E525C5FF3500EFC784 /* config.h */,
-				0B9F831025C6430D00EFC784 /* PCMBuffer.h */,
 				0B9F831125C6430D00EFC784 /* PCMBuffer.hpp */,
 			);
 			path = Support;
@@ -588,7 +584,6 @@
 				C4BEE8172223736F001E6B6D /* GameBoyAudioSynthFramework.h in Headers */,
 				0B9F82A725C5FA7C00EFC784 /* static_assert.hpp in Headers */,
 				0B9F82AB25C5FA7C00EFC784 /* cstdint.hpp in Headers */,
-				0B9F831225C6430D00EFC784 /* PCMBuffer.h in Headers */,
 				0B9F82BD25C5FA7C00EFC784 /* Gb_Oscs.h in Headers */,
 				0B9F82BF25C5FA7C00EFC784 /* Gb_Apu.h in Headers */,
 				0B9F82A925C5FA7C00EFC784 /* config.hpp in Headers */,
@@ -610,7 +605,6 @@
 				C496341422238CFA001D1F5B /* GameBoyAudioSynthFramework.h in Headers */,
 				0B9F82A825C5FA7C00EFC784 /* static_assert.hpp in Headers */,
 				0B9F82AC25C5FA7C00EFC784 /* cstdint.hpp in Headers */,
-				0B9F831325C6430D00EFC784 /* PCMBuffer.h in Headers */,
 				0B9F82BE25C5FA7C00EFC784 /* Gb_Oscs.h in Headers */,
 				0B9F82C025C5FA7C00EFC784 /* Gb_Apu.h in Headers */,
 				0B9F82AA25C5FA7C00EFC784 /* config.hpp in Headers */,
