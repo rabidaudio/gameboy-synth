@@ -12,6 +12,9 @@ As an instrument, the Game Boy APU is a pretty constrained synthesizer. It conta
 - https://gbdev.gg8.se/wiki/articles/Gameboy_sound_hardware
 - https://developer.apple.com/documentation/audiotoolbox/audio_unit_v3_plug-ins/creating_custom_audio_effects
 - http://blargg.8bitalley.com/libs/audio.html#Gb_Snd_Emu
+- https://www.rockhoppertech.com/blog/writing-an-audio-unit-v3-instrument/
+- http://www.rossbencina.com/code/real-time-audio-programming-101-time-waits-for-nothing
+- http://devnotes.kymatica.com/auv3_parameters.html
 
 ## License
 

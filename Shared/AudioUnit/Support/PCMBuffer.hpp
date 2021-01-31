@@ -38,6 +38,11 @@ struct PCMBuffer {
     void init(AVAudioFormat* defaultFormat, AVAudioChannelCount maxChannels) {
         // set the default frameCount to match the 60 fps of the APU.
         // The OS can request a different frameCount before allocateRenderResources
+        // TODO: 60fps buffer size is a consequence of using Basic_Gb_Apu instead of
+        // Gb_Apu. We could switch it around for lower latency.
+        // This post recommends 1-5ms latency: http://www.rossbencina.com/code/real-time-audio-programming-101-time-waits-for-nothing
+        // Then again, some games probably do only change their register config
+        // on frame updates so it might be a more authentic experience.
         maxFrames = defaultFormat.sampleRate/60;
         outFormat = defaultFormat;
         float32PcmBuffer = nullptr;

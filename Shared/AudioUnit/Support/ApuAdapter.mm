@@ -19,6 +19,11 @@
 // and whatever else) from making allocations during the render loop.
 @implementation ApuAdapter {
     // C++ members need to be ivars; they would be copied on access if they were properties.
+
+    // TODO: if we need block-free syncronization between the UI and the audio render loop,
+    // we could use double buffering by keeping two Apus, and writing to one while we
+    // read from the other. At this point that optimization might be premature; it seems like
+    // write_register is relatively atomic.
     Basic_Gb_Apu _apu;
     PCMBuffer _buffer;
 }
@@ -111,6 +116,8 @@ static int const sampleRate = 44100;
         blip_sample_t *data = buffer->int16Buffer();
         long count = apu->read_samples(data, frameCount);
         // now convert the int16 data into float32 on the way out
+        // TODO: a custom implementation of Blip_Buffer might let us avoid
+        // having 3 buffers, and getting that down to 2
         buffer->convertToFloat32(count);
         return noErr;
     };
