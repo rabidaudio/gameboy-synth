@@ -14,10 +14,8 @@ NS_ASSUME_NONNULL_BEGIN
 @interface ApuAdapter : NSObject
 
 @property (nonatomic) AUAudioFrameCount maximumFramesToRender;
-@property (nonatomic, readonly) AUAudioUnitBus *outputBus;
-
-//- (void)setParameter:(AUParameter *)parameter value:(AUValue)value;
-//- (AUValue)valueForParameter:(AUParameter *)parameter;
+//@property (nonatomic, readonly) AUAudioUnitBus *outputBus;
+@property (nonatomic, readonly) AVAudioFormat *format;
 
 - (void)write:(unsigned char)value toRegister:(unsigned int)addr;
 - (unsigned char)readFromRegister:(unsigned int)addr;

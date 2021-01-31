@@ -76,16 +76,6 @@
 		C4BEE7D122236A58001E6B6D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C4BEE7C622236A58001E6B6D /* Assets.xcassets */; };
 		C4BEE7D222236A58001E6B6D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C4BEE7C722236A58001E6B6D /* Main.storyboard */; };
 		C4BEE7D322236A58001E6B6D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4BEE7C922236A58001E6B6D /* AppDelegate.swift */; };
-		C4BEE7EE22236F24001E6B6D /* FilterDSPKernel.hpp in Headers */ = {isa = PBXBuildFile; fileRef = C4BEE7E322236E99001E6B6D /* FilterDSPKernel.hpp */; };
-		C4BEE7EF22236F24001E6B6D /* ParameterRamper.hpp in Headers */ = {isa = PBXBuildFile; fileRef = C4BEE7E522236E99001E6B6D /* ParameterRamper.hpp */; };
-		C4BEE7F022236F24001E6B6D /* DSPKernel.hpp in Headers */ = {isa = PBXBuildFile; fileRef = C4BEE7E622236E99001E6B6D /* DSPKernel.hpp */; };
-		C4BEE7F122236F24001E6B6D /* BufferedAudioBus.hpp in Headers */ = {isa = PBXBuildFile; fileRef = C4BEE7E822236E99001E6B6D /* BufferedAudioBus.hpp */; };
-		C4BEE7F222236F27001E6B6D /* FilterDSPKernel.hpp in Headers */ = {isa = PBXBuildFile; fileRef = C4BEE7E322236E99001E6B6D /* FilterDSPKernel.hpp */; };
-		C4BEE7F322236F27001E6B6D /* ParameterRamper.hpp in Headers */ = {isa = PBXBuildFile; fileRef = C4BEE7E522236E99001E6B6D /* ParameterRamper.hpp */; };
-		C4BEE7F422236F27001E6B6D /* DSPKernel.hpp in Headers */ = {isa = PBXBuildFile; fileRef = C4BEE7E622236E99001E6B6D /* DSPKernel.hpp */; };
-		C4BEE7F522236F27001E6B6D /* BufferedAudioBus.hpp in Headers */ = {isa = PBXBuildFile; fileRef = C4BEE7E822236E99001E6B6D /* BufferedAudioBus.hpp */; };
-		C4BEE7F622236F2C001E6B6D /* DSPKernel.mm in Sources */ = {isa = PBXBuildFile; fileRef = C4BEE7E722236E99001E6B6D /* DSPKernel.mm */; };
-		C4BEE7F722236F2D001E6B6D /* DSPKernel.mm in Sources */ = {isa = PBXBuildFile; fileRef = C4BEE7E722236E99001E6B6D /* DSPKernel.mm */; };
 		C4BEE7F822236F44001E6B6D /* AudioUnitManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4BEE7E022236E99001E6B6D /* AudioUnitManager.swift */; };
 		C4BEE7FB22236F46001E6B6D /* AudioUnitManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4BEE7E022236E99001E6B6D /* AudioUnitManager.swift */; };
 		C4BEE7FF22236F6E001E6B6D /* FilterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4BEE7D922236E99001E6B6D /* FilterView.swift */; };
@@ -250,11 +240,6 @@
 		C4BEE7D922236E99001E6B6D /* FilterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterView.swift; sourceTree = "<group>"; };
 		C4BEE7DB22236E99001E6B6D /* TypeAliases.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TypeAliases.swift; sourceTree = "<group>"; };
 		C4BEE7E022236E99001E6B6D /* AudioUnitManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioUnitManager.swift; sourceTree = "<group>"; };
-		C4BEE7E322236E99001E6B6D /* FilterDSPKernel.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = FilterDSPKernel.hpp; sourceTree = "<group>"; };
-		C4BEE7E522236E99001E6B6D /* ParameterRamper.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ParameterRamper.hpp; sourceTree = "<group>"; };
-		C4BEE7E622236E99001E6B6D /* DSPKernel.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = DSPKernel.hpp; sourceTree = "<group>"; };
-		C4BEE7E722236E99001E6B6D /* DSPKernel.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = DSPKernel.mm; sourceTree = "<group>"; };
-		C4BEE7E822236E99001E6B6D /* BufferedAudioBus.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = BufferedAudioBus.hpp; sourceTree = "<group>"; };
 		C4BEE80822237078001E6B6D /* MainViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		C4BEE80A222370B2001E6B6D /* GameBoyAudioSynth.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = GameBoyAudioSynth.entitlements; sourceTree = "<group>"; };
 		C4BEE80D2223713E001E6B6D /* GameBoyAudioSynthFramework.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameBoyAudioSynthFramework.h; sourceTree = "<group>"; };
@@ -517,13 +502,8 @@
 			isa = PBXGroup;
 			children = (
 				0B9F828525C5FA7B00EFC784 /* Gb_Snd_Emu-0.1.4 */,
-				C4BEE7E822236E99001E6B6D /* BufferedAudioBus.hpp */,
-				C4BEE7E622236E99001E6B6D /* DSPKernel.hpp */,
-				C4BEE7E722236E99001E6B6D /* DSPKernel.mm */,
-				C4BEE7E322236E99001E6B6D /* FilterDSPKernel.hpp */,
 				C4F0049F2239B1E10014E248 /* ApuAdapter.h */,
 				C4F004A02239B1E10014E248 /* ApuAdapter.mm */,
-				C4BEE7E522236E99001E6B6D /* ParameterRamper.hpp */,
 				0B9F82E525C5FF3500EFC784 /* config.h */,
 			);
 			path = Support;
@@ -599,15 +579,11 @@
 				0B9F82AD25C5FA7C00EFC784 /* Basic_Gb_Apu.h in Headers */,
 				C4BEE8172223736F001E6B6D /* GameBoyAudioSynthFramework.h in Headers */,
 				0B9F82A725C5FA7C00EFC784 /* static_assert.hpp in Headers */,
-				C4BEE7EF22236F24001E6B6D /* ParameterRamper.hpp in Headers */,
-				C4BEE7F122236F24001E6B6D /* BufferedAudioBus.hpp in Headers */,
 				0B9F82AB25C5FA7C00EFC784 /* cstdint.hpp in Headers */,
 				0B9F82BD25C5FA7C00EFC784 /* Gb_Oscs.h in Headers */,
 				0B9F82BF25C5FA7C00EFC784 /* Gb_Apu.h in Headers */,
-				C4BEE7EE22236F24001E6B6D /* FilterDSPKernel.hpp in Headers */,
 				0B9F82A925C5FA7C00EFC784 /* config.hpp in Headers */,
 				0B9F82C125C5FA7C00EFC784 /* Blip_Synth.h in Headers */,
-				C4BEE7F022236F24001E6B6D /* DSPKernel.hpp in Headers */,
 				0B9F82C525C5FA7C00EFC784 /* blargg_source.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -624,15 +600,11 @@
 				0B9F82AE25C5FA7C00EFC784 /* Basic_Gb_Apu.h in Headers */,
 				C496341422238CFA001D1F5B /* GameBoyAudioSynthFramework.h in Headers */,
 				0B9F82A825C5FA7C00EFC784 /* static_assert.hpp in Headers */,
-				C4BEE7F322236F27001E6B6D /* ParameterRamper.hpp in Headers */,
-				C4BEE7F522236F27001E6B6D /* BufferedAudioBus.hpp in Headers */,
 				0B9F82AC25C5FA7C00EFC784 /* cstdint.hpp in Headers */,
 				0B9F82BE25C5FA7C00EFC784 /* Gb_Oscs.h in Headers */,
 				0B9F82C025C5FA7C00EFC784 /* Gb_Apu.h in Headers */,
-				C4BEE7F222236F27001E6B6D /* FilterDSPKernel.hpp in Headers */,
 				0B9F82AA25C5FA7C00EFC784 /* config.hpp in Headers */,
 				0B9F82C225C5FA7C00EFC784 /* Blip_Synth.h in Headers */,
-				C4BEE7F422236F27001E6B6D /* DSPKernel.hpp in Headers */,
 				0B9F82C625C5FA7C00EFC784 /* blargg_source.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -759,7 +731,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 1010;
-				LastUpgradeCheck = 1200;
+				LastUpgradeCheck = 1230;
 				ORGANIZATIONNAME = Apple;
 				TargetAttributes = {
 					C437FE39222367A6008D6C09 = {
@@ -905,7 +877,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				0B9F82C725C5FA7C00EFC784 /* Basic_Gb_Apu.cpp in Sources */,
-				C4BEE7F722236F2D001E6B6D /* DSPKernel.mm in Sources */,
 				C4BEE80522236F6F001E6B6D /* ViewExtensions.swift in Sources */,
 				C4F07731223AC4F5008FFF06 /* GameBoyAudioSynthDemoViewController.swift in Sources */,
 				C4F004A62239B2070014E248 /* GameBoyAudioSynthDemo.swift in Sources */,
@@ -944,7 +915,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C4BEE7F622236F2C001E6B6D /* DSPKernel.mm in Sources */,
 				C4F0772F223AACBB008FFF06 /* GameBoyAudioSynthDemoParameters.swift in Sources */,
 				0B9F82B425C5FA7C00EFC784 /* Multi_Buffer.cpp in Sources */,
 				0B9F82BC25C5FA7C00EFC784 /* Gb_Apu.cpp in Sources */,
@@ -1274,7 +1244,7 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
 				CURRENT_PROJECT_VERSION = 1;
@@ -1357,7 +1327,7 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
 				CURRENT_PROJECT_VERSION = 1;
@@ -1721,7 +1691,7 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
@@ -1805,7 +1775,7 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;

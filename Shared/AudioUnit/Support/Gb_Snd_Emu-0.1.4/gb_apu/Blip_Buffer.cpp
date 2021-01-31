@@ -46,7 +46,7 @@ void Blip_Buffer::clear( bool entire_buffer )
 
 blargg_err_t Blip_Buffer::set_sample_rate( long new_rate, int msec )
 {
-	unsigned new_size = (UINT32_MAX >> BLIP_BUFFER_ACCURACY) + 1 - widest_impulse_ - 64;
+	unsigned new_size = (0xFFFFFFFF >> BLIP_BUFFER_ACCURACY) + 1 - widest_impulse_ - 64; // NOTE: replaced ULONG_MAX with 0xFFFFFFFF or else this will allocate 8GB of RAM on 64-bit machines
 	if ( msec != blip_default_length )
 	{
 		size_t s = (new_rate * (msec + 1) + 999) / 1000;
