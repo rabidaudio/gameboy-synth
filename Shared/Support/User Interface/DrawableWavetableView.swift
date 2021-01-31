@@ -8,10 +8,13 @@
 
 import SwiftUI
 
-// TODO: unshare class except for frameworks
 class WavetableController: ObservableObject {
     @Published var wavetable: Wavetable
-    @Published var defaultWavetable: DefaultWavetables
+    @Published var defaultWavetable: DefaultWavetables {
+        didSet {
+            self.wavetable = defaultWavetable.wavetable
+        }
+    }
 
     init(wavetable: Wavetable, defaultWavetable: DefaultWavetables = .sine) {
         self.wavetable = wavetable
@@ -20,11 +23,6 @@ class WavetableController: ObservableObject {
 
     convenience init(defaultWavetable: DefaultWavetables = .sine) {
         self.init(wavetable: defaultWavetable.wavetable, defaultWavetable: defaultWavetable)
-    }
-
-    func restoreDefault(_ defaultWavetable: DefaultWavetables) {
-        self.defaultWavetable = defaultWavetable
-        self.wavetable = defaultWavetable.wavetable
     }
 }
 

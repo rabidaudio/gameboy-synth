@@ -13,24 +13,10 @@ class MainViewController: NSViewController {
 
     let audioUnitManager = AudioUnitManager()
 
-//    init() {
-//        super.init(nibName: nil, bundle: nil)
-//    }
-
-//    public override init(nibName: NSNib.Name?, bundle: Bundle?) {
-//        // Pass a reference to the owning framework bundle
-//        super.init(nibName: nibName, bundle: Bundle(for: type(of: self)))
-//    }
-
-//    required init?(coder: NSCoder) {
-//        fatalError("init(coder:) has not been implemented")
-//    }
-
     override func viewDidLoad() {
         super.viewDidLoad()
         embedPlugInView()
         populatePresetMenu()
-//        audioUnitManager.delegate = self
     }
 
     override func viewWillAppear() {
@@ -54,6 +40,7 @@ class MainViewController: NSViewController {
     }
 
     private func populatePresetMenu() {
+        // TODO: figure out why this isn't working
         guard let presetMenu = NSApplication.shared.mainMenu?.item(withTag: 666)?.submenu else { return }
         for preset in audioUnitManager.presets {
             let menuItem = NSMenuItem(title: preset.name,
@@ -82,24 +69,3 @@ extension MainViewController: NSWindowDelegate {
         audioUnitManager.cleanup()
     }
 }
-
-//extension MainViewController: AUManagerDelegate {
-//
-//    func cutoffValueDidChange(_ value: Float) {
-//
-//        // Normalize the vaue from 0-1
-//        var normalizedValue = (value - defaultMinHertz) / (defaultMaxHertz - defaultMinHertz)
-//
-//        // Map to 2^0 - 2^9 (slider range)
-//        normalizedValue = (normalizedValue * 511.0) + 1
-//
-//        cutoffSlider.floatValue = Float(logValueForNumber(normalizedValue))
-//        cutoffTextField.text = String(format: "%.f", value)
-//    }
-//
-//    func resonanceValueDidChange(_ value: Float) {
-//        resonanceSlider.floatValue = value
-//        resonanceTextField.text = String(format: "%.2f", value)
-//    }
-//}
-
