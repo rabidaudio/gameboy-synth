@@ -8,33 +8,30 @@
 
 import SwiftUI
 
+class WavetableController: ObservableObject {
+    @Published var wavetable: Wavetable
+
+    init(wavetable: Wavetable) {
+        self.wavetable = wavetable
+    }
+
+    convenience init(defaultWavetable: DefaultWavetables = .sine) {
+        self.init(wavetable: defaultWavetable.wavetable)
+    }
+
+    func restoreDefault(_ defaultWavetable: DefaultWavetables) {
+        wavetable = defaultWavetable.wavetable
+    }
+}
+
 struct DrawableWavetableView: View {
-    @State private var storedWavetable: Wavetable?
-    @Binding private var initialWavetable: DefaultWavetables
-
-    private var wavetable: Wavetable {
-        get { return storedWavetable ?? initialWavetable.wavetable }
-        set { storedWavetable = newValue }
-    }
-
-    init(externallySwitchableDefaultWavetable wt: Binding<DefaultWavetables>) {
-        self._initialWavetable = wt
-        self._storedWavetable = State(initialValue: nil)
-    }
-
-    init(initialWavetable wt: Wavetable = DefaultWavetables.sine.wavetable) {
-        self._storedWavetable = State(initialValue: wt)
-        self._initialWavetable = .constant(.sine) // doesn't matter
-    }
+    @ObservedObject var wavetableController = WavetableController()
 
     private func drawAt(_ x: Int, _ y: Int) {
         guard (0...31).contains(x) && (0...15).contains(y) else {
             return
         }
-        if storedWavetable == nil {
-            storedWavetable = initialWavetable.wavetable
-        }
-        storedWavetable![x] =  UInt8(y)
+        wavetableController.wavetable[x] = UInt8(y)
     }
 
     var body: some View {
@@ -42,7 +39,7 @@ struct DrawableWavetableView: View {
             let sqWidth = geometry.size.width / 32
             let sqHeight = geometry.size.height / 16
             Path { path in
-                for (i, v) in wavetable.enumerated() {
+                for (i, v) in wavetableController.wavetable.enumerated() {
                     let y = CGFloat(v) * sqHeight
                     let x = CGFloat(i) * sqWidth
                     let r = CGRect(
@@ -57,7 +54,7 @@ struct DrawableWavetableView: View {
             .gesture(DragGesture(minimumDistance: 0.1)
                         .onChanged { drag in
                             let x = Int(drag.location.x / sqWidth)
-                            let y = Int(drag.location.y / sqWidth)
+                            let y = Int(drag.location.y / sqHeight)
                             drawAt(x, y)
                         })
         }
@@ -65,7 +62,13 @@ struct DrawableWavetableView: View {
 }
 
 struct WavetableView: View {
-    @State var selected: DefaultWavetables = .triangle
+    @ObservedObject var wavetableController: WavetableController
+    @State var selected: DefaultWavetables
+
+    init(initialSelection: DefaultWavetables = .sine) {
+        self.wavetableController = WavetableController(defaultWavetable: initialSelection)
+        self._selected = State(initialValue: initialSelection)
+    }
 
     var body: some View {
         VStack {
@@ -74,19 +77,15 @@ struct WavetableView: View {
                     Text(wt.rawValue).tag(wt)
                 }
             }.pickerStyle(SegmentedPickerStyle())
-            DrawableWavetableView(externallySwitchableDefaultWavetable: $selected)
-        }
+            DrawableWavetableView(wavetableController: wavetableController)
+        }.onChange(of: selected, perform: { value in
+            wavetableController.restoreDefault(value)
+        })
     }
 }
 
 struct WavetableView_Previews: PreviewProvider {
     static var previews: some View {
         WavetableView()
-    }
-}
-
-extension Comparable {
-    fileprivate func clamped(to limits: ClosedRange<Self>) -> Self {
-        return min(max(self, limits.lowerBound), limits.upperBound)
     }
 }

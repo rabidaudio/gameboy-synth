@@ -19,7 +19,8 @@ enum DefaultWavetables: String {
         case .sine:
             return Array(0..<32).map { i in
                 let s = sin(2 * Double.pi * Double(i) / 32)
-                return UInt8((s * 8) + 8)
+                let i = Int((s * 8) + 8).clamped(to: 0...15)
+                return UInt8(i)
             }
         case .square:
             return Array(0..<32).map { i in
@@ -28,18 +29,18 @@ enum DefaultWavetables: String {
         case .triangle:
             return Array(0..<32).map { i in
                 if i >= 16 {
-                    return UInt8(32 - i - 1)
+                    return UInt8(16 - (32 - i - 1) - 1)
                 } else {
-                    return UInt8(i)
+                    return UInt8(16 - i - 1)
                 }
             }
-        case .rampUp:
+        case .rampDown:
             return     Array(0..<32).map { i in
                 return UInt8(i % 16)
             }
-        case .rampDown:
+        case .rampUp:
             return Array(0..<32).map { i in
-                return UInt8(16 - (i % 16))
+                return UInt8(16 - (i % 16) - 1)
             }
         case .noise:
             return Array(0..<32).map { i in
@@ -49,7 +50,7 @@ enum DefaultWavetables: String {
     }
 }
 
-extension DefaultWavetables: CaseIterable, Identifiable {
+extension DefaultWavetables: CaseIterable, Identifiable, Equatable {
     var id: String {
         return rawValue
     }
