@@ -9,7 +9,33 @@
 import SwiftUI
 
 struct DrawableWavetableView: View {
-    @State var wavetable: Wavetable
+    @State private var storedWavetable: Wavetable?
+    @Binding private var initialWavetable: DefaultWavetables
+
+    private var wavetable: Wavetable {
+        get { return storedWavetable ?? initialWavetable.wavetable }
+        set { storedWavetable = newValue }
+    }
+
+    init(externallySwitchableDefaultWavetable wt: Binding<DefaultWavetables>) {
+        self._initialWavetable = wt
+        self._storedWavetable = State(initialValue: nil)
+    }
+
+    init(initialWavetable wt: Wavetable = DefaultWavetables.sine.wavetable) {
+        self._storedWavetable = State(initialValue: wt)
+        self._initialWavetable = .constant(.sine) // doesn't matter
+    }
+
+    private func drawAt(_ x: Int, _ y: Int) {
+        guard (0...31).contains(x) && (0...15).contains(y) else {
+            return
+        }
+        if storedWavetable == nil {
+            storedWavetable = initialWavetable.wavetable
+        }
+        storedWavetable![x] =  UInt8(y)
+    }
 
     var body: some View {
         GeometryReader { geometry in
@@ -32,18 +58,30 @@ struct DrawableWavetableView: View {
                         .onChanged { drag in
                             let x = Int(drag.location.x / sqWidth)
                             let y = Int(drag.location.y / sqWidth)
-                            guard (0...31).contains(x) && (0...15).contains(y) else {
-                                return
-                            }
-                            wavetable[x] = UInt8(y)
+                            drawAt(x, y)
                         })
         }
     }
 }
 
-struct DrawableWavetableView_Previews: PreviewProvider {
+struct WavetableView: View {
+    @State var selected: DefaultWavetables = .triangle
+
+    var body: some View {
+        VStack {
+            Picker("Presets", selection: $selected) {
+                ForEach(DefaultWavetables.allCases) { wt in
+                    Text(wt.rawValue).tag(wt)
+                }
+            }.pickerStyle(SegmentedPickerStyle())
+            DrawableWavetableView(externallySwitchableDefaultWavetable: $selected)
+        }
+    }
+}
+
+struct WavetableView_Previews: PreviewProvider {
     static var previews: some View {
-        DrawableWavetableView(wavetable: sinWavetable)
+        WavetableView()
     }
 }
 

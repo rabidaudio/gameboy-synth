@@ -13,7 +13,7 @@ import GameBoyAudioSynthFramework
 struct GameBoyAudioSynthApp: App {
     var body: some Scene {
         WindowGroup {
-            WavetableDrawView(wavetable: sinWavetable)
+            WavetableView()
         }
     }
 }
