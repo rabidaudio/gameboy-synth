@@ -20,20 +20,20 @@ public class GameBoyAudioSynthDemoViewController: AUViewController {
 
     @IBOutlet weak var filterView: FilterView!
 
-    @IBOutlet weak var frequencyTextField: TextField!
-    @IBOutlet weak var resonanceTextField: TextField!
+    @IBOutlet weak var frequencyTextField: _TextField!
+    @IBOutlet weak var resonanceTextField: _TextField!
     
     var observer: NSKeyValueObservation?
 
     var needsConnection = true
 
-    @IBOutlet var expandedView: View! {
+    @IBOutlet var expandedView: _View! {
         didSet {
             expandedView.setBorder(color: .black, width: 1)
         }
     }
 
-    @IBOutlet var compactView: View! {
+    @IBOutlet var compactView: _View! {
         didSet {
             compactView.setBorder(color: .black, width: 1)
         }
@@ -158,15 +158,15 @@ public class GameBoyAudioSynthDemoViewController: AUViewController {
         updateFilterViewFrequencyAndMagnitudes()
     }
 
-    @IBAction func frequencyUpdated(_ sender: TextField) {
+    @IBAction func frequencyUpdated(_ sender: _TextField) {
         update(parameter: cutoffParameter, with: sender)
     }
 
-    @IBAction func resonanceUpdated(_ sender: TextField) {
+    @IBAction func resonanceUpdated(_ sender: _TextField) {
         update(parameter: resonanceParameter, with: sender)
     }
 
-    func update(parameter: AUParameter, with textField: TextField) {
+    func update(parameter: AUParameter, with textField: _TextField) {
         guard let value = (textField.text as NSString?)?.floatValue else { return }
         parameter.value = value
         textField.text = parameter.string(fromValue: nil)

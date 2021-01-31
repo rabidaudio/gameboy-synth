@@ -1,9 +1,10 @@
-/*
-See LICENSE folder for this sample’s licensing information.
-
-Abstract:
-Adapter object providing a Swift-accessible interface to the filter's underlying DSP code.
-*/
+//
+//  ApuAdapter.h
+//  GameBoyAudioSynth
+//
+//  Created by Charles Julian Knight on 1/31/21.
+//  Copyright © 2021 Charles Julian Knight. All rights reserved.
+//
 
 #import <AudioToolbox/AudioToolbox.h>
 

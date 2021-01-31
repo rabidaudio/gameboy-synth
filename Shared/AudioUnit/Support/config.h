@@ -3,7 +3,7 @@
 //  GameBoyAudioSynth
 //
 //  Created by Charles Julian Knight on 1/30/21.
-//  Copyright © 2021 Apple. All rights reserved.
+//  Copyright © 2021 Charles Julian Knight. All rights reserved.
 //
 
 #ifndef config_h

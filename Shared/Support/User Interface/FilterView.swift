@@ -33,18 +33,18 @@ extension CATransaction {
     }
 }
 
-extension Color {
-    var darker: Color {
+extension _Color {
+    var darker: _Color {
         var hue: CGFloat = 0
         var saturation: CGFloat = 0
         var brightness: CGFloat = 0
         var alpha: CGFloat = 0
         getHue(&hue, saturation: &saturation, brightness: &brightness, alpha: &alpha)
-        return Color(hue: hue, saturation: saturation, brightness: brightness * 0.8, alpha: alpha)
+        return _Color(hue: hue, saturation: saturation, brightness: brightness * 0.8, alpha: alpha)
     }
 }
 
-class FilterView: View {
+class FilterView: _View {
 
     // MARK: Properties
 
@@ -79,10 +79,10 @@ class FilterView: View {
 
         #if os(iOS)
         // Red
-        let fillColor = Color(red: 0.848, green: 0.129, blue: 0.167, alpha: 1.000)
+        let fillColor = _Color(red: 0.848, green: 0.129, blue: 0.167, alpha: 1.000)
         #elseif os(macOS)
         // Blue
-        let fillColor = Color(red: 0.067, green: 0.535, blue: 0.842, alpha: 1.000)
+        let fillColor = _Color(red: 0.067, green: 0.535, blue: 0.842, alpha: 1.000)
         #endif
 
         shapeLayer.fillColor = fillColor.cgColor
@@ -320,9 +320,9 @@ class FilterView: View {
         rootLayer.masksToBounds = false
 
         graphLayer.name = "graph background"
-        graphLayer.borderColor = Color.darkGray.cgColor
+        graphLayer.borderColor = _Color.darkGray.cgColor
         graphLayer.borderWidth = 1.0
-        graphLayer.backgroundColor = Color(white: 0.88, alpha: 1.0).cgColor
+        graphLayer.backgroundColor = _Color(white: 0.88, alpha: 1.0).cgColor
         graphLayer.bounds = CGRect(x: 0, y: 0,
                                    width: rootLayer.frame.width - leftMargin,
                                    height: rootLayer.frame.height - bottomMargin)
@@ -349,11 +349,11 @@ class FilterView: View {
         #endif
     }
 
-    var graphLabelColor: Color {
+    var graphLabelColor: _Color {
         #if os(iOS)
         return Color(white: 0.1, alpha: 1.0)
         #elseif os(macOS)
-        return Color.labelColor // Use Appearance-aware label color
+        return _Color.labelColor // Use Appearance-aware label color
         #endif
     }
     
@@ -392,10 +392,10 @@ class FilterView: View {
 
         init(white: CGFloat) {
             super.init()
-            backgroundColor = Color(white: white, alpha: 1.0).cgColor
+            backgroundColor = _Color(white: white, alpha: 1.0).cgColor
         }
 
-        init(color: Color) {
+        init(color: _Color) {
             super.init()
             backgroundColor = color.cgColor
         }
@@ -467,7 +467,7 @@ class FilterView: View {
      */
     func createControlPoint() {
 
-        guard let color = touchDown ? tintColor : Color.darkGray else {
+        guard let color = touchDown ? tintColor : _Color.darkGray else {
             // This should never happen.
             fatalError("Unable to get color value.")
         }
@@ -497,7 +497,7 @@ class FilterView: View {
      is touching the graph and still down.
      */
     func updateControls(refreshColor: Bool) {
-        let color = touchDown ? tintColor.darker.cgColor: Color.darkGray.cgColor
+        let color = touchDown ? tintColor.darker.cgColor: _Color.darkGray.cgColor
 
         // Turn off implicit animations for the control layers to avoid any control lag.
         CATransaction.noAnimation {

@@ -53,6 +53,16 @@
 		0B9F82E725C5FF3500EFC784 /* config.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B9F82E525C5FF3500EFC784 /* config.h */; };
 		0B9F831425C6430D00EFC784 /* PCMBuffer.hpp in Sources */ = {isa = PBXBuildFile; fileRef = 0B9F831125C6430D00EFC784 /* PCMBuffer.hpp */; };
 		0B9F831525C6430D00EFC784 /* PCMBuffer.hpp in Sources */ = {isa = PBXBuildFile; fileRef = 0B9F831125C6430D00EFC784 /* PCMBuffer.hpp */; };
+		0B9F832925C676CD00EFC784 /* MidiControlView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B9F832825C676CD00EFC784 /* MidiControlView.swift */; };
+		0B9F832A25C676CD00EFC784 /* MidiControlView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B9F832825C676CD00EFC784 /* MidiControlView.swift */; };
+		0B9F835825C67A0000EFC784 /* GameBoyAudioSynthApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B9F835725C67A0000EFC784 /* GameBoyAudioSynthApp.swift */; };
+		0B9F835925C67A0000EFC784 /* GameBoyAudioSynthApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B9F835725C67A0000EFC784 /* GameBoyAudioSynthApp.swift */; };
+		0B9F837325C6925300EFC784 /* PropertyWrappers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B9F837225C6925300EFC784 /* PropertyWrappers.swift */; };
+		0B9F837425C6925300EFC784 /* PropertyWrappers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B9F837225C6925300EFC784 /* PropertyWrappers.swift */; };
+		0B9F837A25C692AB00EFC784 /* WavetableDrawView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B9F837925C692AB00EFC784 /* WavetableDrawView.swift */; };
+		0B9F837B25C692AB00EFC784 /* WavetableDrawView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B9F837925C692AB00EFC784 /* WavetableDrawView.swift */; };
+		0B9F838125C697E900EFC784 /* Wavetable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B9F838025C697E900EFC784 /* Wavetable.swift */; };
+		0B9F838225C697E900EFC784 /* Wavetable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B9F838025C697E900EFC784 /* Wavetable.swift */; };
 		C4201A2922403120006E4333 /* GameBoyAudioSynthDemoViewControllerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4201A2822403120006E4333 /* GameBoyAudioSynthDemoViewControllerExtension.swift */; };
 		C433F56122404C7C00F1B750 /* GameBoyAudioSynthDemoViewControllerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = C433F56022404C7C00F1B750 /* GameBoyAudioSynthDemoViewControllerExtension.swift */; };
 		C437FE59222367CD008D6C09 /* GameBoyAudioSynthFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C437FE52222367CD008D6C09 /* GameBoyAudioSynthFramework.framework */; };
@@ -207,6 +217,11 @@
 		0B9F82E525C5FF3500EFC784 /* config.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = config.h; sourceTree = "<group>"; };
 		0B9F831125C6430D00EFC784 /* PCMBuffer.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = PCMBuffer.hpp; sourceTree = "<group>"; };
 		0B9F832725C65D4F00EFC784 /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
+		0B9F832825C676CD00EFC784 /* MidiControlView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MidiControlView.swift; sourceTree = "<group>"; };
+		0B9F835725C67A0000EFC784 /* GameBoyAudioSynthApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameBoyAudioSynthApp.swift; sourceTree = "<group>"; };
+		0B9F837225C6925300EFC784 /* PropertyWrappers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PropertyWrappers.swift; sourceTree = "<group>"; };
+		0B9F837925C692AB00EFC784 /* WavetableDrawView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WavetableDrawView.swift; sourceTree = "<group>"; };
+		0B9F838025C697E900EFC784 /* Wavetable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Wavetable.swift; sourceTree = "<group>"; };
 		7E56CF207E56CEE000000001 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		C4201A2822403120006E4333 /* GameBoyAudioSynthDemoViewControllerExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameBoyAudioSynthDemoViewControllerExtension.swift; sourceTree = "<group>"; };
 		C433F56022404C7C00F1B750 /* GameBoyAudioSynthDemoViewControllerExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameBoyAudioSynthDemoViewControllerExtension.swift; sourceTree = "<group>"; };
@@ -526,6 +541,7 @@
 			children = (
 				C4F07734223ACB91008FFF06 /* Synth.aif */,
 				C4A3D65A223FF12A002784D4 /* SimplePlayEngine.swift */,
+				0B9F838025C697E900EFC784 /* Wavetable.swift */,
 			);
 			path = Audio;
 			sourceTree = "<group>";
@@ -536,6 +552,10 @@
 				C4BEE7D922236E99001E6B6D /* FilterView.swift */,
 				C4BEE7DB22236E99001E6B6D /* TypeAliases.swift */,
 				C4BEE7D722236E99001E6B6D /* ViewExtensions.swift */,
+				0B9F832825C676CD00EFC784 /* MidiControlView.swift */,
+				0B9F835725C67A0000EFC784 /* GameBoyAudioSynthApp.swift */,
+				0B9F837225C6925300EFC784 /* PropertyWrappers.swift */,
+				0B9F837925C692AB00EFC784 /* WavetableDrawView.swift */,
 			);
 			path = "User Interface";
 			sourceTree = "<group>";
@@ -724,7 +744,7 @@
 			attributes = {
 				LastSwiftUpdateCheck = 1010;
 				LastUpgradeCheck = 1230;
-				ORGANIZATIONNAME = Apple;
+				ORGANIZATIONNAME = "Charles Julian Knight";
 				TargetAttributes = {
 					C437FE39222367A6008D6C09 = {
 						CreatedOnToolsVersion = 10.1;
@@ -868,7 +888,11 @@
 			files = (
 				0B9F82C725C5FA7C00EFC784 /* Basic_Gb_Apu.cpp in Sources */,
 				C4BEE80522236F6F001E6B6D /* ViewExtensions.swift in Sources */,
+				0B9F837A25C692AB00EFC784 /* WavetableDrawView.swift in Sources */,
+				0B9F832925C676CD00EFC784 /* MidiControlView.swift in Sources */,
 				C4F07731223AC4F5008FFF06 /* GameBoyAudioSynthDemoViewController.swift in Sources */,
+				0B9F835825C67A0000EFC784 /* GameBoyAudioSynthApp.swift in Sources */,
+				0B9F838125C697E900EFC784 /* Wavetable.swift in Sources */,
 				C4F004A62239B2070014E248 /* GameBoyAudioSynthDemo.swift in Sources */,
 				C4BEE7F822236F44001E6B6D /* AudioUnitManager.swift in Sources */,
 				0B9F82CB25C5FA7C00EFC784 /* demo.cpp in Sources */,
@@ -876,6 +900,7 @@
 				0B9F82B325C5FA7C00EFC784 /* Multi_Buffer.cpp in Sources */,
 				0B9F82BB25C5FA7C00EFC784 /* Gb_Apu.cpp in Sources */,
 				C4A3D65B223FF12A002784D4 /* SimplePlayEngine.swift in Sources */,
+				0B9F837325C6925300EFC784 /* PropertyWrappers.swift in Sources */,
 				C4BEE80322236F6F001E6B6D /* FilterView.swift in Sources */,
 				C4BEE80422236F6F001E6B6D /* TypeAliases.swift in Sources */,
 				0B9F82B525C5FA7C00EFC784 /* Gb_Oscs.cpp in Sources */,
@@ -907,22 +932,27 @@
 			buildActionMask = 2147483647;
 			files = (
 				C4F0772F223AACBB008FFF06 /* GameBoyAudioSynthDemoParameters.swift in Sources */,
+				0B9F835925C67A0000EFC784 /* GameBoyAudioSynthApp.swift in Sources */,
 				0B9F82B425C5FA7C00EFC784 /* Multi_Buffer.cpp in Sources */,
 				0B9F82BC25C5FA7C00EFC784 /* Gb_Apu.cpp in Sources */,
 				C4F07732223AC4F5008FFF06 /* GameBoyAudioSynthDemoViewController.swift in Sources */,
+				0B9F837B25C692AB00EFC784 /* WavetableDrawView.swift in Sources */,
 				C4BEE80122236F6E001E6B6D /* ViewExtensions.swift in Sources */,
 				C496341322238CDD001D1F5B /* NSStoryboardExtensions.swift in Sources */,
 				0B9F82C825C5FA7C00EFC784 /* Basic_Gb_Apu.cpp in Sources */,
 				C4BEE7FB22236F46001E6B6D /* AudioUnitManager.swift in Sources */,
 				C496341222238CDD001D1F5B /* NSTextFieldExtensions.swift in Sources */,
+				0B9F837425C6925300EFC784 /* PropertyWrappers.swift in Sources */,
 				C4BEE7FF22236F6E001E6B6D /* FilterView.swift in Sources */,
 				C4BEE80022236F6E001E6B6D /* TypeAliases.swift in Sources */,
 				0B9F831525C6430D00EFC784 /* PCMBuffer.hpp in Sources */,
 				C4F004A72239B2070014E248 /* GameBoyAudioSynthDemo.swift in Sources */,
 				0B9F82B625C5FA7C00EFC784 /* Gb_Oscs.cpp in Sources */,
+				0B9F832A25C676CD00EFC784 /* MidiControlView.swift in Sources */,
 				0B9F82B825C5FA7C00EFC784 /* Blip_Buffer.cpp in Sources */,
 				C4201A2922403120006E4333 /* GameBoyAudioSynthDemoViewControllerExtension.swift in Sources */,
 				C4A3D65C223FF12A002784D4 /* SimplePlayEngine.swift in Sources */,
+				0B9F838225C697E900EFC784 /* Wavetable.swift in Sources */,
 				0B9F82CC25C5FA7C00EFC784 /* demo.cpp in Sources */,
 				C4F004A42239B1E10014E248 /* ApuAdapter.mm in Sources */,
 			);
@@ -1020,8 +1050,9 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
-				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				MACOSX_DEPLOYMENT_TARGET = 11.0;
 				ONLY_ACTIVE_ARCH = YES;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
 		};
@@ -1055,7 +1086,8 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
-				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				MACOSX_DEPLOYMENT_TARGET = 11.0;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
 		};
@@ -1237,6 +1269,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
 				CURRENT_PROJECT_VERSION = 1;
@@ -1320,6 +1353,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
 				CURRENT_PROJECT_VERSION = 1;
@@ -1683,7 +1717,7 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
@@ -1767,7 +1801,7 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
