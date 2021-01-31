@@ -6,14 +6,14 @@
 //  Copyright © 2021 Charles Julian Knight. All rights reserved.
 //
 
-import SwiftUI
-import GameBoyAudioSynthFramework
-
-@main
-struct GameBoyAudioSynthApp: App {
-    var body: some Scene {
-        WindowGroup {
-            WavetableView()
-        }
-    }
-}
+//import SwiftUI
+//import GameBoyAudioSynthFramework
+//
+//@main
+//struct GameBoyAudioSynthApp: App {
+//    var body: some Scene {
+//        WindowGroup {
+//            WavetableView()
+//        }
+//    }
+//}

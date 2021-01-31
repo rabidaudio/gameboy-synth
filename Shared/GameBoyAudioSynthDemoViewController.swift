@@ -6,6 +6,13 @@ View controller for the GameBoyAudioSynthDemo audio unit. Manages the interactio
 */
 
 import CoreAudioKit
+import SwiftUI
+
+#if os(iOS)
+import UIKit
+#elseif os(macOS)
+import AppKit
+#endif
 
 public class GameBoyAudioSynthDemoViewController: AUViewController {
 
@@ -14,30 +21,27 @@ public class GameBoyAudioSynthDemoViewController: AUViewController {
 
     private var viewConfig: AUAudioUnitViewConfiguration!
 
-    private var cutoffParameter: AUParameter!
-    private var resonanceParameter: AUParameter!
+//    private var cutoffParameter: AUParameter!
+//    private var resonanceParameter: AUParameter!
     private var parameterObserverToken: AUParameterObserverToken?
-
-    @IBOutlet weak var filterView: FilterView!
-
-    @IBOutlet weak var frequencyTextField: _TextField!
-    @IBOutlet weak var resonanceTextField: _TextField!
     
     var observer: NSKeyValueObservation?
 
     var needsConnection = true
 
-    @IBOutlet var expandedView: _View! {
-        didSet {
-            expandedView.setBorder(color: .black, width: 1)
-        }
-    }
+//    @IBOutlet var expandedView: _View! {
+//        didSet {
+//            expandedView.setBorder(color: .black, width: 1)
+//        }
+//    }
+//
+//    @IBOutlet var compactView: _View! {
+//        didSet {
+//            compactView.setBorder(color: .black, width: 1)
+//        }
+//    }
 
-    @IBOutlet var compactView: _View! {
-        didSet {
-            compactView.setBorder(color: .black, width: 1)
-        }
-    }
+    private var state: WavetableController = WavetableController()
 
     public var viewConfigurations: [AUAudioUnitViewConfiguration] {
         // width: 0 height:0  is always supported, should be the default, largest view.
@@ -80,24 +84,45 @@ public class GameBoyAudioSynthDemoViewController: AUViewController {
 
     // MARK: Lifecycle
 
+    public override func loadView() {
+      self.view = NSView()
+    }
+
     public override func viewDidLoad() {
         super.viewDidLoad()
         
         preferredContentSize = CGSize(width: 800, height: 500)
+
+        let contentView: some View = WavetableView(withExternalController: state)
+        let hostingController = _HostingController(rootView: contentView)
+
+
+        #if os(iOS)
+        // Present the view controller's view.
+        if let view = controller.view {
+            addChild(controller)
+            view.frame = containerView.bounds
+            containerView.addSubview(view)
+            view.pinToSuperviewEdges()
+            controller.didMove(toParent: self)
+        }
+        #elseif os(macOS)
+        // Present the view controller's view.
+        addChild(hostingController)
+        view.addSubview(hostingController.view)
+        hostingController.view.pinToSuperviewEdges()
+        #endif
         
-        view.addSubview(expandedView)
-        expandedView.pinToSuperviewEdges()
+//        view.addSubview(expandedView)
+//        expandedView.pinToSuperviewEdges()
 
         // Set the default view configuration.
         viewConfig = expanded
 
         // Respond to changes in the filterView (frequency and/or response changes).
-        filterView.delegate = self
+//        filterView.delegate = self
 
-        #if os(iOS)
-        frequencyTextField.delegate = self
-        resonanceTextField.delegate = self
-        #endif
+        
 
         guard audioUnit != nil else { return }
 
@@ -108,68 +133,42 @@ public class GameBoyAudioSynthDemoViewController: AUViewController {
     private func connectViewToAU() {
         guard needsConnection, let paramTree = audioUnit?.parameterTree else { return }
 
-        // Find the cutoff and resonance parameters in the parameter tree.
-        guard let cutoff = paramTree.value(forKey: "cutoff") as? AUParameter,
-            let resonance = paramTree.value(forKey: "resonance") as? AUParameter else {
-                fatalError("Required AU parameters not found.")
-        }
-
-        // Set the instance variables.
-        cutoffParameter = cutoff
-        resonanceParameter = resonance
+//        // Find the cutoff and resonance parameters in the parameter tree.
+//        guard let cutoff = paramTree.value(forKey: "cutoff") as? AUParameter,
+//            let resonance = paramTree.value(forKey: "resonance") as? AUParameter else {
+//                fatalError("Required AU parameters not found.")
+//        }
+//
+//        // Set the instance variables.
+//        cutoffParameter = cutoff
+//        resonanceParameter = resonance
 
         // Observe major state changes like a user selecting a user preset.
-        observer = audioUnit?.observe(\.allParameterValues) { object, change in
-            DispatchQueue.main.async {
-                self.updateUI()
-            }
-        }
+//        observer = audioUnit?.observe(\.allParameterValues) { object, change in
+//            DispatchQueue.main.async {
+//                self.updateUI()
+//            }
+//        }
 
         // Observe value changes made to the cutoff and resonance parameters.
         parameterObserverToken =
             paramTree.token(byAddingParameterObserver: { [weak self] address, value in
                 guard let self = self else { return }
 
-                // This closure is being called by an arbitrary queue. Ensure
-                // all UI updates are dispatched back to the main thread.
-                if [cutoff.address, resonance.address].contains(address) {
-                    DispatchQueue.main.async {
-                        self.updateUI()
-                    }
-                }
+//                // This closure is being called by an arbitrary queue. Ensure
+//                // all UI updates are dispatched back to the main thread.
+//                if [cutoff.address, resonance.address].contains(address) {
+//                    DispatchQueue.main.async {
+//                        self.updateUI()
+//                    }
+//                }
             })
 
         // Indicate the view and AU are connected
         needsConnection = false
 
         // Sync UI with parameter state
-        updateUI()
-    }
-
-    private func updateUI() {
-        // Set latest values on graph view
-        filterView.frequency = cutoffParameter.value
-        filterView.resonance = resonanceParameter.value
-
-        // Set latest text field values
-//        frequencyTextField.text = cutoffParameter.string(fromValue: nil)
-//        resonanceTextField.text = resonanceParameter.string(fromValue: nil)
-
-        updateFilterViewFrequencyAndMagnitudes()
-    }
-
-    @IBAction func frequencyUpdated(_ sender: _TextField) {
-        update(parameter: cutoffParameter, with: sender)
-    }
-
-    @IBAction func resonanceUpdated(_ sender: _TextField) {
-        update(parameter: resonanceParameter, with: sender)
-    }
-
-    func update(parameter: AUParameter, with textField: _TextField) {
-//        guard let value = (textField.text as NSString?)?.floatValue else { return }
-//        parameter.value = value
-//        textField.text = parameter.string(fromValue: nil)
+//        updateUI()
     }
 
     // MARK: View Configuration Selection
@@ -186,31 +185,31 @@ public class GameBoyAudioSynthDemoViewController: AUViewController {
 
         self.viewConfig = viewConfig
 
-        let isDefault = viewConfig.width >= expanded.width &&
-                        viewConfig.height >= expanded.height
-        let fromView = isDefault ? compactView : expandedView
-        let toView = isDefault ? expandedView : compactView
-
-        performOnMain {
-            #if os(iOS)
-            UIView.transition(from: fromView!,
-                              to: toView!,
-                              duration: 0.2,
-                              options: [.transitionCrossDissolve, .layoutSubviews])
-
-            if toView == self.expandedView {
-                toView?.pinToSuperviewEdges()
-            }
-
-            #elseif os(macOS)
-            self.view.addSubview(toView!)
-            fromView!.removeFromSuperview()
-            toView!.pinToSuperviewEdges()
-            #endif
-        }
+//        let isDefault = viewConfig.width >= expanded.width &&
+//                        viewConfig.height >= expanded.height
+//        let fromView = isDefault ? compactView : expandedView
+//        let toView = isDefault ? expandedView : compactView
+//
+//        performOnMain {
+//            #if os(iOS)
+//            UIView.transition(from: fromView!,
+//                              to: toView!,
+//                              duration: 0.2,
+//                              options: [.transitionCrossDissolve, .layoutSubviews])
+//
+//            if toView == self.expandedView {
+//                toView?.pinToSuperviewEdges()
+//            }
+//
+//            #elseif os(macOS)
+//            self.view.addSubview(toView!)
+//            fromView!.removeFromSuperview()
+//            toView!.pinToSuperviewEdges()
+//            #endif
+//        }
     }
 
-    func performOnMain(_ operation: @escaping () -> Void) {
+    private func performOnMain(_ operation: @escaping () -> Void) {
         if Thread.isMainThread {
             operation()
         } else {
@@ -220,89 +219,3 @@ public class GameBoyAudioSynthDemoViewController: AUViewController {
         }
     }
 }
-
-extension GameBoyAudioSynthDemoViewController: FilterViewDelegate {
-    // MARK: FilterViewDelegate
-
-    func updateFilterViewFrequencyAndMagnitudes() {
-//        guard let audioUnit = audioUnit else { return }
-
-        // Get an array of frequencies from the view.
-//        let frequencies = filterView.frequencyDataForDrawing()
-
-        // Get the corresponding magnitudes from the AU.
-//        let magnitudes = audioUnit.magnitudes(forFrequencies: frequencies)
-        let magnitudes = [1.0, 1.0]
-
-        filterView.setMagnitudes(magnitudes)
-    }
-
-    func filterViewTouchBegan(_ filterView: FilterView) {
-        resonanceParameter.setValue(filterView.resonance,
-                                    originator: parameterObserverToken,
-                                    atHostTime: 0,
-                                    eventType: .touch)
-        
-        cutoffParameter.setValue(filterView.frequency,
-                                    originator: parameterObserverToken,
-                                    atHostTime: 0,
-                                    eventType: .touch)
-    }
-    
-    func filterView(_ filterView: FilterView, didChangeResonance resonance: Float) {
-        resonanceParameter.setValue(resonance,
-                                    originator: parameterObserverToken,
-                                    atHostTime: 0,
-                                    eventType: .value)
-        updateFilterViewFrequencyAndMagnitudes()
-    }
-
-    func filterView(_ filterView: FilterView, didChangeFrequency frequency: Float) {
-        cutoffParameter.setValue(frequency,
-                                 originator: parameterObserverToken,
-                                 atHostTime: 0,
-                                 eventType: .value)
-        updateFilterViewFrequencyAndMagnitudes()
-    }
-
-    func filterView(_ filterView: FilterView, didChangeFrequency frequency: Float, andResonance resonance: Float) {
-        
-         resonanceParameter.setValue(resonance,
-                                    originator: parameterObserverToken,
-                                    atHostTime: 0,
-                                    eventType: .value)
-        
-        cutoffParameter.setValue(frequency,
-                                 originator: parameterObserverToken,
-                                 atHostTime: 0,
-                                 eventType: .value)
-        
-        updateFilterViewFrequencyAndMagnitudes()
-    }
-
-    func filterViewTouchEnded(_ filterView: FilterView) {
-        resonanceParameter.setValue(filterView.resonance,
-                                    originator: nil,
-                                    atHostTime: 0,
-                                    eventType: .release)
-        
-        cutoffParameter.setValue(filterView.frequency,
-                                    originator: nil,
-                                    atHostTime: 0,
-                                    eventType: .release)
-    }
-    
-    func filterViewDataDidChange(_ filterView: FilterView) {
-        updateFilterViewFrequencyAndMagnitudes()
-    }
-}
-
-#if os(iOS)
-extension GameBoyAudioSynthDemoViewController: UITextFieldDelegate {
-    // MARK: UITextFieldDelegate
-    public func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        view.endEditing(true)
-        return false
-    }
-}
-#endif

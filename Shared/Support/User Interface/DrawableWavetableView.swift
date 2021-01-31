@@ -8,19 +8,23 @@
 
 import SwiftUI
 
+// TODO: unshare class except for frameworks
 class WavetableController: ObservableObject {
     @Published var wavetable: Wavetable
+    @Published var defaultWavetable: DefaultWavetables
 
-    init(wavetable: Wavetable) {
+    init(wavetable: Wavetable, defaultWavetable: DefaultWavetables = .sine) {
         self.wavetable = wavetable
+        self.defaultWavetable = defaultWavetable
     }
 
     convenience init(defaultWavetable: DefaultWavetables = .sine) {
-        self.init(wavetable: defaultWavetable.wavetable)
+        self.init(wavetable: defaultWavetable.wavetable, defaultWavetable: defaultWavetable)
     }
 
     func restoreDefault(_ defaultWavetable: DefaultWavetables) {
-        wavetable = defaultWavetable.wavetable
+        self.defaultWavetable = defaultWavetable
+        self.wavetable = defaultWavetable.wavetable
     }
 }
 
@@ -63,24 +67,24 @@ struct DrawableWavetableView: View {
 
 struct WavetableView: View {
     @ObservedObject var wavetableController: WavetableController
-    @State var selected: DefaultWavetables
+
+    init(withExternalController controller: WavetableController) {
+        self.wavetableController = controller
+    }
 
     init(initialSelection: DefaultWavetables = .sine) {
         self.wavetableController = WavetableController(defaultWavetable: initialSelection)
-        self._selected = State(initialValue: initialSelection)
     }
 
     var body: some View {
         VStack {
-            Picker("Presets", selection: $selected) {
+            Picker("Presets", selection: $wavetableController.defaultWavetable) {
                 ForEach(DefaultWavetables.allCases) { wt in
                     Text(wt.rawValue).tag(wt)
                 }
             }.pickerStyle(SegmentedPickerStyle())
             DrawableWavetableView(wavetableController: wavetableController)
-        }.onChange(of: selected, perform: { value in
-            wavetableController.restoreDefault(value)
-        })
+        }
     }
 }
 

@@ -55,7 +55,7 @@
 		<key>NSExtensionPointIdentifier</key>
 		<string>com.apple.AudioUnit-UI</string>
 		<key>NSExtensionPrincipalClass</key>
-		<string>GameBoyAudioSynthFramework.GameBoyAudioSynthDemoViewController</string>
+		<string>NSApplication</string>
 	</dict>
 </dict>
 </plist>

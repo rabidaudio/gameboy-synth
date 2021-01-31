@@ -136,13 +136,14 @@ public class AudioUnitManager {
         }
 
         #if os(iOS)
-        let storyboard = Storyboard(name: "MainInterface", bundle: appexBundle)
-        guard let controller = storyboard.instantiateInitialViewController() as? GameBoyAudioSynthDemoViewController else {
-            fatalError("Unable to instantiate GameBoyAudioSynthDemoViewController")
-        }
-        return controller
+        // TODO: initalize
+//        let storyboard = Storyboard(name: "MainInterface", bundle: appexBundle)
+//        guard let controller = storyboard.instantiateInitialViewController() as? GameBoyAudioSynthDemoViewController else {
+//            fatalError("Unable to instantiate GameBoyAudioSynthDemoViewController")
+//        }
+//        return controller
         #elseif os(macOS)
-        return GameBoyAudioSynthDemoViewController(nibName: "GameBoyAudioSynthDemoViewController", bundle: appexBundle)
+        return GameBoyAudioSynthDemoViewController(nibName: nil, bundle: appexBundle)
         #endif
     }
 

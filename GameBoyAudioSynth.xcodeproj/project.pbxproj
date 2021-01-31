@@ -7,6 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0B10A93C25C7283700491F04 /* DrawableWavetableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B9F837925C692AB00EFC784 /* DrawableWavetableView.swift */; };
+		0B10A94125C7283800491F04 /* DrawableWavetableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B9F837925C692AB00EFC784 /* DrawableWavetableView.swift */; };
+		0B10A94725C728D100491F04 /* MainContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B10A94625C728D100491F04 /* MainContainer.swift */; };
+		0B10A96325C72E5F00491F04 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B10A96225C72E5F00491F04 /* SceneDelegate.swift */; };
+		0B10A96C25C72F5D00491F04 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B10A95425C72CBE00491F04 /* MainViewController.swift */; };
+		0B10A97B25C737F200491F04 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B10A97125C737E200491F04 /* main.swift */; };
 		0B9F82A525C5FA7C00EFC784 /* notes.txt in Resources */ = {isa = PBXBuildFile; fileRef = 0B9F828625C5FA7B00EFC784 /* notes.txt */; };
 		0B9F82A625C5FA7C00EFC784 /* notes.txt in Resources */ = {isa = PBXBuildFile; fileRef = 0B9F828625C5FA7B00EFC784 /* notes.txt */; };
 		0B9F82A725C5FA7C00EFC784 /* static_assert.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 0B9F828825C5FA7B00EFC784 /* static_assert.hpp */; };
@@ -94,13 +100,6 @@
 		C4BEE7D322236A58001E6B6D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4BEE7C922236A58001E6B6D /* AppDelegate.swift */; };
 		C4BEE7F822236F44001E6B6D /* AudioUnitManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4BEE7E022236E99001E6B6D /* AudioUnitManager.swift */; };
 		C4BEE7FB22236F46001E6B6D /* AudioUnitManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4BEE7E022236E99001E6B6D /* AudioUnitManager.swift */; };
-		C4BEE7FF22236F6E001E6B6D /* FilterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4BEE7D922236E99001E6B6D /* FilterView.swift */; };
-		C4BEE80022236F6E001E6B6D /* TypeAliases.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4BEE7DB22236E99001E6B6D /* TypeAliases.swift */; };
-		C4BEE80122236F6E001E6B6D /* ViewExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4BEE7D722236E99001E6B6D /* ViewExtensions.swift */; };
-		C4BEE80322236F6F001E6B6D /* FilterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4BEE7D922236E99001E6B6D /* FilterView.swift */; };
-		C4BEE80422236F6F001E6B6D /* TypeAliases.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4BEE7DB22236E99001E6B6D /* TypeAliases.swift */; };
-		C4BEE80522236F6F001E6B6D /* ViewExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4BEE7D722236E99001E6B6D /* ViewExtensions.swift */; };
-		C4BEE80922237078001E6B6D /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4BEE80822237078001E6B6D /* MainViewController.swift */; };
 		C4BEE81022237302001E6B6D /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4BEE80F22237302001E6B6D /* MainViewController.swift */; };
 		C4BEE8132223734E001E6B6D /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C4BEE8112223734E001E6B6D /* MainInterface.storyboard */; };
 		C4BEE8172223736F001E6B6D /* GameBoyAudioSynthFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = C4BEE8162223736F001E6B6D /* GameBoyAudioSynthFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -199,6 +198,10 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		0B10A94625C728D100491F04 /* MainContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainContainer.swift; sourceTree = "<group>"; };
+		0B10A95425C72CBE00491F04 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
+		0B10A96225C72E5F00491F04 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
+		0B10A97125C737E200491F04 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		0B9F828625C5FA7B00EFC784 /* notes.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = notes.txt; sourceTree = "<group>"; };
 		0B9F828825C5FA7B00EFC784 /* static_assert.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = static_assert.hpp; sourceTree = "<group>"; };
 		0B9F828925C5FA7B00EFC784 /* config.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = config.hpp; sourceTree = "<group>"; };
@@ -240,7 +243,6 @@
 		C44F544422260E2500484B67 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		C44F544622260E2C00484B67 /* CoreAudioKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudioKit.framework; path = System/Library/Frameworks/CoreAudioKit.framework; sourceTree = SDKROOT; };
 		C44F544822260E4200484B67 /* GameBoyAudioSynthExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameBoyAudioSynthExtension.swift; sourceTree = "<group>"; };
-		C4737B092231D918002CAD0B /* AUv3Filter.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = AUv3Filter.entitlements; sourceTree = "<group>"; };
 		C4737B0A2231D930002CAD0B /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS12.1.sdk/System/Library/Frameworks/AudioToolbox.framework; sourceTree = DEVELOPER_DIR; };
 		C4A3D65A223FF12A002784D4 /* SimplePlayEngine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SimplePlayEngine.swift; sourceTree = "<group>"; };
 		C4BEE79C22236A29001E6B6D /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -255,11 +257,7 @@
 		C4BEE7C622236A58001E6B6D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		C4BEE7C922236A58001E6B6D /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		C4BEE7CA22236A58001E6B6D /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		C4BEE7D722236E99001E6B6D /* ViewExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewExtensions.swift; sourceTree = "<group>"; };
-		C4BEE7D922236E99001E6B6D /* FilterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterView.swift; sourceTree = "<group>"; };
-		C4BEE7DB22236E99001E6B6D /* TypeAliases.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TypeAliases.swift; sourceTree = "<group>"; };
 		C4BEE7E022236E99001E6B6D /* AudioUnitManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioUnitManager.swift; sourceTree = "<group>"; };
-		C4BEE80822237078001E6B6D /* MainViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		C4BEE80A222370B2001E6B6D /* GameBoyAudioSynth.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = GameBoyAudioSynth.entitlements; sourceTree = "<group>"; };
 		C4BEE80D2223713E001E6B6D /* GameBoyAudioSynthFramework.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameBoyAudioSynthFramework.h; sourceTree = "<group>"; };
 		C4BEE80F22237302001E6B6D /* MainViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
@@ -434,7 +432,6 @@
 				C4BEE7A722236A29001E6B6D /* Main.storyboard */,
 				C4BEE7A422236A29001E6B6D /* Assets.xcassets */,
 				C4BEE7AA22236A29001E6B6D /* Info.plist */,
-				C4737B092231D918002CAD0B /* AUv3Filter.entitlements */,
 			);
 			path = GameBoyAudioSynth;
 			sourceTree = "<group>";
@@ -473,10 +470,12 @@
 			children = (
 				C4BEE7C922236A58001E6B6D /* AppDelegate.swift */,
 				0B9F835725C67A0000EFC784 /* GameBoyAudioSynthApp.swift */,
-				C4BEE80822237078001E6B6D /* MainViewController.swift */,
+				0B10A95425C72CBE00491F04 /* MainViewController.swift */,
 				C4BEE7C622236A58001E6B6D /* Assets.xcassets */,
 				C4BEE7CA22236A58001E6B6D /* Info.plist */,
 				C4BEE80A222370B2001E6B6D /* GameBoyAudioSynth.entitlements */,
+				0B10A96225C72E5F00491F04 /* SceneDelegate.swift */,
+				0B10A97125C737E200491F04 /* main.swift */,
 			);
 			path = GameBoyAudioSynth;
 			sourceTree = "<group>";
@@ -539,12 +538,10 @@
 		C4DCBAD6223ADE85000D9CB3 /* User Interface */ = {
 			isa = PBXGroup;
 			children = (
-				C4BEE7D922236E99001E6B6D /* FilterView.swift */,
-				C4BEE7DB22236E99001E6B6D /* TypeAliases.swift */,
-				C4BEE7D722236E99001E6B6D /* ViewExtensions.swift */,
 				0B9F832825C676CD00EFC784 /* MidiControlView.swift */,
 				0B9F837225C6925300EFC784 /* PropertyWrappers.swift */,
 				0B9F837925C692AB00EFC784 /* DrawableWavetableView.swift */,
+				0B10A94625C728D100491F04 /* MainContainer.swift */,
 			);
 			path = "User Interface";
 			sourceTree = "<group>";
@@ -869,7 +866,9 @@
 				C44F544922260E4200484B67 /* GameBoyAudioSynthExtension.swift in Sources */,
 				0B9F83D725C69F9E00EFC784 /* Wavetable.swift in Sources */,
 				0B9F83CB25C69F3400EFC784 /* PropertyWrappers.swift in Sources */,
+				0B10A96325C72E5F00491F04 /* SceneDelegate.swift in Sources */,
 				0B9F83B725C69F0C00EFC784 /* MidiControlView.swift in Sources */,
+				0B10A94725C728D100491F04 /* MainContainer.swift in Sources */,
 				0B9F83EF25C69FB800EFC784 /* DrawableWavetableView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -880,7 +879,6 @@
 			files = (
 				0B9F82C725C5FA7C00EFC784 /* Basic_Gb_Apu.cpp in Sources */,
 				0B9F83FD25C6CA3C00EFC784 /* Extensions.swift in Sources */,
-				C4BEE80522236F6F001E6B6D /* ViewExtensions.swift in Sources */,
 				C4F07731223AC4F5008FFF06 /* GameBoyAudioSynthDemoViewController.swift in Sources */,
 				0B9F838125C697E900EFC784 /* Wavetable.swift in Sources */,
 				C4F004A62239B2070014E248 /* GameBoyAudioSynthDemo.swift in Sources */,
@@ -890,11 +888,10 @@
 				0B9F82B325C5FA7C00EFC784 /* Multi_Buffer.cpp in Sources */,
 				0B9F82BB25C5FA7C00EFC784 /* Gb_Apu.cpp in Sources */,
 				C4A3D65B223FF12A002784D4 /* SimplePlayEngine.swift in Sources */,
-				C4BEE80322236F6F001E6B6D /* FilterView.swift in Sources */,
-				C4BEE80422236F6F001E6B6D /* TypeAliases.swift in Sources */,
 				0B9F82B525C5FA7C00EFC784 /* Gb_Oscs.cpp in Sources */,
 				C4F0772E223AACBB008FFF06 /* GameBoyAudioSynthDemoParameters.swift in Sources */,
 				0B9F82B725C5FA7C00EFC784 /* Blip_Buffer.cpp in Sources */,
+				0B10A93C25C7283700491F04 /* DrawableWavetableView.swift in Sources */,
 				C4F004A32239B1E10014E248 /* ApuAdapter.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -915,9 +912,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0B10A96C25C72F5D00491F04 /* MainViewController.swift in Sources */,
 				C4BEE7D322236A58001E6B6D /* AppDelegate.swift in Sources */,
+				0B10A97B25C737F200491F04 /* main.swift in Sources */,
 				0B9F839725C69D5900EFC784 /* GameBoyAudioSynthApp.swift in Sources */,
-				C4BEE80922237078001E6B6D /* MainViewController.swift in Sources */,
 				0B9F83D525C69F9D00EFC784 /* Wavetable.swift in Sources */,
 				0B9F83C525C69F3300EFC784 /* PropertyWrappers.swift in Sources */,
 				0B9F83AD25C69F0B00EFC784 /* MidiControlView.swift in Sources */,
@@ -934,11 +932,8 @@
 				0B9F82B425C5FA7C00EFC784 /* Multi_Buffer.cpp in Sources */,
 				0B9F82BC25C5FA7C00EFC784 /* Gb_Apu.cpp in Sources */,
 				C4F07732223AC4F5008FFF06 /* GameBoyAudioSynthDemoViewController.swift in Sources */,
-				C4BEE80122236F6E001E6B6D /* ViewExtensions.swift in Sources */,
 				0B9F82C825C5FA7C00EFC784 /* Basic_Gb_Apu.cpp in Sources */,
 				C4BEE7FB22236F46001E6B6D /* AudioUnitManager.swift in Sources */,
-				C4BEE7FF22236F6E001E6B6D /* FilterView.swift in Sources */,
-				C4BEE80022236F6E001E6B6D /* TypeAliases.swift in Sources */,
 				0B9F831525C6430D00EFC784 /* PCMBuffer.hpp in Sources */,
 				C4F004A72239B2070014E248 /* GameBoyAudioSynthDemo.swift in Sources */,
 				0B9F82B625C5FA7C00EFC784 /* Gb_Oscs.cpp in Sources */,
@@ -946,6 +941,7 @@
 				C4A3D65C223FF12A002784D4 /* SimplePlayEngine.swift in Sources */,
 				0B9F838225C697E900EFC784 /* Wavetable.swift in Sources */,
 				0B9F82CC25C5FA7C00EFC784 /* demo.cpp in Sources */,
+				0B10A94125C7283800491F04 /* DrawableWavetableView.swift in Sources */,
 				C4F004A42239B1E10014E248 /* ApuAdapter.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
