@@ -11,7 +11,8 @@
 uint16_t Oscillator::midiNoteToPeriod(uint8_t note) {
     // TODO: there's probably a more efficent non-floating point way to do this
     double frequency = pow(2, ((double)(note)-69)/12) * 440.0;
-    double period = -1 * (131072.0 / frequency)-2048;
+    double period = (-131072.0 / frequency)+2048;
+    // -131072.0/(1750-2048) == 440
     return (uint16_t) lround(period);
 }
 
@@ -41,7 +42,7 @@ void Oscillator::setConstantVolume(uint8_t velocity) {
     setVolumeEnvelope(velocity, false, 0);
 }
 
-void SquareOscilator::setDuty(DutyCycle duty) {
+void SquareOscilator::setDuty(GBDutyCycle duty) {
     duty_ = duty;
     apu_->write_register(startAddr_ + NRX1, duty << 6);
 }
@@ -53,9 +54,10 @@ void SquareOscilator::setEvent(MidiEvent event) {
 
 void SquareOscilator::afterInit() {
     setDuty(duty_);
+    apu_->write_register(startAddr_ + NRX0, 0x00); // disable sweep
 }
 
-WaveVolume WaveOscillator::midiVelocityToWaveVolume(uint8_t velocity) {
+GBWaveVolume WaveOscillator::midiVelocityToWaveVolume(uint8_t velocity) {
     if (velocity < 16) {
         return WAVE_VOL_OFF;
     } else if (velocity < 48) {
@@ -94,7 +96,8 @@ void EventManager::init(Basic_Gb_Apu* apu) {
     apu_ = apu;
     apu_->write_register(NR52, 0x80); // initialize APU
     for (uint i = 0; i < OscCount; i++) {
-        oscs_[i]->setApu(apu);
+        if (i == 3) continue; // TODO: noise osc
+        oscs_[i]->setApu(apu_);
         configs_[i].enabled = false;
         configs_[i].channel = 0;
         configs_[i].voice = 0;
@@ -102,7 +105,7 @@ void EventManager::init(Basic_Gb_Apu* apu) {
     }
 }
 
-void EventManager::setConfig(uint oscillator, MidiConfig config) {
+void EventManager::setConfig(uint oscillator, GBMidiConfig config) {
     if (oscillator >= OscCount) return;
 
     // TODO: allow changing settings without resetting all keys
@@ -119,8 +122,16 @@ void EventManager::setConfig(uint oscillator, MidiConfig config) {
     }
     manager_.setVoices(voicesRequired);
     // TODO: support stereo
-    apu_->write_register(NR50, 0x7F); // turn stero volume to full
-    apu_->write_register(NR51, voices << 8 | voices); // enable voices
+    apu_->write_register(NR50, 0x7F);
+    apu_->write_register(NR51, voices << 4 | voices); // enable voices
+
+    // TODO: remove, testing only
+    if (config.enabled && oscillator == 0) {
+        MidiEvent e;
+        e.note = 69;
+        e.velocity = 127;
+        osc_1_.setEvent(e);
+    }
 }
 
 void EventManager::handleMIDIEvent(long time, const uint8_t* data) {
@@ -150,7 +161,7 @@ void EventManager::handleMIDIEvent(long time, const uint8_t* data) {
         if (!configs_[i].enabled) continue;
 
         MidiEvent e = manager_.get(configs_[i].voice);
-        e.note += configs_[i].offset; // TODO: bound?
+        e.note += configs_[i].transpose; // TODO: bound?
         oscs_[i]->setEvent(e);
     }
 }

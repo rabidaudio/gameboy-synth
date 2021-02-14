@@ -57,7 +57,7 @@ static int const sampleRate = 44100;
 //    return apu_.read_register(addr);
 //}
 
-- (void)configure:(UInt8)oscillator with:(struct MidiConfig)config {
+- (void)configure:(UInt8)oscillator with:(struct GBMidiConfig)config {
     eventManager_.setConfig(oscillator, config);
 }
 
@@ -118,7 +118,7 @@ static int const sampleRate = 44100;
                     // paramEvent.parameterAddress, paramEvent.value, paramEvent.rampDurationSampleFrames
                     break; // TODO: ramp parameters
                 case AURenderEventMIDI:
-                    eventManager->handleMIDIEvent(event->MIDI.eventSampleTime, event->MIDI.data);
+                    // eventManager->handleMIDIEvent(event->MIDI.eventSampleTime, event->MIDI.data);
                     break;
                 case AURenderEventMIDISysEx:
                     break; // unsupported

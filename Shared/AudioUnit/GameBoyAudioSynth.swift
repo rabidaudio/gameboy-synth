@@ -119,6 +119,10 @@ public class GameBoyAudioSynth: AUAudioUnit {
         
         // Set the default preset
         currentPreset = factoryPresets.first
+
+        // TODO: remove, testing only
+        let config = MidiConfig(enabled: true)
+        apu.configure(0, with: config.toGB())
     }
 
     public override func allocateRenderResources() throws {
@@ -158,5 +162,11 @@ public class GameBoyAudioSynth: AUAudioUnit {
 
     public override func select(_ viewConfiguration: AUAudioUnitViewConfiguration) {
         viewController?.selectViewConfiguration(viewConfiguration)
+    }
+}
+
+extension MidiConfig {
+    func toGB() -> GBMidiConfig {
+        return GBMidiConfig(enabled: self.enabled, channel: UInt32(self.channel - 1), voice: UInt32(self.voice - 1), transpose: Int32(self.transpose))
     }
 }

@@ -76,6 +76,7 @@ public class AudioUnitManager {
 
     /// The playback engine used to play audio.
     private let playEngine = SimplePlayEngine()
+//    private let engine = AVAudioEngine()
 
     // The audio unit's filter cutoff frequency parameter object.
     private var cutoffParameter: AUParameter!
@@ -118,6 +119,13 @@ public class AudioUnitManager {
             self.audioUnit = audioUnit.auAudioUnit as? GameBoyAudioSynth
             self.connectParametersToControls()
             self.playEngine.connect(avAudioUnit: audioUnit)
+            self.playEngine.startPlaying()
+
+
+//            self.engine.prepare()
+//            self.engine.attach(audioUnit)
+//            let stereoFormat = AVAudioFormat(standardFormatWithSampleRate: 441000, channels: 2)
+//            self.engine.connect(audioUnit, to: self.engine.mainMixerNode, format: stereoFormat)
         }
     }
 
@@ -188,10 +196,10 @@ public class AudioUnitManager {
         delegate?.resonanceValueDidChange(param.value)
     }
 
-    @discardableResult
-    public func togglePlayback() -> Bool {
-        return playEngine.togglePlay()
-    }
+//    @discardableResult
+//    public func togglePlayback() -> Bool {
+//        return playEngine.togglePlay()
+//    }
 
     public func toggleView() {
         viewController.toggleViewConfiguration()
@@ -199,6 +207,7 @@ public class AudioUnitManager {
 
     public func cleanup() {
         playEngine.stopPlaying()
+        // TODO: stop engine
 
         guard let parameterTree = audioUnit?.parameterTree else { return }
         parameterTree.removeParameterObserver(parameterObserverToken)

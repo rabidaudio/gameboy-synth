@@ -21,7 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 //- (void)write:(unsigned char)value toRegister:(unsigned int)addr;
 //- (unsigned char)readFromRegister:(unsigned int)addr;
-- (void)configure:(UInt8)oscillator with:(struct MidiConfig)config;
+- (void)configure:(UInt8)oscillator with:(struct GBMidiConfig)config;
 - (void)allocateRenderResources;
 - (void)deallocateRenderResources;
 - (AUInternalRenderBlock)internalRenderBlock;

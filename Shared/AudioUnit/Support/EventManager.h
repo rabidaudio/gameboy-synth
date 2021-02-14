@@ -64,6 +64,7 @@ public:
     }
     void setApu(Basic_Gb_Apu* apu) {
         apu_ = apu;
+        afterInit();
     }
     virtual void setEvent(MidiEvent event) = 0;
 
@@ -83,11 +84,11 @@ protected:
 
 class SquareOscilator: public Oscillator {
 private:
-    DutyCycle duty_ = DUTY_CYCLE_50;
+    GBDutyCycle duty_ = DUTY_CYCLE_50;
 
 public:
     SquareOscilator(uint16_t startAddr) : Oscillator(startAddr) {};
-    void setDuty(DutyCycle duty);
+    void setDuty(GBDutyCycle duty);
     void setEvent(MidiEvent event);
 
 protected:
@@ -113,7 +114,7 @@ public:
 protected:
     void afterInit();
 private:
-    WaveVolume midiVelocityToWaveVolume(uint8_t velocity);
+    GBWaveVolume midiVelocityToWaveVolume(uint8_t velocity);
     void setVelocity(uint8_t velocity);
     void setWaveTable(uint8_t* samples);
 };
@@ -128,7 +129,7 @@ private:
     // TODO: support channels
 //    MidiManager<16, OscCount> managers_[OscCount];
 //    uint channels_[OscCount]; // key = manager index, value = channel id
-    MidiConfig configs_[OscCount];
+    GBMidiConfig configs_[OscCount];
     MidiManager<16, 4> manager_;
     Basic_Gb_Apu* apu_;
     SquareOscilatorOne osc_1_;
@@ -144,7 +145,7 @@ public:
     EventManager() {}
 
     void init(Basic_Gb_Apu* apu);
-    void setConfig(uint oscillator, MidiConfig config);
+    void setConfig(uint oscillator, GBMidiConfig config);
     void handleMIDIEvent(long time, const uint8_t* data);
 };
 
