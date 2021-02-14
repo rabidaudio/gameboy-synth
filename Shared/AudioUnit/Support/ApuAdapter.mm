@@ -12,6 +12,7 @@
 #import <CoreAudioKit/AUViewController.h>
 #import "Basic_Gb_Apu.h"
 #import "ApuAdapter.h"
+#import "EventManager.h"
 #import "PCMBuffer.hpp"
 
 // This obj-c class acts as a wrapper around the Apu and a C struct containing audio buffers.
@@ -24,8 +25,11 @@
     // we could use double buffering by keeping two Apus, and writing to one while we
     // read from the other. At this point that optimization might be premature; it seems like
     // write_register is relatively atomic.
-    Basic_Gb_Apu _apu;
-    PCMBuffer _buffer;
+    // Actually I think a better way is to queue up changes from the UI and run them
+    // at the beginning of the next render loop
+    Basic_Gb_Apu apu_;
+    PCMBuffer buffer_;
+    EventManager eventManager_;
 }
 
 static int const channels = 2;
@@ -35,41 +39,46 @@ static int const sampleRate = 44100;
 
     if (self = [super init]) {
         AVAudioFormat* format = [[AVAudioFormat alloc] initStandardFormatWithSampleRate:sampleRate channels:channels];
-        _buffer.init(format, channels);
+        buffer_.init(format, channels);
         // Set sample rate and check for out of memory error
-        if (_apu.set_sample_rate(sampleRate) != blargg_success) {
+        if (apu_.set_sample_rate(sampleRate) != blargg_success) {
             return nil;
         }
+        eventManager_.init(&apu_);
     }
     return self;
 }
 
-- (void)write:(unsigned char)data toRegister:(gb_addr_t)addr {
-    _apu.write_register(addr, data);
-}
+//- (void)write:(unsigned char)data toRegister:(gb_addr_t)addr {
+//    apu_.write_register(addr, data);
+//}
+//
+//- (unsigned char)readFromRegister:(gb_addr_t)addr {
+//    return apu_.read_register(addr);
+//}
 
-- (unsigned char)readFromRegister:(gb_addr_t)addr {
-    return _apu.read_register(addr);
+- (void)configure:(UInt8)oscillator with:(struct MidiConfig)config {
+    eventManager_.setConfig(oscillator, config);
 }
 
 - (AUAudioFrameCount)maximumFramesToRender {
-    return _buffer.maxFrames;
+    return buffer_.maxFrames;
 }
 
 - (void)setMaximumFramesToRender:(AUAudioFrameCount)maximumFramesToRender {
-    _buffer.maxFrames = maximumFramesToRender;
+    buffer_.maxFrames = maximumFramesToRender;
 }
 
 - (AVAudioFormat *)format {
-    return _buffer.outFormat;
+    return buffer_.outFormat;
 }
 
 - (void)allocateRenderResources {
-    _buffer.allocateRenderResources();
+    buffer_.allocateRenderResources();
 }
 
 - (void)deallocateRenderResources {
-    _buffer.deallocateRenderResources();
+    buffer_.deallocateRenderResources();
 }
 
 #pragma mark - AUAudioUnit (AUAudioUnitImplementation)
@@ -82,8 +91,9 @@ static int const sampleRate = 44100;
      render, we're doing it wrong.
      */
     // Specify captured objects are mutable.
-    __block Basic_Gb_Apu *apu = &_apu;
-    __block PCMBuffer *buffer = &_buffer;
+    __block Basic_Gb_Apu *apu = &apu_;
+    __block PCMBuffer *buffer = &buffer_;
+    __block EventManager *eventManager = &eventManager_;
 
     return ^AUAudioUnitStatus(AudioUnitRenderActionFlags *actionFlags,
                               const AudioTimeStamp       *timestamp,
@@ -98,6 +108,25 @@ static int const sampleRate = 44100;
 //        if (frameCount > state->maximumFramesToRender()) {
 //            return kAudioUnitErr_TooManyFramesToProcess;
 //        }
+
+        const AURenderEvent *event = realtimeEventListHead;
+        while (event != nullptr) {
+            switch (event->head.eventType) {
+                case AURenderEventParameter:
+                case AURenderEventParameterRamp:
+                    // AUParameterEvent const& paramEvent = event->parameter;
+                    // paramEvent.parameterAddress, paramEvent.value, paramEvent.rampDurationSampleFrames
+                    break; // TODO: ramp parameters
+                case AURenderEventMIDI:
+                    eventManager->handleMIDIEvent(event->MIDI.eventSampleTime, event->MIDI.data);
+                    break;
+                case AURenderEventMIDISysEx:
+                    break; // unsupported
+                default:
+                    break;
+            }
+            event = event->head.next;
+        }
 
         // If passed null output buffer pointers, process in-our own buffer.
         AudioBufferList *outAudioBufferList = outputData;

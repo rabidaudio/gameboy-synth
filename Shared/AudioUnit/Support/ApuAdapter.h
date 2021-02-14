@@ -7,6 +7,7 @@
 //
 
 #import <AudioToolbox/AudioToolbox.h>
+#include "Structs.h"
 
 @class GameBoyAudioSynthDemoViewController;
 
@@ -18,8 +19,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, readonly) AUAudioUnitBus *outputBus;
 @property (nonatomic, readonly) AVAudioFormat *format;
 
-- (void)write:(unsigned char)value toRegister:(unsigned int)addr;
-- (unsigned char)readFromRegister:(unsigned int)addr;
+//- (void)write:(unsigned char)value toRegister:(unsigned int)addr;
+//- (unsigned char)readFromRegister:(unsigned int)addr;
+- (void)configure:(UInt8)oscillator with:(struct MidiConfig)config;
 - (void)allocateRenderResources;
 - (void)deallocateRenderResources;
 - (AUInternalRenderBlock)internalRenderBlock;

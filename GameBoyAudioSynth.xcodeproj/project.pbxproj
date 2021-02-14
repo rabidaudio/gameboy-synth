@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0B0AAA8F25D8A57200FF0245 /* EventManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B0AAA8E25D8A57200FF0245 /* EventManager.h */; };
+		0B0AAA9025D8A57200FF0245 /* EventManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B0AAA8E25D8A57200FF0245 /* EventManager.h */; };
+		0B0AAA9E25D8A7F100FF0245 /* Structs.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B0AAA9D25D8A7F100FF0245 /* Structs.h */; };
+		0B0AAA9F25D8A7F100FF0245 /* Structs.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B0AAA9D25D8A7F100FF0245 /* Structs.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		0B10A93C25C7283700491F04 /* DrawableWavetableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B9F837925C692AB00EFC784 /* DrawableWavetableView.swift */; };
 		0B10A94125C7283800491F04 /* DrawableWavetableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B9F837925C692AB00EFC784 /* DrawableWavetableView.swift */; };
 		0B10A96C25C72F5D00491F04 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B10A95425C72CBE00491F04 /* MainViewController.swift */; };
@@ -17,6 +21,14 @@
 		0B10A9A325C73D6F00491F04 /* PropertyWrappers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B9F837225C6925300EFC784 /* PropertyWrappers.swift */; };
 		0B10A9C125C741AC00491F04 /* Controller.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B10A9C025C741AC00491F04 /* Controller.swift */; };
 		0B10A9C225C741AC00491F04 /* Controller.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B10A9C025C741AC00491F04 /* Controller.swift */; };
+		0B6A429025D0D78F001181A4 /* types.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B6A428C25D0D78F001181A4 /* types.h */; };
+		0B6A429125D0D78F001181A4 /* types.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B6A428C25D0D78F001181A4 /* types.h */; };
+		0B6A429225D0D78F001181A4 /* midimanager.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B6A428D25D0D78F001181A4 /* midimanager.h */; };
+		0B6A429325D0D78F001181A4 /* midimanager.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B6A428D25D0D78F001181A4 /* midimanager.h */; };
+		0B6A429425D0D78F001181A4 /* staticlinkedlist.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B6A428E25D0D78F001181A4 /* staticlinkedlist.h */; };
+		0B6A429525D0D78F001181A4 /* staticlinkedlist.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B6A428E25D0D78F001181A4 /* staticlinkedlist.h */; };
+		0B6A429625D0D78F001181A4 /* midimanager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0B6A428F25D0D78F001181A4 /* midimanager.cpp */; };
+		0B6A429725D0D78F001181A4 /* midimanager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0B6A428F25D0D78F001181A4 /* midimanager.cpp */; };
 		0B9F82A525C5FA7C00EFC784 /* notes.txt in Resources */ = {isa = PBXBuildFile; fileRef = 0B9F828625C5FA7B00EFC784 /* notes.txt */; };
 		0B9F82A625C5FA7C00EFC784 /* notes.txt in Resources */ = {isa = PBXBuildFile; fileRef = 0B9F828625C5FA7B00EFC784 /* notes.txt */; };
 		0B9F82A725C5FA7C00EFC784 /* static_assert.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 0B9F828825C5FA7B00EFC784 /* static_assert.hpp */; };
@@ -67,6 +79,8 @@
 		0B9F838225C697E900EFC784 /* Wavetable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B9F838025C697E900EFC784 /* Wavetable.swift */; };
 		0B9F83FD25C6CA3C00EFC784 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B9F83FC25C6CA3C00EFC784 /* Extensions.swift */; };
 		0B9F83FE25C6CA3C00EFC784 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B9F83FC25C6CA3C00EFC784 /* Extensions.swift */; };
+		0BDE2C3725C77D0500EF1E70 /* EventManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0BDE2C3625C77D0500EF1E70 /* EventManager.cpp */; };
+		0BDE2C3825C77D0500EF1E70 /* EventManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0BDE2C3625C77D0500EF1E70 /* EventManager.cpp */; };
 		C433F56122404C7C00F1B750 /* GameBoyAudioSynthDemoViewControllerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = C433F56022404C7C00F1B750 /* GameBoyAudioSynthDemoViewControllerExtension.swift */; };
 		C437FE59222367CD008D6C09 /* GameBoyAudioSynthFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C437FE52222367CD008D6C09 /* GameBoyAudioSynthFramework.framework */; };
 		C437FE5A222367CD008D6C09 /* GameBoyAudioSynthFramework.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C437FE52222367CD008D6C09 /* GameBoyAudioSynthFramework.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -185,9 +199,15 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		0B0AAA8E25D8A57200FF0245 /* EventManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EventManager.h; sourceTree = "<group>"; };
+		0B0AAA9D25D8A7F100FF0245 /* Structs.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Structs.h; sourceTree = "<group>"; };
 		0B10A95425C72CBE00491F04 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		0B10A97125C737E200491F04 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		0B10A9C025C741AC00491F04 /* Controller.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Controller.swift; sourceTree = "<group>"; };
+		0B6A428C25D0D78F001181A4 /* types.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = types.h; sourceTree = "<group>"; };
+		0B6A428D25D0D78F001181A4 /* midimanager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = midimanager.h; sourceTree = "<group>"; };
+		0B6A428E25D0D78F001181A4 /* staticlinkedlist.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = staticlinkedlist.h; sourceTree = "<group>"; };
+		0B6A428F25D0D78F001181A4 /* midimanager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = midimanager.cpp; sourceTree = "<group>"; };
 		0B9F828625C5FA7B00EFC784 /* notes.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = notes.txt; sourceTree = "<group>"; };
 		0B9F828825C5FA7B00EFC784 /* static_assert.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = static_assert.hpp; sourceTree = "<group>"; };
 		0B9F828925C5FA7B00EFC784 /* config.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = config.hpp; sourceTree = "<group>"; };
@@ -217,6 +237,7 @@
 		0B9F837925C692AB00EFC784 /* DrawableWavetableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawableWavetableView.swift; sourceTree = "<group>"; };
 		0B9F838025C697E900EFC784 /* Wavetable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Wavetable.swift; sourceTree = "<group>"; };
 		0B9F83FC25C6CA3C00EFC784 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		0BDE2C3625C77D0500EF1E70 /* EventManager.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = EventManager.cpp; sourceTree = "<group>"; };
 		7E56CF207E56CEE000000001 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		C433F56022404C7C00F1B750 /* GameBoyAudioSynthDemoViewControllerExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameBoyAudioSynthDemoViewControllerExtension.swift; sourceTree = "<group>"; };
 		C437FE3A222367A6008D6C09 /* GameBoyAudioSynth.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GameBoyAudioSynth.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -309,6 +330,17 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0B6A428B25D0D78F001181A4 /* midimanager */ = {
+			isa = PBXGroup;
+			children = (
+				0B6A428C25D0D78F001181A4 /* types.h */,
+				0B6A428D25D0D78F001181A4 /* midimanager.h */,
+				0B6A428E25D0D78F001181A4 /* staticlinkedlist.h */,
+				0B6A428F25D0D78F001181A4 /* midimanager.cpp */,
+			);
+			path = midimanager;
+			sourceTree = "<group>";
+		};
 		0B9F828525C5FA7B00EFC784 /* Gb_Snd_Emu-0.1.4 */ = {
 			isa = PBXGroup;
 			children = (
@@ -487,11 +519,15 @@
 		C4BEE7E422236E99001E6B6D /* Support */ = {
 			isa = PBXGroup;
 			children = (
+				0B6A428B25D0D78F001181A4 /* midimanager */,
 				0B9F828525C5FA7B00EFC784 /* Gb_Snd_Emu-0.1.4 */,
 				C4F0049F2239B1E10014E248 /* ApuAdapter.h */,
 				C4F004A02239B1E10014E248 /* ApuAdapter.mm */,
 				0B9F82E525C5FF3500EFC784 /* config.h */,
 				0B9F831125C6430D00EFC784 /* PCMBuffer.hpp */,
+				0BDE2C3625C77D0500EF1E70 /* EventManager.cpp */,
+				0B0AAA8E25D8A57200FF0245 /* EventManager.h */,
+				0B0AAA9D25D8A7F100FF0245 /* Structs.h */,
 			);
 			path = Support;
 			sourceTree = "<group>";
@@ -554,8 +590,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				0B9F82B925C5FA7C00EFC784 /* Multi_Buffer.h in Headers */,
+				0B0AAA8F25D8A57200FF0245 /* EventManager.h in Headers */,
+				0B6A429225D0D78F001181A4 /* midimanager.h in Headers */,
 				C4F004A12239B1E10014E248 /* ApuAdapter.h in Headers */,
 				0B9F82B125C5FA7C00EFC784 /* blargg_common.h in Headers */,
+				0B6A429025D0D78F001181A4 /* types.h in Headers */,
 				0B9F82C325C5FA7C00EFC784 /* Blip_Buffer.h in Headers */,
 				0B9F82E625C5FF3500EFC784 /* config.h in Headers */,
 				0B9F82AD25C5FA7C00EFC784 /* Basic_Gb_Apu.h in Headers */,
@@ -564,9 +603,11 @@
 				0B9F82AB25C5FA7C00EFC784 /* cstdint.hpp in Headers */,
 				0B9F82BD25C5FA7C00EFC784 /* Gb_Oscs.h in Headers */,
 				0B9F82BF25C5FA7C00EFC784 /* Gb_Apu.h in Headers */,
+				0B0AAA9E25D8A7F100FF0245 /* Structs.h in Headers */,
 				0B9F82A925C5FA7C00EFC784 /* config.hpp in Headers */,
 				0B9F82C125C5FA7C00EFC784 /* Blip_Synth.h in Headers */,
 				0B9F82C525C5FA7C00EFC784 /* blargg_source.h in Headers */,
+				0B6A429425D0D78F001181A4 /* staticlinkedlist.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -575,9 +616,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				0B9F82BA25C5FA7C00EFC784 /* Multi_Buffer.h in Headers */,
+				0B6A429325D0D78F001181A4 /* midimanager.h in Headers */,
+				0B0AAA9F25D8A7F100FF0245 /* Structs.h in Headers */,
 				C4F004A22239B1E10014E248 /* ApuAdapter.h in Headers */,
 				0B9F82B225C5FA7C00EFC784 /* blargg_common.h in Headers */,
+				0B6A429125D0D78F001181A4 /* types.h in Headers */,
 				0B9F82C425C5FA7C00EFC784 /* Blip_Buffer.h in Headers */,
+				0B0AAA9025D8A57200FF0245 /* EventManager.h in Headers */,
 				0B9F82E725C5FF3500EFC784 /* config.h in Headers */,
 				0B9F82AE25C5FA7C00EFC784 /* Basic_Gb_Apu.h in Headers */,
 				C496341422238CFA001D1F5B /* GameBoyAudioSynthFramework.h in Headers */,
@@ -588,6 +633,7 @@
 				0B9F82AA25C5FA7C00EFC784 /* config.hpp in Headers */,
 				0B9F82C225C5FA7C00EFC784 /* Blip_Synth.h in Headers */,
 				0B9F82C625C5FA7C00EFC784 /* blargg_source.h in Headers */,
+				0B6A429525D0D78F001181A4 /* staticlinkedlist.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -713,7 +759,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 1010;
-				LastUpgradeCheck = 1230;
+				LastUpgradeCheck = 1240;
 				ORGANIZATIONNAME = "Charles Julian Knight";
 				TargetAttributes = {
 					C437FE39222367A6008D6C09 = {
@@ -860,6 +906,7 @@
 				0B9F838125C697E900EFC784 /* Wavetable.swift in Sources */,
 				C4F004A62239B2070014E248 /* GameBoyAudioSynth.swift in Sources */,
 				C4BEE7F822236F44001E6B6D /* AudioUnitManager.swift in Sources */,
+				0BDE2C3725C77D0500EF1E70 /* EventManager.cpp in Sources */,
 				0B10A9A325C73D6F00491F04 /* PropertyWrappers.swift in Sources */,
 				0B9F82CB25C5FA7C00EFC784 /* demo.cpp in Sources */,
 				0B9F831425C6430D00EFC784 /* PCMBuffer.hpp in Sources */,
@@ -868,6 +915,7 @@
 				C4A3D65B223FF12A002784D4 /* SimplePlayEngine.swift in Sources */,
 				0B9F82B525C5FA7C00EFC784 /* Gb_Oscs.cpp in Sources */,
 				C4F0772E223AACBB008FFF06 /* SynthParameters.swift in Sources */,
+				0B6A429625D0D78F001181A4 /* midimanager.cpp in Sources */,
 				0B10A9C125C741AC00491F04 /* Controller.swift in Sources */,
 				0B9F82B725C5FA7C00EFC784 /* Blip_Buffer.cpp in Sources */,
 				0B10A93C25C7283700491F04 /* DrawableWavetableView.swift in Sources */,
@@ -904,6 +952,7 @@
 				0B9F82BC25C5FA7C00EFC784 /* Gb_Apu.cpp in Sources */,
 				C4F07732223AC4F5008FFF06 /* GameBoyAudioSynthViewController.swift in Sources */,
 				0B9F82C825C5FA7C00EFC784 /* Basic_Gb_Apu.cpp in Sources */,
+				0BDE2C3825C77D0500EF1E70 /* EventManager.cpp in Sources */,
 				0B10A99E25C73D6E00491F04 /* PropertyWrappers.swift in Sources */,
 				C4BEE7FB22236F46001E6B6D /* AudioUnitManager.swift in Sources */,
 				0B9F831525C6430D00EFC784 /* PCMBuffer.hpp in Sources */,
@@ -912,6 +961,7 @@
 				0B9F82B825C5FA7C00EFC784 /* Blip_Buffer.cpp in Sources */,
 				C4A3D65C223FF12A002784D4 /* SimplePlayEngine.swift in Sources */,
 				0B9F838225C697E900EFC784 /* Wavetable.swift in Sources */,
+				0B6A429725D0D78F001181A4 /* midimanager.cpp in Sources */,
 				0B10A9C225C741AC00491F04 /* Controller.swift in Sources */,
 				0B9F82CC25C5FA7C00EFC784 /* demo.cpp in Sources */,
 				0B10A94125C7283800491F04 /* DrawableWavetableView.swift in Sources */,
@@ -976,6 +1026,7 @@
 		C437FE342223672C008D6C09 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "compiler-default";
 				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
@@ -1013,6 +1064,7 @@
 		C437FE352223672C008D6C09 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "compiler-default";
 				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
@@ -1645,7 +1697,7 @@
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
@@ -1671,7 +1723,7 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
@@ -1729,7 +1781,7 @@
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
@@ -1755,7 +1807,7 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
