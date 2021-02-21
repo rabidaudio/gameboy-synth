@@ -8,7 +8,7 @@
   ==============================================================================
 */
 
-#include "EventManager.h"
+#include "Synth.h"
 
 uint16_t Oscillator::midiNoteToPeriod(uint8_t note) {
     // TODO: there's probably a more efficent non-floating point way to do this
@@ -46,7 +46,7 @@ void Oscillator::setConstantVolume(uint8_t velocity) {
 
 Oscillator::~Oscillator() {};
 
-void SquareOscilator::setDuty(GBDutyCycle duty) {
+void SquareOscilator::setDuty(DutyCycle duty) {
     duty_ = duty;
     apu_->write_register(startAddr_ + NRX1, duty << 6);
 }
@@ -95,20 +95,31 @@ void WaveOscillator::afterInit() {
     setWaveTable(zeros);
 }
 
-void EventManager::init(Basic_Gb_Apu* apu) {
-    apu_ = apu;
-    apu_->write_register(NR52, 0x80); // initialize APU
+void Synth::configure(long sampleRate, size_t channels) {
+    blargg_err_t res = apu_.set_sample_rate(sampleRate);
+    apu_.write_register(NR52, 0x80); // initialize APU
+    jassert(res == blargg_success);
+
+    // TODO: configure APU mono or stereo
+
+    // TODO: temporary
+    apu_.write_register( 0xff25, 0x11 );
+}
+
+void Synth::stop() {
+    apu_.write_register(NR52, 0x00);
     for (uint i = 0; i < OscCount; i++) {
         if (i == 3) continue; // TODO: noise osc
-        oscs_[i]->setApu(apu_);
+        oscs_[i]->setApu(&apu_);
         configs_[i].enabled = false;
         configs_[i].channel = 0;
         configs_[i].voice = 0;
         setConfig(i, configs_[i]);
     }
+    // TODO: clear BlipBuffer
 }
 
-void EventManager::setConfig(uint oscillator, GBMidiConfig config) {
+void Synth::setConfig(uint oscillator, MidiConfig config) {
     if (oscillator >= OscCount) return;
 
     // TODO: allow changing settings without resetting all keys
@@ -125,8 +136,8 @@ void EventManager::setConfig(uint oscillator, GBMidiConfig config) {
     }
     manager_.setVoices(voicesRequired);
     // TODO: support stereo
-    apu_->write_register(NR50, 0x7F);
-    apu_->write_register(NR51, (voices << 4) | voices); // enable voices
+    apu_.write_register(NR50, 0x7F);
+    apu_.write_register(NR51, (voices << 4) | voices); // enable voices
 
     // TODO: remove, testing only
     if (config.enabled && oscillator == 0) {
@@ -137,7 +148,18 @@ void EventManager::setConfig(uint oscillator, GBMidiConfig config) {
     }
 }
 
-void EventManager::handleMIDIEvent(long time, const uint8_t* data) {
+void Synth::readSamples(blip_sample_t* buffer, size_t sampleCount) {
+    // Generate 1/60 second of sound into APU's sample buffer
+    while (apu_.samples_avail() < sampleCount) {
+        apu_.end_frame();
+    }
+    // TODO: avoid doublebuffering with custom BlipBuffer which converts to float
+    //  on write
+    long count = apu_.read_samples(buffer, sampleCount);
+    jassert(count == sampleCount);
+}
+
+void Synth::handleMIDIEvent(long time, const uint8_t* data) {
     // https://www.midi.org/specifications-old/item/table-1-summary-of-midi-message
     const uint8_t NOTE_ON = 0x80;
     const uint8_t NOTE_OFF = 0x90;

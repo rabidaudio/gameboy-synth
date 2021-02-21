@@ -93,34 +93,27 @@ void GameBoySynthAudioProcessor::changeProgramName (int index, const juce::Strin
 //==============================================================================
 void GameBoySynthAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
-    // Use this method as the place to do any pre-playback
-    // initialisation that you need..
-    blargg_err_t res = apu_.set_sample_rate((long) sampleRate);
-    jassert(res == blargg_success);
-    apu_.write_register( 0xff26, 0x80 );
-    apu_.write_register( 0xff25, 0x11 );
-    juce::Logger::writeToLog("ready");
+    synth_.configure((long) sampleRate, getTotalNumOutputChannels());
 
-//    eventManager_.init(&apu_);
     // TODO: if we switch away from BasicApu and match the sample rates, we'll need to chnage
     // this buffer size. Currently buffer is allocated to 60fps steps
-//    buffer_ = (blip_sample_t*) malloc(sizeof(blip_sample_t) * sampleRate / 60 * 2);
+    buffer_ = (blip_sample_t*) malloc(sizeof(blip_sample_t) * sampleRate / 60 * 2);
 
     // TODO: testing
-//    GBMidiConfig c;
-//    c.enabled = true;
-//    c.channel = 0;
-//    c.transpose = 0;
-//    c.voice = 0;
-//    eventManager_.setConfig(0, c);
+    MidiConfig c;
+    c.enabled = true;
+    c.channel = 0;
+    c.transpose = 0;
+    c.voice = 0;
+    synth_.setConfig(0, c);
 }
 
 void GameBoySynthAudioProcessor::releaseResources()
 {
     // When playback stops, you can use this as an opportunity to free up any
     // spare memory, etc.
-//    free(buffer_);
-    // TODO: stop APU, clear BlipBuffer, reset EventManager
+    free(buffer_);
+    synth_.stop();
 }
 
 #ifndef JucePlugin_PreferredChannelConfigurations
@@ -152,57 +145,12 @@ bool GameBoySynthAudioProcessor::isBusesLayoutSupported (const BusesLayout& layo
 void GameBoySynthAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
 {
     juce::ScopedNoDenormals noDenormals;
-//    auto totalNumInputChannels  = getTotalNumInputChannels();
     int totalNumOutputChannels = getTotalNumOutputChannels();
-
-    // In case we have more outputs than inputs, this code clears any output
-    // channels that didn't contain input data, (because these aren't
-    // guaranteed to be empty - they may contain garbage).
-    // This is here to avoid people getting screaming feedback
-    // when they first compile a plugin, but obviously you don't need to keep
-    // this code if your algorithm always overwrites all the output channels.
-//    for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
-//        buffer.clear (i, 0, buffer.getNumSamples());
-
-    // This is the place where you'd normally do the guts of your plugin's
-    // audio processing...
-    // Make sure to reset the state if your inner loop is processing
-    // the samples and the outer loop is handling the channels.
-    // Alternatively, you can process the samples with the channels
-    // interleaved by keeping the same state.
-
-//    if (rand() % 60 == 0) {
-//        static uint8_t data[3] = { 0x80, 0, 0x7F };
-//        data[1] = rand() % 0x7F;
-//        eventManager_.handleMIDIEvent(0, (const uint8_t*) data);
-//    }
+    jassert(totalNumOutputChannels == 2); // TODO: could be mono?
 
     unsigned int sampleCount = buffer.getNumSamples();
-    // Generate 1/60 second of sound into APU's sample buffer
-    while (apu_.samples_avail() < sampleCount) {
-        static int delay;
-        if ( --delay <= 0 )
-        {
-            delay = 12;
 
-            // Start a new random tone
-//            int chan = rand() & 0x11;
-//            apu_.write_register( 0xff26, 0x80 );
-//            apu_.write_register( 0xff25, chan ? chan : 0x11 );
-            apu_.write_register( 0xff11, 0x80 );
-            int freq = (rand() & 0x3ff) + 0x300;
-            apu_.write_register( 0xff13, freq & 0xff );
-            apu_.write_register( 0xff12, 0xf1 );
-            apu_.write_register( 0xff14, (freq >> 8) | 0x80 );
-        }
-        apu_.end_frame();
-    }
-
-    // TODO: avoid doublebuffering with custom BlipBuffer which converts to float
-    //  on write
-    long count = apu_.read_samples(buffer_, sampleCount);
-    jassert(count == sampleCount);
-
+    synth_.readSamples(buffer_, sampleCount);
     for (int channel = 0; channel < totalNumOutputChannels; ++channel)
     {
         float* channelData = buffer.getWritePointer (channel);
@@ -210,13 +158,6 @@ void GameBoySynthAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
         for (int i = 0; i < sampleCount; i++) {
             channelData[i] = ((float) buffer_[i]) / 32768.0;
         }
-
-//        for (int i = 0; i < sampleCount; i++) {
-//            channelData[i] = sinf((float) i / (float)(sampleCount / 4) * 2.0 * 3.1415) / 2;
-//        }
-//        for (int i = 0; i < sampleCount; i++) {
-//            channelData[i] = ((float) buffer_[(i*totalNumOutputChannels) + channel]) / 32768.0;
-//        }
 //        juce::AudioDataConverters::convertInt16BEToFloat(buffer_, channelData, sampleCount);
     }
 }

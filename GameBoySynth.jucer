@@ -9,9 +9,8 @@
               projectLineFeed="&#10;">
   <MAINGROUP id="l9BrHS" name="GameBoySynth">
     <GROUP id="{547F6CC2-A1E7-5511-1621-1739E99809BE}" name="Source">
-      <FILE id="xdW3Ti" name="EventManager.cpp" compile="1" resource="0"
-            file="Source/EventManager.cpp"/>
-      <FILE id="Ay43E7" name="EventManager.h" compile="0" resource="0" file="Source/EventManager.h"/>
+      <FILE id="xdW3Ti" name="Synth.cpp" compile="1" resource="0" file="Source/Synth.cpp"/>
+      <FILE id="Ay43E7" name="Synth.h" compile="0" resource="0" file="Source/Synth.h"/>
       <GROUP id="{D33F0277-B008-DA3D-6E61-5B48C4FF6F51}" name="midimanager">
         <FILE id="ow6Mpg" name="midimanager.cpp" compile="1" resource="0" file="Source/midimanager/midimanager.cpp"/>
         <FILE id="QfIIyR" name="midimanager.h" compile="0" resource="0" file="Source/midimanager/midimanager.h"/>

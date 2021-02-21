@@ -10,13 +10,12 @@
 
 #pragma once
 
+#include <JuceHeader.h>
 #include "midimanager/midimanager.h"
 #include "Gb_Snd_Emu-0.1.4/Basic_Gb_Apu.h"
 
-typedef unsigned int uint;
-
 // Register definitions
-static const uint OscCount = 4;
+static const size_t OscCount = 4;
 
 static const uint16_t Sq1Addr = 0xFF10; // Square 1 (with freq envelope)
 static const uint16_t Sq2Addr = 0xFF15; // Square 2
@@ -51,14 +50,14 @@ static const uint16_t NR51 = 0xFF25;
 static const uint16_t NR52 = 0xFF26;
 static const uint16_t WaveTableAddr = 0xFF30;
 
-struct GBMidiConfig {
+struct MidiConfig {
     bool enabled;
-    unsigned int channel;
-    unsigned int voice;
-    int transpose;
+    uint8_t channel;
+    uint8_t voice;
+    int8_t transpose;
 };
 
-enum GBDutyCycle: uint8_t {
+enum DutyCycle: uint8_t {
     DUTY_CYCLE_12_5 = 0x00, DUTY_CYCLE_25 = 0x01, DUTY_CYCLE_50 = 0x02, DUTY_CYCLE_75 = 0x03
 };
 
@@ -103,12 +102,12 @@ protected:
 
 class SquareOscilator: public Oscillator {
 private:
-    GBDutyCycle duty_ = DUTY_CYCLE_50;
+    DutyCycle duty_ = DUTY_CYCLE_50;
 
 public:
     SquareOscilator(uint16_t startAddr) : Oscillator(startAddr) {};
     ~SquareOscilator() {}
-    void setDuty(GBDutyCycle duty);
+    void setDuty(DutyCycle duty);
     void setEvent(MidiEvent event);
 
 protected:
@@ -145,16 +144,16 @@ private:
 // Track MIDI state, which is separate from the register settings,
 // and convert MIDI events into register calls
 // TODO: this guy can also be a FIFO queue for changes from the UI
-class EventManager {
+class Synth {
 private:
     // since there are only 4 oscillators, we won't need more than
     // 4 channels, so we pre-allocate all of them.
     // TODO: support channels
 //    MidiManager<16, OscCount> managers_[OscCount];
 //    uint channels_[OscCount]; // key = manager index, value = channel id
-    GBMidiConfig configs_[OscCount];
+    MidiConfig configs_[OscCount];
     MidiManager<16, 4> manager_;
-    Basic_Gb_Apu* apu_;
+    Basic_Gb_Apu apu_;
     SquareOscilatorOne osc_1_;
     SquareOscilatorTwo osc_2_;
     WaveOscillator osc_3_;
@@ -162,12 +161,15 @@ private:
     Oscillator* oscs_[OscCount] = { &osc_1_, &osc_2_, &osc_3_ /*, &osc_4_*/ };
 
 public:
-    // since this class is used from objc, it can't have an argument constructor.
-    // instead we initialize it with an init method
-    // https://stackoverflow.com/a/12467491
-    EventManager() {}
+    Synth() {
+        stop();
+    }
 
-    void init(Basic_Gb_Apu* apu);
-    void setConfig(uint oscillator, GBMidiConfig config);
+    void configure(long sampleRate, size_t channels);
+    void stop();
+
+    void readSamples (blip_sample_t* buffer, size_t sampleCount);
+
+    void setConfig(uint oscillator, MidiConfig config);
     void handleMIDIEvent(long time, const uint8_t* data);
 };
