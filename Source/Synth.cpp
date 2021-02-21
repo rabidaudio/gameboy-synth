@@ -95,15 +95,15 @@ void WaveOscillator::afterInit() {
     setWaveTable(zeros);
 }
 
-void Synth::configure(long sampleRate, size_t channels) {
-    blargg_err_t res = apu_.set_sample_rate(sampleRate);
+void Synth::configure(double sampleRate, size_t channels) {
+    blargg_err_t res = apu_.set_sample_rate((long) sampleRate);
     apu_.write_register(NR52, 0x80); // initialize APU
     jassert(res == blargg_success);
 
     // TODO: configure APU mono or stereo
 
     // TODO: temporary
-    apu_.write_register( 0xff25, 0x11 );
+//    apu_.write_register( 0xff25, 0x11 );
 }
 
 void Synth::stop() {
@@ -138,17 +138,14 @@ void Synth::setConfig(uint oscillator, MidiConfig config) {
     // TODO: support stereo
     apu_.write_register(NR50, 0x7F);
     apu_.write_register(NR51, (voices << 4) | voices); // enable voices
-
-    // TODO: remove, testing only
-    if (config.enabled && oscillator == 0) {
-        MidiEvent e;
-        e.note = 69;
-        e.velocity = 127;
-        osc_1_.setEvent(e);
-    }
 }
 
-void Synth::readSamples(blip_sample_t* buffer, size_t sampleCount) {
+void Synth::process(blip_sample_t* buffer, size_t sampleCount, juce::MidiBuffer& midiMessages) {
+    // loop through midi events
+    for (const juce::MidiMessageMetadata metadata : midiMessages) {
+        handleMIDIEvent(metadata.getMessage());
+    }
+
     // Generate 1/60 second of sound into APU's sample buffer
     while (apu_.samples_avail() < sampleCount) {
         apu_.end_frame();
@@ -159,27 +156,17 @@ void Synth::readSamples(blip_sample_t* buffer, size_t sampleCount) {
     jassert(count == sampleCount);
 }
 
-void Synth::handleMIDIEvent(long time, const uint8_t* data) {
+void Synth::handleMIDIEvent(juce::MidiMessage msg) {
+    if (msg.isSysEx()) return;
+
     // https://www.midi.org/specifications-old/item/table-1-summary-of-midi-message
-    const uint8_t NOTE_ON = 0x80;
-    const uint8_t NOTE_OFF = 0x90;
-    // data is the raw midi message, 3 bytes.
-    uint8_t status = data[0] & 0xF0;
-    // TODO: trigger events at the specified time instead of immediately at
-    // the  start of the sample
-    // TODO: select the right manager by channel
-    // uint8_t channel = data[0] & 0x0F;
-    uint8_t note = data[1] & 0x7F;
-    uint8_t velocity = data[2] & 0x7F;
-    switch (status) {
-        case NOTE_ON:
-            manager_.handle(note, velocity);
-            break;
-        case NOTE_OFF:
-            manager_.handle(note, 0);
-            break;
-        default:
-            return;
+    // TODO: use time of msg
+    if (msg.isNoteOn()) {
+        manager_.handle(msg.getNoteNumber(), msg.getVelocity());
+    } else if (msg.isNoteOff()) {
+        manager_.handle(msg.getNoteNumber(), 0);
+    } else {
+        return;
     }
     // now pass that midi info to the oscillators
     for (uint i = 0; i < OscCount; i++) {

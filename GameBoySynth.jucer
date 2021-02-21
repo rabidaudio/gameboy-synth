@@ -9,6 +9,10 @@
               projectLineFeed="&#10;">
   <MAINGROUP id="l9BrHS" name="GameBoySynth">
     <GROUP id="{547F6CC2-A1E7-5511-1621-1739E99809BE}" name="Source">
+      <FILE id="DnWkox" name="SquareOscComponent.cpp" compile="1" resource="0"
+            file="Source/SquareOscComponent.cpp"/>
+      <FILE id="tBkKQ9" name="SquareOscComponent.h" compile="0" resource="0"
+            file="Source/SquareOscComponent.h"/>
       <FILE id="xdW3Ti" name="Synth.cpp" compile="1" resource="0" file="Source/Synth.cpp"/>
       <FILE id="Ay43E7" name="Synth.h" compile="0" resource="0" file="Source/Synth.h"/>
       <GROUP id="{D33F0277-B008-DA3D-6E61-5B48C4FF6F51}" name="midimanager">

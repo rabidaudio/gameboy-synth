@@ -165,11 +165,13 @@ public:
         stop();
     }
 
-    void configure(long sampleRate, size_t channels);
+    void configure(double sampleRate, size_t channels);
     void stop();
 
-    void readSamples (blip_sample_t* buffer, size_t sampleCount);
+    void process(blip_sample_t* buffer, size_t sampleCount, juce::MidiBuffer& midiMessages);
 
     void setConfig(uint oscillator, MidiConfig config);
-    void handleMIDIEvent(long time, const uint8_t* data);
+
+private:
+    void handleMIDIEvent(juce::MidiMessage msg);
 };
