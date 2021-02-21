@@ -9,6 +9,48 @@
               projectLineFeed="&#10;">
   <MAINGROUP id="l9BrHS" name="GameBoySynth">
     <GROUP id="{547F6CC2-A1E7-5511-1621-1739E99809BE}" name="Source">
+      <FILE id="xdW3Ti" name="EventManager.cpp" compile="1" resource="0"
+            file="Source/EventManager.cpp"/>
+      <FILE id="Ay43E7" name="EventManager.h" compile="0" resource="0" file="Source/EventManager.h"/>
+      <GROUP id="{D33F0277-B008-DA3D-6E61-5B48C4FF6F51}" name="midimanager">
+        <FILE id="ow6Mpg" name="midimanager.cpp" compile="1" resource="0" file="Source/midimanager/midimanager.cpp"/>
+        <FILE id="QfIIyR" name="midimanager.h" compile="0" resource="0" file="Source/midimanager/midimanager.h"/>
+        <FILE id="luAWNP" name="staticlinkedlist.h" compile="0" resource="0"
+              file="Source/midimanager/staticlinkedlist.h"/>
+        <FILE id="zKizms" name="types.h" compile="0" resource="0" file="Source/midimanager/types.h"/>
+      </GROUP>
+      <GROUP id="{B274B02E-3093-3768-AC80-8F364BCD1F7D}" name="Gb_Snd_Emu-0.1.4">
+        <GROUP id="{AB038AF8-1EEE-6F41-6BC1-C9066048A005}" name="boost">
+          <FILE id="tj4uUh" name="config.hpp" compile="0" resource="0" file="Source/Gb_Snd_Emu-0.1.4/boost/config.hpp"/>
+          <FILE id="wnzwdT" name="cstdint.hpp" compile="0" resource="0" file="Source/Gb_Snd_Emu-0.1.4/boost/cstdint.hpp"/>
+          <FILE id="flBgod" name="static_assert.hpp" compile="0" resource="0"
+                file="Source/Gb_Snd_Emu-0.1.4/boost/static_assert.hpp"/>
+        </GROUP>
+        <GROUP id="{D4D946CC-061A-7BCC-BBA4-246E13316521}" name="gb_apu">
+          <FILE id="aLMN1m" name="blargg_common.h" compile="0" resource="0" file="Source/Gb_Snd_Emu-0.1.4/gb_apu/blargg_common.h"/>
+          <FILE id="DZPLAm" name="blargg_source.h" compile="0" resource="0" file="Source/Gb_Snd_Emu-0.1.4/gb_apu/blargg_source.h"/>
+          <FILE id="XB00Vz" name="Blip_Buffer.cpp" compile="1" resource="0" file="Source/Gb_Snd_Emu-0.1.4/gb_apu/Blip_Buffer.cpp"/>
+          <FILE id="BSgalo" name="Blip_Buffer.h" compile="0" resource="0" file="Source/Gb_Snd_Emu-0.1.4/gb_apu/Blip_Buffer.h"/>
+          <FILE id="j8UCk9" name="Blip_Synth.h" compile="0" resource="0" file="Source/Gb_Snd_Emu-0.1.4/gb_apu/Blip_Synth.h"/>
+          <FILE id="jxt0QV" name="Gb_Apu.cpp" compile="1" resource="0" file="Source/Gb_Snd_Emu-0.1.4/gb_apu/Gb_Apu.cpp"/>
+          <FILE id="CH9S8r" name="Gb_Apu.h" compile="0" resource="0" file="Source/Gb_Snd_Emu-0.1.4/gb_apu/Gb_Apu.h"/>
+          <FILE id="aGycGu" name="Gb_Oscs.cpp" compile="1" resource="0" file="Source/Gb_Snd_Emu-0.1.4/gb_apu/Gb_Oscs.cpp"/>
+          <FILE id="jdxnaQ" name="Gb_Oscs.h" compile="0" resource="0" file="Source/Gb_Snd_Emu-0.1.4/gb_apu/Gb_Oscs.h"/>
+          <FILE id="xmwkW8" name="Multi_Buffer.cpp" compile="1" resource="0"
+                file="Source/Gb_Snd_Emu-0.1.4/gb_apu/Multi_Buffer.cpp"/>
+          <FILE id="xkNlZa" name="Multi_Buffer.h" compile="0" resource="0" file="Source/Gb_Snd_Emu-0.1.4/gb_apu/Multi_Buffer.h"/>
+        </GROUP>
+        <FILE id="dU6bRV" name="Basic_Gb_Apu.cpp" compile="1" resource="0"
+              file="Source/Gb_Snd_Emu-0.1.4/Basic_Gb_Apu.cpp"/>
+        <FILE id="d68kUq" name="Basic_Gb_Apu.h" compile="0" resource="0" file="Source/Gb_Snd_Emu-0.1.4/Basic_Gb_Apu.h"/>
+        <FILE id="vmstmX" name="changes.txt" compile="0" resource="0" file="Source/Gb_Snd_Emu-0.1.4/changes.txt"/>
+        <FILE id="PHPsYq" name="demo.cpp" compile="0" resource="0" file="Source/Gb_Snd_Emu-0.1.4/demo.cpp"/>
+        <FILE id="cZOVqu" name="LGPL.txt" compile="0" resource="0" file="Source/Gb_Snd_Emu-0.1.4/LGPL.txt"/>
+        <FILE id="kyfn1V" name="notes.txt" compile="0" resource="0" file="Source/Gb_Snd_Emu-0.1.4/notes.txt"/>
+        <FILE id="T9pGfp" name="readme.txt" compile="0" resource="0" file="Source/Gb_Snd_Emu-0.1.4/readme.txt"/>
+        <FILE id="rIW6GB" name="usage.txt" compile="0" resource="0" file="Source/Gb_Snd_Emu-0.1.4/usage.txt"/>
+        <FILE id="rLPfZQ" name="Wave_Writer.cpp" compile="0" resource="0" file="Source/Gb_Snd_Emu-0.1.4/Wave_Writer.cpp"/>
+      </GROUP>
       <FILE id="PxpC7A" name="PluginProcessor.cpp" compile="1" resource="0"
             file="Source/PluginProcessor.cpp"/>
       <FILE id="VRrgce" name="PluginProcessor.h" compile="0" resource="0"

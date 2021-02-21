@@ -9,6 +9,8 @@
 #pragma once
 
 #include <JuceHeader.h>
+#include "Gb_Snd_Emu-0.1.4/Basic_Gb_Apu.h"
+#include "EventManager.h"
 
 //==============================================================================
 /**
@@ -56,4 +58,8 @@ public:
 private:
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (GameBoySynthAudioProcessor)
+
+    Basic_Gb_Apu apu_;
+    EventManager eventManager_;
+    blip_sample_t buffer_[512*2];
 };

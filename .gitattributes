@@ -1,2 +1,5 @@
-JuceLibraryCode/ binary
+JuceLibraryCode/**/* binary
+Source/Gb_Snd_Emu-0.1.4/**/* binary
+Source/midimanger/**/* binary
+GameBoySynth.jucer binary
 
