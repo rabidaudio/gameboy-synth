@@ -11,11 +11,14 @@
 #include "Synth.h"
 
 uint16_t Oscillator::midiNoteToPeriod(uint8_t note) {
-    // TODO: there's probably a more efficent non-floating point way to do this
-    double frequency = pow(2, ((double)(note)-69)/12) * 440.0;
+//    double frequency = pow(2, ((double)(note)-69)/12) * 440.0;
+    double frequency = juce::MidiMessage::getMidiNoteInHertz(note);
+
+    // Note: notes below #36 will wrap around. I am choosing to consider this
+    // the desired behavior
     double period = (-131072.0 / frequency)+2048;
     // -131072.0/(1750-2048) == 440
-    return (uint16_t) lround(period);
+    return (uint16_t) lround(period) & 0x07FF;
 }
 
 uint8_t Oscillator::midiVelocityTo4BitVolume(uint8_t velocity) {
@@ -101,9 +104,6 @@ void Synth::configure(double sampleRate, size_t channels) {
     jassert(res == blargg_success);
 
     // TODO: configure APU mono or stereo
-
-    // TODO: temporary
-//    apu_.write_register( 0xff25, 0x11 );
 }
 
 void Synth::stop() {
@@ -159,6 +159,8 @@ void Synth::process(blip_sample_t* buffer, size_t sampleCount, juce::MidiBuffer&
 void Synth::handleMIDIEvent(juce::MidiMessage msg) {
     if (msg.isSysEx()) return;
 
+    DBG(msg.getNoteNumber());
+
     // https://www.midi.org/specifications-old/item/table-1-summary-of-midi-message
     // TODO: use time of msg
     if (msg.isNoteOn()) {
@@ -171,27 +173,10 @@ void Synth::handleMIDIEvent(juce::MidiMessage msg) {
     // now pass that midi info to the oscillators
     for (uint i = 0; i < OscCount; i++) {
         if (!configs_[i].enabled) continue;
-
         MidiEvent e = manager_.get(configs_[i].voice);
-        e.note += configs_[i].transpose; // TODO: bound?
+        // NOTE: transposes can cause notes to wrap. I'm choosing to call this
+        // expected behavior.
+        e.note += configs_[i].transpose;
         oscs_[i]->setEvent(e);
     }
 }
-
-
-//private:
-//    uint voicesRequiredForChannel(uint channel) {
-//        uint voices = 0;
-//        uint res = 0;
-//        for (uint i = 0; i < OscCount; i++) {
-//            if (!configs_[i].enabled || configs_[i].channel != channel) {
-//                continue;
-//            }
-//            if ((voices >> configs_[i].voice) & 0x01) {
-//                continue;
-//            }
-//            voices |= (1 << configs_[i].voice);
-//            res++;
-//        }
-//        return res;
-//    }

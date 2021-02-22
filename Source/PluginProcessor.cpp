@@ -106,6 +106,8 @@ void GameBoySynthAudioProcessor::prepareToPlay (double sampleRate, int samplesPe
     c.channel = 1;
     c.transpose = 0;
     synth_.setConfig(0, c);
+    c.voice = 1;
+    synth_.setConfig(1, c);
 }
 
 void GameBoySynthAudioProcessor::releaseResources()
