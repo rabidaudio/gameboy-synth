@@ -15,7 +15,9 @@
 //==============================================================================
 /**
 */
-class GameBoySynthAudioProcessorEditor  : public juce::AudioProcessorEditor
+class GameBoySynthAudioProcessorEditor  : public juce::AudioProcessorEditor,
+                                            public juce::Button::Listener,
+                                            public juce::Slider::Listener
 {
 public:
     GameBoySynthAudioProcessorEditor (GameBoySynthAudioProcessor&);
@@ -24,6 +26,9 @@ public:
     //==============================================================================
     void paint (juce::Graphics&) override;
     void resized() override;
+
+    void buttonClicked (juce::Button* button) override;
+    void sliderValueChanged (juce::Slider* slider) override;
 
 private:
     // This reference is provided as a quick way for your editor to

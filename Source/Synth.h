@@ -15,7 +15,8 @@
 #include "Gb_Snd_Emu-0.1.4/Basic_Gb_Apu.h"
 
 // Register definitions
-static const size_t OscCount = 4;
+typedef uint8_t OSCID;
+static const OSCID NUM_OSC = 4;
 
 static const uint16_t Sq1Addr = 0xFF10; // Square 1 (with freq envelope)
 static const uint16_t Sq2Addr = 0xFF15; // Square 2
@@ -57,9 +58,22 @@ struct MidiConfig {
     int8_t transpose;
 };
 
-enum DutyCycle: uint8_t {
-    DUTY_CYCLE_12_5 = 0x00, DUTY_CYCLE_25 = 0x01, DUTY_CYCLE_50 = 0x02, DUTY_CYCLE_75 = 0x03
+enum class DutyCycle: uint8_t {
+    duty12_5 = 0x00, duty25 = 0x01, duty50 = 0x02, duty75 = 0x03
 };
+
+static DutyCycle dutyCycleFromValue(double value)
+{
+    if (value < 18.75) {
+        return DutyCycle::duty12_5;
+    } else if (value < 37.5) {
+        return DutyCycle::duty25;
+    } else if (value < 62.5) {
+        return DutyCycle::duty50;
+    } else {
+        return DutyCycle::duty75;
+    }
+}
 
 // unlike the square and noise waves with velocity of 4 bits,
 // the wave has 2 bits: 00=0%, 01=100%, 10=50%, 11=25%
@@ -75,8 +89,9 @@ protected:
     virtual void afterInit() = 0;
 
 public:
-    Oscillator(uint16_t startAddr) {
-        startAddr_ = startAddr;
+    Oscillator(OSCID id) {
+        static const uint16_t addrs[NUM_OSC] = {Sq1Addr, Sq2Addr, WaveAddr, NoiseAddr};
+        startAddr_ = addrs[id];
     }
     virtual ~Oscillator() = 0;
 
@@ -102,10 +117,10 @@ protected:
 
 class SquareOscilator: public Oscillator {
 private:
-    DutyCycle duty_ = DUTY_CYCLE_50;
+    DutyCycle duty_ = DutyCycle::duty50;
 
 public:
-    SquareOscilator(uint16_t startAddr) : Oscillator(startAddr) {};
+    SquareOscilator(OSCID id) : Oscillator(id) {};
     ~SquareOscilator() {}
     void setDuty(DutyCycle duty);
     void setEvent(MidiEvent event);
@@ -117,28 +132,38 @@ protected:
 class SquareOscilatorOne : public SquareOscilator {
     // TODO: frequency envelope
 public:
-    SquareOscilatorOne() : SquareOscilator(Sq1Addr) {}
+    SquareOscilatorOne() : SquareOscilator(0) {}
     ~SquareOscilatorOne() {}
 };
 
 class SquareOscilatorTwo : public SquareOscilator {
 public:
-    SquareOscilatorTwo() : SquareOscilator(Sq2Addr) {}
+    SquareOscilatorTwo() : SquareOscilator(1) {}
     ~SquareOscilatorTwo() {}
 };
 
 class WaveOscillator : public Oscillator {
 public:
-    WaveOscillator(): Oscillator(WaveAddr) {}
+    WaveOscillator(): Oscillator(2) {}
     ~WaveOscillator() {}
     void setEvent(MidiEvent event);
+    void setWaveTable(uint8_t* samples);
 
 protected:
     void afterInit();
 private:
     GBWaveVolume midiVelocityToWaveVolume(uint8_t velocity);
     void setVelocity(uint8_t velocity);
-    void setWaveTable(uint8_t* samples);
+};
+
+class NoiseOscillator : public Oscillator {
+public:
+    NoiseOscillator(): Oscillator(3) {}
+    ~NoiseOscillator() {}
+    void setEvent(MidiEvent event);
+
+protected:
+    void afterInit();
 };
 
 // Track MIDI state, which is separate from the register settings,
@@ -149,16 +174,16 @@ private:
     // since there are only 4 oscillators, we won't need more than
     // 4 channels, so we pre-allocate all of them.
     // TODO: support channels
-//    MidiManager<16, OscCount> managers_[OscCount];
-//    uint channels_[OscCount]; // key = manager index, value = channel id
-    MidiConfig configs_[OscCount];
+//    MidiManager<16, NUM_OSC> managers_[NUM_OSC];
+//    uint channels_[NUM_OSC]; // key = manager index, value = channel id
+    MidiConfig configs_[NUM_OSC];
     MidiManager<16, 4> manager_;
     Basic_Gb_Apu apu_;
-    SquareOscilatorOne osc_1_;
-    SquareOscilatorTwo osc_2_;
-    WaveOscillator osc_3_;
-    // NoiseOscillator osc_4_;
-    Oscillator* oscs_[OscCount] = { &osc_1_, &osc_2_, &osc_3_ /*, &osc_4_*/ };
+    SquareOscilatorOne osc1;
+    SquareOscilatorTwo osc2;
+    WaveOscillator osc3;
+    NoiseOscillator osc4;
+    Oscillator* oscs_[NUM_OSC] = { &osc1, &osc2, &osc3, &osc4 };
 
 public:
     Synth() {
@@ -166,12 +191,29 @@ public:
     }
 
     void configure(double sampleRate, size_t channels);
-    void stop();
+
+    void setEnabled(OSCID oscillator, bool enabled);
+    void setTranspose(OSCID oscillator, int8_t transpose);
+    void setMIDIVoice(OSCID oscillator, uint8_t voice);
+    void setMIDIChannel(OSCID oscillator, uint8_t channel);
+
+    void setDutyCycle(OSCID oscillator, DutyCycle duty) {
+        switch (oscillator) {
+            case 0: return osc1.setDuty(duty);
+            case 1: return osc2.setDuty(duty);
+            default: return;
+        }
+    }
+
+    void setWaveTable(uint8_t* samples) {
+        osc3.setWaveTable(samples);
+    }
 
     void process(blip_sample_t* buffer, size_t sampleCount, juce::MidiBuffer& midiMessages);
 
-    void setConfig(uint oscillator, MidiConfig config);
+    void stop();
 
 private:
+    void reconfigure(OSCID oscillator);
     void handleMIDIEvent(juce::MidiMessage msg);
 };

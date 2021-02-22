@@ -50,8 +50,9 @@ void Oscillator::setConstantVolume(uint8_t velocity) {
 Oscillator::~Oscillator() {};
 
 void SquareOscilator::setDuty(DutyCycle duty) {
+    if (duty == duty_) return;
     duty_ = duty;
-    apu_->write_register(startAddr_ + NRX1, duty << 6);
+    apu_->write_register(startAddr_ + NRX1, (uint8_t) duty << 6);
 }
 
 void SquareOscilator::setEvent(MidiEvent event) {
@@ -98,6 +99,14 @@ void WaveOscillator::afterInit() {
     setWaveTable(zeros);
 }
 
+void NoiseOscillator::setEvent(MidiEvent event) {
+    // TODO:
+}
+
+void NoiseOscillator::afterInit() {
+    // TODO
+}
+
 void Synth::configure(double sampleRate, size_t channels) {
     blargg_err_t res = apu_.set_sample_rate((long) sampleRate);
     apu_.write_register(NR52, 0x80); // initialize APU
@@ -108,25 +117,42 @@ void Synth::configure(double sampleRate, size_t channels) {
 
 void Synth::stop() {
     apu_.write_register(NR52, 0x00);
-    for (uint i = 0; i < OscCount; i++) {
-        if (i == 3) continue; // TODO: noise osc
+    for (OSCID i = 0; i < NUM_OSC; i++) {
         oscs_[i]->setApu(&apu_);
         configs_[i].enabled = false;
         configs_[i].channel = 0;
         configs_[i].voice = 0;
-        setConfig(i, configs_[i]);
+        reconfigure(i);
     }
     // TODO: clear BlipBuffer
 }
 
-void Synth::setConfig(uint oscillator, MidiConfig config) {
-    if (oscillator >= OscCount) return;
+void Synth::setEnabled(OSCID oscillator, bool enabled) {
+    jassert(oscillator < NUM_OSC);
+    configs_[oscillator].enabled = enabled;
+    reconfigure(oscillator);
+}
+void Synth::setTranspose(OSCID oscillator, int8_t transpose) {
+    jassert(oscillator < NUM_OSC);
+    configs_[oscillator].transpose = transpose;
+    reconfigure(oscillator);
+}
+void Synth::setMIDIVoice(OSCID oscillator, uint8_t voice) {
+    jassert(oscillator < NUM_OSC);
+    configs_[oscillator].voice = voice;
+    reconfigure(oscillator);
+}
+void Synth::setMIDIChannel(OSCID oscillator, uint8_t channel) {
+    jassert(oscillator < NUM_OSC);
+    configs_[oscillator].channel = channel & 0x0F;
+    reconfigure(oscillator);
+}
 
+void Synth::reconfigure(OSCID oscillator) {
     // TODO: allow changing settings without resetting all keys
-    configs_[oscillator] = config;
     uint8_t voices = 0;
     uint voicesRequired = 0;
-    for (uint i = 0; i < OscCount; i++) {
+    for (uint i = 0; i < NUM_OSC; i++) {
         if (!configs_[i].enabled) continue;
         if ((voices >> configs_[i].voice) & 0x01) {
             continue;
@@ -161,6 +187,7 @@ void Synth::handleMIDIEvent(juce::MidiMessage msg) {
 
     DBG(msg.getNoteNumber());
 
+    if (manager_.voices() == 0) return;
     // https://www.midi.org/specifications-old/item/table-1-summary-of-midi-message
     // TODO: use time of msg
     if (msg.isNoteOn()) {
@@ -171,7 +198,7 @@ void Synth::handleMIDIEvent(juce::MidiMessage msg) {
         return;
     }
     // now pass that midi info to the oscillators
-    for (uint i = 0; i < OscCount; i++) {
+    for (uint i = 0; i < NUM_OSC; i++) {
         if (!configs_[i].enabled) continue;
         MidiEvent e = manager_.get(configs_[i].voice);
         // NOTE: transposes can cause notes to wrap. I'm choosing to call this

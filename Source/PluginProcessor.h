@@ -58,11 +58,12 @@ public:
     //==============================================================================
     juce::MidiMessageCollector* getMidiCollector() { return &midiCollector_; }
 
+    Synth synth;
+
 private:
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (GameBoySynthAudioProcessor)
 
-    Synth synth_;
     blip_sample_t* buffer_;
     juce::MidiMessageCollector midiCollector_;
 };

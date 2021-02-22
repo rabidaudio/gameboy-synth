@@ -6,6 +6,25 @@ This is an VST3/AU3 wrapper around the Game Boy sound unit. This exposes the Gam
 
 As an instrument, the Game Boy APU is a pretty constrained synthesizer. It contains 2 square wave oscillators, a 32-sample 4-bit arbitary wavetable oscillator, and a noise oscillator with a variable frequency. All oscillators except the wave have a linear volume envelope. One of the square waves has a linear frequency envelope. The resolution in both time and amplitude is relatively low, so the pitches are slightly out of tune. There's no controllable filter, only a static passive high-pass filter. The limited CPU of the platform limits the resolution at which these parameters are controllable. All of this adds up to a limited but iconic sound.
 
+## TODO
+
+- [x] integrate sound core
+- [x] handle midi events
+- [ ] Build basic UI
+- [ ] Use finer time resolution than 1/60s
+- [ ] Custom BlipBuffer to avoid extra buffer copy for int16->float conversion
+- [ ] True stereo support
+- [ ] wave osc
+- [ ] noise osc
+- [ ] vol envelopes (native at low periods, then manual)
+- [ ] LFOs - vol and freq (quantize option? native for osc 1 at low periods?)
+- [ ] Arbitrary wavetable drawing
+- [ ] Multiple MIDI channels
+- [ ] Better AU compatibility
+- [ ] Pretty UI
+- [ ] package for multiple platforms
+- [ ] throw on app store
+
 ## Reference
 
 - https://gbdev.io/pandocs/#sound-controller

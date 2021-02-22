@@ -14,10 +14,13 @@ GameBoySynthAudioProcessorEditor::GameBoySynthAudioProcessorEditor (GameBoySynth
     : AudioProcessorEditor (&p), audioProcessor (p),
         keyboard(keyboardState, juce::MidiKeyboardComponent::horizontalKeyboard)
 {
-    setSize (400, 300);
+    setSize(400, 300);
+    osc1.enableButton.addListener(this);
+    osc1.enableButton.setToggleState(true, juce::sendNotification);
+    osc1.pwmSlider.addListener(this);
     addAndMakeVisible(osc1);
-    addAndMakeVisible(keyboard);
     keyboardState.addListener(audioProcessor.getMidiCollector());
+    addAndMakeVisible(keyboard);
 }
 
 GameBoySynthAudioProcessorEditor::~GameBoySynthAudioProcessorEditor()
@@ -28,7 +31,7 @@ GameBoySynthAudioProcessorEditor::~GameBoySynthAudioProcessorEditor()
 void GameBoySynthAudioProcessorEditor::paint (juce::Graphics& g)
 {
     // (Our component is opaque, so we must completely fill the background with a solid colour)
-    g.fillAll (getLookAndFeel().findColour (juce::ResizableWindow::backgroundColourId));
+    g.fillAll(getLookAndFeel().findColour(juce::ResizableWindow::backgroundColourId));
 }
 
 void GameBoySynthAudioProcessorEditor::resized()
@@ -38,4 +41,18 @@ void GameBoySynthAudioProcessorEditor::resized()
     osc1.setBounds(getLocalBounds());
 //    keyboard.setBounds(0, getHeight()-64, getWidth(), getHeight());
     keyboard.setBounds(0, getHeight()-64, getWidth(), 64);
+}
+
+void GameBoySynthAudioProcessorEditor::buttonClicked (juce::Button* button)
+{
+    if (button == &osc1.enableButton) {
+        audioProcessor.synth.setEnabled(0, osc1.enableButton.getToggleState());
+    }
+}
+
+void GameBoySynthAudioProcessorEditor::sliderValueChanged(juce::Slider *slider)
+{
+    if (slider == &osc1.pwmSlider) {
+        audioProcessor.synth.setDutyCycle(0, dutyCycleFromValue(slider->getValue()));
+    }
 }
