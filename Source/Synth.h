@@ -58,26 +58,15 @@ struct MidiConfig {
     int8_t transpose;
 };
 
-enum class DutyCycle: uint8_t {
+enum class DutyCycle: uint8_t
+{
     duty12_5 = 0x00, duty25 = 0x01, duty50 = 0x02, duty75 = 0x03
 };
 
-static DutyCycle dutyCycleFromValue(double value)
-{
-    if (value < 18.75) {
-        return DutyCycle::duty12_5;
-    } else if (value < 37.5) {
-        return DutyCycle::duty25;
-    } else if (value < 62.5) {
-        return DutyCycle::duty50;
-    } else {
-        return DutyCycle::duty75;
-    }
-}
-
 // unlike the square and noise waves with velocity of 4 bits,
 // the wave has 2 bits: 00=0%, 01=100%, 10=50%, 11=25%
-enum GBWaveVolume: uint8_t {
+enum GBWaveVolume: uint8_t
+{
     WAVE_VOL_OFF = 0x00, WAVE_VOL_FULL = 0x01, WAVE_VOL_50 = 0x02, WAVE_VOL_25 = 0x03
 };
 
@@ -89,13 +78,15 @@ protected:
     virtual void afterInit() = 0;
 
 public:
-    Oscillator(OSCID id) {
+    Oscillator(OSCID id)
+    {
         static const uint16_t addrs[NUM_OSC] = {Sq1Addr, Sq2Addr, WaveAddr, NoiseAddr};
         startAddr_ = addrs[id];
     }
     virtual ~Oscillator() = 0;
 
-    void setApu(Basic_Gb_Apu* apu) {
+    void setApu(Basic_Gb_Apu* apu)
+    {
         apu_ = apu;
         afterInit();
     }
@@ -115,7 +106,8 @@ protected:
     void setConstantVolume(uint8_t velocity);
 };
 
-class SquareOscilator: public Oscillator {
+class SquareOscilator: public Oscillator
+{
 private:
     DutyCycle duty_ = DutyCycle::duty50;
 
@@ -125,24 +117,40 @@ public:
     void setDuty(DutyCycle duty);
     void setEvent(MidiEvent event);
 
+    static DutyCycle dutyCycleFromValue(double value)
+    {
+        if (value < 18.75) {
+            return DutyCycle::duty12_5;
+        } else if (value < 37.5) {
+            return DutyCycle::duty25;
+        } else if (value < 62.5) {
+            return DutyCycle::duty50;
+        } else {
+            return DutyCycle::duty75;
+        }
+    }
+
 protected:
     void afterInit();
 };
 
-class SquareOscilatorOne : public SquareOscilator {
+class SquareOscilatorOne : public SquareOscilator
+{
     // TODO: frequency envelope
 public:
     SquareOscilatorOne() : SquareOscilator(0) {}
     ~SquareOscilatorOne() {}
 };
 
-class SquareOscilatorTwo : public SquareOscilator {
+class SquareOscilatorTwo : public SquareOscilator
+{
 public:
     SquareOscilatorTwo() : SquareOscilator(1) {}
     ~SquareOscilatorTwo() {}
 };
 
-class WaveOscillator : public Oscillator {
+class WaveOscillator : public Oscillator
+{
 public:
     WaveOscillator(): Oscillator(2) {}
     ~WaveOscillator() {}
@@ -156,7 +164,8 @@ private:
     void setVelocity(uint8_t velocity);
 };
 
-class NoiseOscillator : public Oscillator {
+class NoiseOscillator : public Oscillator
+{
 public:
     NoiseOscillator(): Oscillator(3) {}
     ~NoiseOscillator() {}
@@ -169,7 +178,8 @@ protected:
 // Track MIDI state, which is separate from the register settings,
 // and convert MIDI events into register calls
 // TODO: this guy can also be a FIFO queue for changes from the UI
-class Synth {
+class Synth
+{
 private:
     // since there are only 4 oscillators, we won't need more than
     // 4 channels, so we pre-allocate all of them.
@@ -186,9 +196,7 @@ private:
     Oscillator* oscs_[NUM_OSC] = { &osc1, &osc2, &osc3, &osc4 };
 
 public:
-    Synth() {
-        stop();
-    }
+    Synth();
 
     void configure(double sampleRate, size_t channels);
 
@@ -197,15 +205,19 @@ public:
     void setMIDIVoice(OSCID oscillator, uint8_t voice);
     void setMIDIChannel(OSCID oscillator, uint8_t channel);
 
-    void setDutyCycle(OSCID oscillator, DutyCycle duty) {
-        switch (oscillator) {
+    void setDutyCycle(OSCID oscillator, double value)
+    {
+        DutyCycle duty = SquareOscilator::dutyCycleFromValue(value);
+        switch (oscillator)
+        {
             case 0: return osc1.setDuty(duty);
             case 1: return osc2.setDuty(duty);
             default: return;
         }
     }
 
-    void setWaveTable(uint8_t* samples) {
+    void setWaveTable(uint8_t* samples)
+    {
         osc3.setWaveTable(samples);
     }
 

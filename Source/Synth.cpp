@@ -10,7 +10,8 @@
 
 #include "Synth.h"
 
-uint16_t Oscillator::midiNoteToPeriod(uint8_t note) {
+uint16_t Oscillator::midiNoteToPeriod(uint8_t note)
+{
 //    double frequency = pow(2, ((double)(note)-69)/12) * 440.0;
     double frequency = juce::MidiMessage::getMidiNoteInHertz(note);
 
@@ -21,12 +22,13 @@ uint16_t Oscillator::midiNoteToPeriod(uint8_t note) {
     return (uint16_t) lround(period) & 0x07FF;
 }
 
-uint8_t Oscillator::midiVelocityTo4BitVolume(uint8_t velocity) {
-    // 7 bits to 4 bits
-    return velocity >> 3;
+uint8_t Oscillator::midiVelocityTo4BitVolume(uint8_t velocity)
+{
+    return velocity >> 3; // 7 bits to 4 bits
 }
 
-void Oscillator::set11BitPeriod(uint8_t note) {
+void Oscillator::set11BitPeriod(uint8_t note)
+{
     uint16_t period = midiNoteToPeriod(note);
     apu_->write_register(startAddr_ + NRX3, (uint8_t)(period & 0xff));
     // TODO: always triggering, is this expected?
@@ -38,34 +40,40 @@ void Oscillator::set11BitPeriod(uint8_t note) {
 
 // NRX2, Osc 1,2,4 only
 // Note: if you want to trigger the envelope, you must set it before NRX3
-void Oscillator::setVolumeEnvelope(uint8_t startVelocity, bool increasing, uint8_t period) {
+void Oscillator::setVolumeEnvelope(uint8_t startVelocity, bool increasing, uint8_t period)
+{
     uint8_t volume = midiVelocityTo4BitVolume(startVelocity);
     apu_->write_register(startAddr_ + NRX2, volume << 4 | (increasing ? 0x08 : 0x00) | (period & 0x03));
 }
 
-void Oscillator::setConstantVolume(uint8_t velocity) {
+void Oscillator::setConstantVolume(uint8_t velocity)
+{
     setVolumeEnvelope(velocity, false, 0);
 }
 
 Oscillator::~Oscillator() {};
 
-void SquareOscilator::setDuty(DutyCycle duty) {
+void SquareOscilator::setDuty(DutyCycle duty)
+{
     if (duty == duty_) return;
     duty_ = duty;
     apu_->write_register(startAddr_ + NRX1, (uint8_t) duty << 6);
 }
 
-void SquareOscilator::setEvent(MidiEvent event) {
+void SquareOscilator::setEvent(MidiEvent event)
+{
     setConstantVolume(event.velocity);
     set11BitPeriod(event.note);
 }
 
-void SquareOscilator::afterInit() {
+void SquareOscilator::afterInit()
+{
     setDuty(duty_);
     apu_->write_register(startAddr_ + NRX0, 0x00); // disable sweep
 }
 
-GBWaveVolume WaveOscillator::midiVelocityToWaveVolume(uint8_t velocity) {
+GBWaveVolume WaveOscillator::midiVelocityToWaveVolume(uint8_t velocity)
+{
     if (velocity < 16) {
         return WAVE_VOL_OFF;
     } else if (velocity < 48) {
@@ -77,37 +85,49 @@ GBWaveVolume WaveOscillator::midiVelocityToWaveVolume(uint8_t velocity) {
     }
 }
 
-void WaveOscillator::setVelocity(uint8_t velocity) {
+void WaveOscillator::setVelocity(uint8_t velocity)
+{
     uint8_t vol = (uint8_t) midiVelocityToWaveVolume(velocity);
     apu_->write_register(startAddr_ + NRX2, vol << 5);
 }
 
-void WaveOscillator::setWaveTable(uint8_t* samples) {
+void WaveOscillator::setWaveTable(uint8_t* samples)
+{
     for (uint i = 0; i < 32; i += 2) {
         uint8_t value = ((*(samples+i) & 0x0F) << 4) | (*(samples+i+1) & 0x0F);
         apu_->write_register(WaveTableAddr + i / 2, value);
     }
 }
 
-void WaveOscillator::setEvent(MidiEvent event) {
+void WaveOscillator::setEvent(MidiEvent event)
+{
     setVelocity(event.velocity);
     set11BitPeriod(event.note);
 }
 
-void WaveOscillator::afterInit() {
+void WaveOscillator::afterInit()
+{
     static uint8_t zeros[32] = { 0 };
     setWaveTable(zeros);
 }
 
-void NoiseOscillator::setEvent(MidiEvent event) {
+void NoiseOscillator::setEvent(MidiEvent event)
+{
     // TODO:
 }
 
-void NoiseOscillator::afterInit() {
+void NoiseOscillator::afterInit()
+{
     // TODO
 }
 
-void Synth::configure(double sampleRate, size_t channels) {
+Synth::Synth()
+{
+    stop();
+}
+
+void Synth::configure(double sampleRate, size_t channels)
+{
     blargg_err_t res = apu_.set_sample_rate((long) sampleRate);
     apu_.write_register(NR52, 0x80); // initialize APU
     jassert(res == blargg_success);
@@ -115,7 +135,8 @@ void Synth::configure(double sampleRate, size_t channels) {
     // TODO: configure APU mono or stereo
 }
 
-void Synth::stop() {
+void Synth::stop()
+{
     apu_.write_register(NR52, 0x00);
     for (OSCID i = 0; i < NUM_OSC; i++) {
         oscs_[i]->setApu(&apu_);
@@ -127,28 +148,36 @@ void Synth::stop() {
     // TODO: clear BlipBuffer
 }
 
-void Synth::setEnabled(OSCID oscillator, bool enabled) {
+void Synth::setEnabled(OSCID oscillator, bool enabled)
+{
     jassert(oscillator < NUM_OSC);
     configs_[oscillator].enabled = enabled;
     reconfigure(oscillator);
 }
-void Synth::setTranspose(OSCID oscillator, int8_t transpose) {
+
+void Synth::setTranspose(OSCID oscillator, int8_t transpose)
+{
     jassert(oscillator < NUM_OSC);
     configs_[oscillator].transpose = transpose;
     reconfigure(oscillator);
 }
-void Synth::setMIDIVoice(OSCID oscillator, uint8_t voice) {
+
+void Synth::setMIDIVoice(OSCID oscillator, uint8_t voice)
+{
     jassert(oscillator < NUM_OSC);
     configs_[oscillator].voice = voice;
     reconfigure(oscillator);
 }
-void Synth::setMIDIChannel(OSCID oscillator, uint8_t channel) {
+
+void Synth::setMIDIChannel(OSCID oscillator, uint8_t channel)
+{
     jassert(oscillator < NUM_OSC);
     configs_[oscillator].channel = channel & 0x0F;
     reconfigure(oscillator);
 }
 
-void Synth::reconfigure(OSCID oscillator) {
+void Synth::reconfigure(OSCID oscillator)
+{
     // TODO: allow changing settings without resetting all keys
     uint8_t voices = 0;
     uint voicesRequired = 0;
@@ -166,7 +195,8 @@ void Synth::reconfigure(OSCID oscillator) {
     apu_.write_register(NR51, (voices << 4) | voices); // enable voices
 }
 
-void Synth::process(blip_sample_t* buffer, size_t sampleCount, juce::MidiBuffer& midiMessages) {
+void Synth::process(blip_sample_t* buffer, size_t sampleCount, juce::MidiBuffer& midiMessages)
+{
     // loop through midi events
     for (const juce::MidiMessageMetadata metadata : midiMessages) {
         handleMIDIEvent(metadata.getMessage());
@@ -182,7 +212,8 @@ void Synth::process(blip_sample_t* buffer, size_t sampleCount, juce::MidiBuffer&
     jassert(count == sampleCount);
 }
 
-void Synth::handleMIDIEvent(juce::MidiMessage msg) {
+void Synth::handleMIDIEvent(juce::MidiMessage msg)
+{
     if (msg.isSysEx()) return;
 
     DBG(msg.getNoteNumber());

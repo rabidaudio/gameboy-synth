@@ -10,8 +10,9 @@
 #include "PluginEditor.h"
 
 //==============================================================================
-GameBoySynthAudioProcessorEditor::GameBoySynthAudioProcessorEditor (GameBoySynthAudioProcessor& p)
-    : AudioProcessorEditor (&p), audioProcessor (p),
+GameBoySynthAudioProcessorEditor::GameBoySynthAudioProcessorEditor(GameBoySynthAudioProcessor& p)
+    : AudioProcessorEditor (&p),
+        audioProcessor (p),
         keyboard(keyboardState, juce::MidiKeyboardComponent::horizontalKeyboard)
 {
     setSize(400, 300);
@@ -23,9 +24,7 @@ GameBoySynthAudioProcessorEditor::GameBoySynthAudioProcessorEditor (GameBoySynth
     addAndMakeVisible(keyboard);
 }
 
-GameBoySynthAudioProcessorEditor::~GameBoySynthAudioProcessorEditor()
-{
-}
+GameBoySynthAudioProcessorEditor::~GameBoySynthAudioProcessorEditor() {}
 
 //==============================================================================
 void GameBoySynthAudioProcessorEditor::paint (juce::Graphics& g)
@@ -53,6 +52,6 @@ void GameBoySynthAudioProcessorEditor::buttonClicked (juce::Button* button)
 void GameBoySynthAudioProcessorEditor::sliderValueChanged(juce::Slider *slider)
 {
     if (slider == &osc1.pwmSlider) {
-        audioProcessor.synth.setDutyCycle(0, dutyCycleFromValue(slider->getValue()));
+        audioProcessor.synth.setDutyCycle(0, slider->getValue());
     }
 }
