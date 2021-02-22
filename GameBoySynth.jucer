@@ -8,6 +8,8 @@
               pluginCode="Gbas" aaxIdentifier="audio.rabid.gameboysynth" pluginAUIsSandboxSafe="1"
               projectLineFeed="&#10;">
   <MAINGROUP id="l9BrHS" name="GameBoySynth">
+    <FILE id="DqHiij" name="LICENSE" compile="0" resource="1" file="LICENSE"/>
+    <FILE id="ZmNejr" name="README.md" compile="0" resource="1" file="README.md"/>
     <GROUP id="{547F6CC2-A1E7-5511-1621-1739E99809BE}" name="Source">
       <FILE id="DnWkox" name="SquareOscComponent.cpp" compile="1" resource="0"
             file="Source/SquareOscComponent.cpp"/>
