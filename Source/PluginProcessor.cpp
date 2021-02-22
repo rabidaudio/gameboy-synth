@@ -95,16 +95,12 @@ void GameBoySynthAudioProcessor::prepareToPlay (double sampleRate, int samplesPe
 {
     synth.configure(sampleRate, getTotalNumOutputChannels());
     midiCollector_.reset(sampleRate);
-    // TODO: if we switch away from BasicApu and match the sample rates, we'll need to chnage
-    // this buffer size. Currently buffer is allocated to 60fps steps
-    buffer_ = (blip_sample_t*) malloc(sizeof(blip_sample_t) * sampleRate / 60 * 2);
 }
 
 void GameBoySynthAudioProcessor::releaseResources()
 {
     // When playback stops, you can use this as an opportunity to free up any
     // spare memory, etc.
-    free(buffer_);
     synth.stop();
 }
 
@@ -137,24 +133,12 @@ bool GameBoySynthAudioProcessor::isBusesLayoutSupported (const BusesLayout& layo
 void GameBoySynthAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
 {
     juce::ScopedNoDenormals noDenormals;
-    int totalNumOutputChannels = getTotalNumOutputChannels();
-    jassert(totalNumOutputChannels == 2); // TODO: could be mono?
-
-    size_t sampleCount = buffer.getNumSamples();
+    if (!buffer.hasBeenCleared()) buffer.clear();
 
     // also append any events from the collector
-    midiCollector_.removeNextBlockOfMessages(midiMessages, (int) sampleCount);
-
-    synth.process(buffer_, sampleCount, midiMessages);
-    for (int channel = 0; channel < totalNumOutputChannels; ++channel)
-    {
-        float* channelData = buffer.getWritePointer (channel);
-
-        for (int i = 0; i < sampleCount; i++) {
-            channelData[i] = ((float) buffer_[i]) / 32768.0;
-        }
-//        juce::AudioDataConverters::convertInt16BEToFloat(buffer_, channelData, sampleCount);
-    }
+    midiCollector_.removeNextBlockOfMessages(midiMessages, (int) buffer.getNumSamples());
+    synth.handleMIDI(midiMessages);
+    synth.readSamples(&buffer);
 }
 
 //==============================================================================

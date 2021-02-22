@@ -64,6 +64,5 @@ private:
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (GameBoySynthAudioProcessor)
 
-    blip_sample_t* buffer_;
     juce::MidiMessageCollector midiCollector_;
 };

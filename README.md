@@ -11,15 +11,15 @@ As an instrument, the Game Boy APU is a pretty constrained synthesizer. It conta
 - [x] integrate sound core
 - [x] handle midi events
 - [ ] Build basic UI
-- [ ] Use finer time resolution than 1/60s
-- [ ] Custom BlipBuffer to avoid extra buffer copy for int16->float conversion
-- [ ] True stereo support
+- [x] Use finer time resolution than 1/60s
+- [x] Custom BlipBuffer to avoid extra buffer copy for int16->float conversion
 - [ ] wave osc
 - [ ] noise osc
 - [ ] vol envelopes (native at low periods, then manual)
 - [ ] LFOs - vol and freq (quantize option? native for osc 1 at low periods?)
 - [ ] Arbitrary wavetable drawing
 - [ ] Multiple MIDI channels
+- [ ] UI for stereo control
 - [ ] Better AU compatibility
 - [ ] Pretty UI
 - [ ] package for multiple platforms

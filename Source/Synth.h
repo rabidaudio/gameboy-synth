@@ -12,7 +12,11 @@
 
 #include <JuceHeader.h>
 #include "midimanager/midimanager.h"
-#include "Gb_Snd_Emu-0.1.4/Basic_Gb_Apu.h"
+#include "Gb_Snd_Emu-0.1.4/gb_apu/Gb_Apu.h"
+#include "Gb_Snd_Emu-0.1.4/gb_apu/Multi_Buffer.h"
+
+static const gb_time_t CLOCK_SPEED = 4194304;
+static const gb_time_t CLOCKS_PER_INSTRUCTION = 4;
 
 // Register definitions
 typedef uint8_t OSCID;
@@ -70,9 +74,37 @@ enum GBWaveVolume: uint8_t
     WAVE_VOL_OFF = 0x00, WAVE_VOL_FULL = 0x01, WAVE_VOL_50 = 0x02, WAVE_VOL_25 = 0x03
 };
 
+class Apu
+{
+private:
+    Gb_Apu apu_;
+    Stereo_Buffer sbuf_;
+    Mono_Buffer mbuf_;
+    Multi_Buffer* buf_;
+    bool stereo_;
+    blip_time_t clock_;
+    blip_sample_t samples_[2];
+
+public:
+    Apu();
+    ~Apu();
+
+    void configure(double sampleRate, int channels);
+    void writeRegister(gb_addr_t addr, uint8_t data);
+    uint8_t readRegister(gb_addr_t addr);
+
+    long samplesAvailable();
+    void readSamples(juce::AudioBuffer<float>* out);
+
+    void reset();
+
+private:
+    blip_time_t tick() { return clock_ += 4; }
+};
+
 class Oscillator {
 protected:
-    Basic_Gb_Apu* apu_;
+    Apu* apu_;
     uint16_t startAddr_;
 
     virtual void afterInit() = 0;
@@ -85,7 +117,7 @@ public:
     }
     virtual ~Oscillator() = 0;
 
-    void setApu(Basic_Gb_Apu* apu)
+    void setApu(Apu* apu)
     {
         apu_ = apu;
         afterInit();
@@ -188,7 +220,7 @@ private:
 //    uint channels_[NUM_OSC]; // key = manager index, value = channel id
     MidiConfig configs_[NUM_OSC];
     MidiManager<16, 4> manager_;
-    Basic_Gb_Apu apu_;
+    Apu apu_;
     SquareOscilatorOne osc1;
     SquareOscilatorTwo osc2;
     WaveOscillator osc3;
@@ -198,7 +230,7 @@ private:
 public:
     Synth();
 
-    void configure(double sampleRate, size_t channels);
+    void configure(double sampleRate, int channels);
 
     void setEnabled(OSCID oscillator, bool enabled);
     void setTranspose(OSCID oscillator, int8_t transpose);
@@ -221,8 +253,10 @@ public:
         osc3.setWaveTable(samples);
     }
 
-    void process(blip_sample_t* buffer, size_t sampleCount, juce::MidiBuffer& midiMessages);
+    void handleMIDI(juce::MidiBuffer& midiMessages);
+    void readSamples(juce::AudioBuffer<float>* out);
 
+    void setDefaults();
     void stop();
 
 private:

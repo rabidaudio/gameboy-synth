@@ -10,6 +10,85 @@
 
 #include "Synth.h"
 
+Apu::Apu()
+{
+    stereo_ = true;
+    buf_ = &sbuf_; // default streo
+    clock_ = 0;
+}
+
+Apu::~Apu() {}
+
+void Apu::configure(double sampleRate, int channels)
+{
+    stereo_ = channels != 1;
+    if (stereo_) {
+        buf_ = &sbuf_;
+        apu_.output(sbuf_.center(), sbuf_.left(), sbuf_.right());
+
+    } else {
+        buf_ = &mbuf_;
+        apu_.output(mbuf_.center());
+    }
+    buf_->clock_rate(CLOCK_SPEED);
+    blargg_err_t res = buf_->set_sample_rate((long) sampleRate);
+    jassert(res == blargg_success);
+    // Adjust frequency equalization to make it sound like a tiny speaker
+    // TODO: expose these parameters
+    apu_.treble_eq(-20.0); // lower values muffle it more
+    buf_->bass_freq(461); // higher values simulate smaller speaker
+    writeRegister(NR52, 0x80); // turn on
+}
+
+void Apu::writeRegister(gb_addr_t addr, uint8_t data)
+{
+    apu_.write_register(tick(), addr, data);
+}
+
+uint8_t Apu::readRegister(gb_addr_t addr)
+{
+    return apu_.read_register(tick(), addr);
+}
+
+inline long Apu::samplesAvailable()
+{
+    if (stereo_) {
+        return sbuf_.samples_avail() / 2;
+    }
+    return mbuf_.samples_avail();
+}
+
+void Apu::readSamples(juce::AudioBuffer<float>* out)
+{
+    // TODO: is it a performance problem to simulate and read in very small steps?
+    // is this better than double buffering?
+    long sampleCount = out->getNumSamples();
+    jassert( (stereo_ && out->getNumChannels() == 2) || (out->getNumChannels() == 1) );
+    long read = 0;
+    int channelCount = stereo_ ? 2 : 1;
+    while (read < sampleCount) {
+        while (!samplesAvailable()) {
+            bool stereo = apu_.end_frame(tick());
+            buf_->end_frame(clock_, stereo);
+        }
+        buf_->read_samples(samples_, channelCount);
+        for (int c = 0; c < channelCount; c++) {
+            out->getWritePointer(c)[read] = ((float) samples_[c]) / 0x7FFF;
+        }
+        read++;
+    }
+    clock_ = 0;
+}
+
+void Apu::reset()
+{
+    writeRegister(NR52, 0x00); // turn off
+    sbuf_.clear();
+    mbuf_.clear();
+    clock_ = 0;
+    apu_.reset();
+}
+
 uint16_t Oscillator::midiNoteToPeriod(uint8_t note)
 {
 //    double frequency = pow(2, ((double)(note)-69)/12) * 440.0;
@@ -30,12 +109,12 @@ uint8_t Oscillator::midiVelocityTo4BitVolume(uint8_t velocity)
 void Oscillator::set11BitPeriod(uint8_t note)
 {
     uint16_t period = midiNoteToPeriod(note);
-    apu_->write_register(startAddr_ + NRX3, (uint8_t)(period & 0xff));
+    apu_->writeRegister(startAddr_ + NRX3, (uint8_t)(period & 0xff));
     // TODO: always triggering, is this expected?
     // TODO: doesn't deal with length enable, although it seems like the emulator ignores
     //  this bit anyway. And the length feature doesn't make much sense in the context
     //  of a synthesizer anyway
-    apu_->write_register(startAddr_ + NRX4, (uint8_t)(period >> 8) | 0x80);
+    apu_->writeRegister(startAddr_ + NRX4, (uint8_t)(period >> 8) | 0x80);
 }
 
 // NRX2, Osc 1,2,4 only
@@ -43,7 +122,7 @@ void Oscillator::set11BitPeriod(uint8_t note)
 void Oscillator::setVolumeEnvelope(uint8_t startVelocity, bool increasing, uint8_t period)
 {
     uint8_t volume = midiVelocityTo4BitVolume(startVelocity);
-    apu_->write_register(startAddr_ + NRX2, volume << 4 | (increasing ? 0x08 : 0x00) | (period & 0x03));
+    apu_->writeRegister(startAddr_ + NRX2, volume << 4 | (increasing ? 0x08 : 0x00) | (period & 0x03));
 }
 
 void Oscillator::setConstantVolume(uint8_t velocity)
@@ -57,7 +136,7 @@ void SquareOscilator::setDuty(DutyCycle duty)
 {
     if (duty == duty_) return;
     duty_ = duty;
-    apu_->write_register(startAddr_ + NRX1, (uint8_t) duty << 6);
+    apu_->writeRegister(startAddr_ + NRX1, (uint8_t) duty << 6);
 }
 
 void SquareOscilator::setEvent(MidiEvent event)
@@ -69,7 +148,7 @@ void SquareOscilator::setEvent(MidiEvent event)
 void SquareOscilator::afterInit()
 {
     setDuty(duty_);
-    apu_->write_register(startAddr_ + NRX0, 0x00); // disable sweep
+    apu_->writeRegister(startAddr_ + NRX0, 0x00); // disable sweep
 }
 
 GBWaveVolume WaveOscillator::midiVelocityToWaveVolume(uint8_t velocity)
@@ -88,14 +167,14 @@ GBWaveVolume WaveOscillator::midiVelocityToWaveVolume(uint8_t velocity)
 void WaveOscillator::setVelocity(uint8_t velocity)
 {
     uint8_t vol = (uint8_t) midiVelocityToWaveVolume(velocity);
-    apu_->write_register(startAddr_ + NRX2, vol << 5);
+    apu_->writeRegister(startAddr_ + NRX2, vol << 5);
 }
 
 void WaveOscillator::setWaveTable(uint8_t* samples)
 {
     for (uint i = 0; i < 32; i += 2) {
         uint8_t value = ((*(samples+i) & 0x0F) << 4) | (*(samples+i+1) & 0x0F);
-        apu_->write_register(WaveTableAddr + i / 2, value);
+        apu_->writeRegister(WaveTableAddr + i / 2, value);
     }
 }
 
@@ -123,21 +202,16 @@ void NoiseOscillator::afterInit()
 
 Synth::Synth()
 {
-    stop();
+    setDefaults();
 }
 
-void Synth::configure(double sampleRate, size_t channels)
+void Synth::configure(double sampleRate, int channels)
 {
-    blargg_err_t res = apu_.set_sample_rate((long) sampleRate);
-    apu_.write_register(NR52, 0x80); // initialize APU
-    jassert(res == blargg_success);
-
-    // TODO: configure APU mono or stereo
+    apu_.configure(sampleRate, channels);
 }
 
-void Synth::stop()
+void Synth::setDefaults()
 {
-    apu_.write_register(NR52, 0x00);
     for (OSCID i = 0; i < NUM_OSC; i++) {
         oscs_[i]->setApu(&apu_);
         configs_[i].enabled = false;
@@ -145,7 +219,11 @@ void Synth::stop()
         configs_[i].voice = 0;
         reconfigure(i);
     }
-    // TODO: clear BlipBuffer
+}
+
+void Synth::stop()
+{
+    apu_.reset();
 }
 
 void Synth::setEnabled(OSCID oscillator, bool enabled)
@@ -190,33 +268,26 @@ void Synth::reconfigure(OSCID oscillator)
         voicesRequired++;
     }
     manager_.setVoices(voicesRequired);
-    // TODO: support stereo
-    apu_.write_register(NR50, 0x7F);
-    apu_.write_register(NR51, (voices << 4) | voices); // enable voices
+    // TODO: support stereo assignment
+    apu_.writeRegister(NR50, 0x7F);
+    apu_.writeRegister(NR51, (voices << 4) | voices); // enable voices
 }
 
-void Synth::process(blip_sample_t* buffer, size_t sampleCount, juce::MidiBuffer& midiMessages)
+void Synth::handleMIDI(juce::MidiBuffer& midiMessages)
 {
-    // loop through midi events
     for (const juce::MidiMessageMetadata metadata : midiMessages) {
         handleMIDIEvent(metadata.getMessage());
     }
+}
 
-    // Generate 1/60 second of sound into APU's sample buffer
-    while (apu_.samples_avail() < sampleCount) {
-        apu_.end_frame();
-    }
-    // TODO: avoid doublebuffering with custom BlipBuffer which converts to float
-    //  on write
-    long count = apu_.read_samples(buffer, sampleCount);
-    jassert(count == sampleCount);
+void Synth::readSamples(juce::AudioBuffer<float> *out)
+{
+    apu_.readSamples(out);
 }
 
 void Synth::handleMIDIEvent(juce::MidiMessage msg)
 {
     if (msg.isSysEx()) return;
-
-    DBG(msg.getNoteNumber());
 
     if (manager_.voices() == 0) return;
     // https://www.midi.org/specifications-old/item/table-1-summary-of-midi-message
