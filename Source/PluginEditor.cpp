@@ -17,6 +17,7 @@ GameBoySynthAudioProcessorEditor::GameBoySynthAudioProcessorEditor(GameBoySynthA
 {
     theme(getLookAndFeel());
     setSize(WindowWidth, WindowHeight);
+    // osc 1
     osc1.enableButton.addListener(this);
     osc1.enableButton.setToggleState(true, juce::sendNotification);
     osc1.volSlider.addListener(this);
@@ -24,6 +25,7 @@ GameBoySynthAudioProcessorEditor::GameBoySynthAudioProcessorEditor(GameBoySynthA
     osc1.voicePicker.addListener(this);
     osc1.transposePicker.addListener(this);
     addAndMakeVisible(osc1);
+    // osc 2
     osc2.enableButton.addListener(this);
     osc2.enableButton.setToggleState(true, juce::sendNotification);
     osc2.volSlider.addListener(this);
@@ -31,6 +33,9 @@ GameBoySynthAudioProcessorEditor::GameBoySynthAudioProcessorEditor(GameBoySynthA
     osc2.voicePicker.addListener(this);
     osc2.transposePicker.addListener(this);
     addAndMakeVisible(osc2);
+    // osc 3
+    addAndMakeVisible(wavetable);
+    // keyboard
     keyboardState.addListener(audioProcessor.getMidiCollector());
     addAndMakeVisible(keyboard);
 }
@@ -50,6 +55,7 @@ void GameBoySynthAudioProcessorEditor::resized()
     // subcomponents in your editor..
     osc1.setBounds(0, 0, OscBoxWidth, OscBoxHeight);
     osc2.setBounds(OscBoxWidth, 0, OscBoxWidth, OscBoxHeight);
+    wavetable.setBounds(0, OscBoxHeight, OscBoxWidth, OscBoxHeight);
     keyboard.setBounds(0, WindowHeight-KeyboardHeight, WindowWidth, KeyboardHeight);
 }
 
