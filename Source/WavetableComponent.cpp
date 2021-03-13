@@ -16,22 +16,8 @@
 
 static int widthUnits = WAVE_TABLE_SIZE;
 static int heightUnits = 16;
-static int pickerPad = 5;
-static int pickerHeight = 25;
-static int pickerWidth = 150;
 
-WavetableComponent::WavetableComponent() : shapePicker("Shape")
-{
-    shapePicker.addItem("sine", 1);
-    shapePicker.addItem("square", 2);
-    shapePicker.addItem("triangle", 3);
-    shapePicker.addItem("ramp up", 4);
-    shapePicker.addItem("ramp down", 5);
-    shapePicker.addItem("noise", 6);
-    shapePicker.addListener(this);
-    shapePicker.setSelectedId(1);
-    addAndMakeVisible(shapePicker);
-}
+WavetableComponent::WavetableComponent() {}
 
 WavetableComponent::~WavetableComponent() {}
 
@@ -46,10 +32,7 @@ void WavetableComponent::paint(juce::Graphics& g)
     }
 }
 
-void WavetableComponent::resized()
-{
-    shapePicker.setBounds(getLocalBounds().getWidth() - pickerWidth - pickerPad, pickerPad, pickerWidth, pickerHeight);
-}
+void WavetableComponent::resized() {}
 
 int WavetableComponent::scaleFactor()
 {
@@ -63,7 +46,7 @@ int WavetableComponent::padX()
 
 int WavetableComponent::padY()
 {
-    return ((getLocalBounds().getHeight() - pickerHeight - (pickerPad * 2) - heightUnits*scaleFactor()) / 2) + pickerHeight + pickerPad;
+    return (getLocalBounds().getHeight() - heightUnits*scaleFactor()) / 2;
 }
 
 juce::Rectangle<int> WavetableComponent::drawingBounds()
@@ -94,25 +77,6 @@ void WavetableComponent::mouseUp(const juce::MouseEvent &event)
     if (changed_) {
         // TODO: trigger wavetable update
         changed_ = false;
-    }
-}
-
-void WavetableComponent::comboBoxChanged(juce::ComboBox *comboBox)
-{
-    jassert(comboBox == &shapePicker);
-    switch (comboBox->getSelectedId()) {
-        case 1:
-            return loadDefaultWavetable(WAVE_TABLE_SINE);
-        case 2:
-            return loadDefaultWavetable(WAVE_TABLE_SQUARE);
-        case 3:
-            return loadDefaultWavetable(WAVE_TABLE_TRIANGLE);
-        case 4:
-            return loadDefaultWavetable(WAVE_TABLE_RAMP_UP);
-        case 5:
-            return loadDefaultWavetable(WAVE_TABLE_RAMP_DOWN);
-        case 6:
-            return loadDefaultWavetable(WAVE_TABLE_NOISE);
     }
 }
 

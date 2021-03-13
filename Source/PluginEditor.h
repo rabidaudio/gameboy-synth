@@ -11,7 +11,7 @@
 #include <JuceHeader.h>
 #include "PluginProcessor.h"
 #include "SquareOscComponent.h"
-#include "WavetableComponent.h"
+#include "WaveOscComponent.h"
 #include "Theme.h"
 
 //==============================================================================
@@ -40,10 +40,9 @@ private:
     GameBoySynthAudioProcessor& audioProcessor;
     SquareOscComponent osc1;
     SquareOscComponent osc2;
+    WaveOscComponent osc3;
     juce::MidiKeyboardState keyboardState;
     juce::MidiKeyboardComponent keyboard;
-
-    WavetableComponent wavetable;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (GameBoySynthAudioProcessorEditor)
 };

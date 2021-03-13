@@ -174,6 +174,8 @@ void WaveOscillator::setVelocity(uint8_t velocity)
 
 void WaveOscillator::setWaveTable(uint8_t* samples)
 {
+    // TODO: pandocs say you should only change the wavetable while the osc is off
+    // apu_->writeRegister(startAddr_ + NRX0, 0x00);
     for (uint i = 0; i < 32; i += 2) {
         uint8_t value = ((*(samples+i) & 0x0F) << 4) | (*(samples+i+1) & 0x0F);
         apu_->writeRegister(WaveTableAddr + i / 2, value);
