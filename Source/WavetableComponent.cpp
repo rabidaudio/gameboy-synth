@@ -75,8 +75,7 @@ void WavetableComponent::mouseUp(const juce::MouseEvent &event)
 {
     enableWavePixel(event);
     if (changed_) {
-        // TODO: trigger wavetable update
-        changed_ = false;
+        wavetableChanged();
     }
 }
 
@@ -98,5 +97,13 @@ void WavetableComponent::enableWavePixel(const juce::MouseEvent &event)
 void WavetableComponent::loadDefaultWavetable(const uint8_t* defaultWavetable)
 {
     std::memcpy(wavetable, defaultWavetable, WAVE_TABLE_SIZE);
+    wavetableChanged();
+
+}
+
+void WavetableComponent::wavetableChanged()
+{
     repaint(drawingBounds());
+    sendSynchronousChangeMessage();
+    changed_ = false;
 }

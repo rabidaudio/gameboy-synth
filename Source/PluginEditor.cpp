@@ -34,6 +34,7 @@ GameBoySynthAudioProcessorEditor::GameBoySynthAudioProcessorEditor(GameBoySynthA
     osc2.transposePicker.addListener(this);
     addAndMakeVisible(osc2);
     // osc 3
+    osc3.wavetable.addChangeListener(this);
     addAndMakeVisible(osc3);
     // keyboard
     keyboardState.addListener(audioProcessor.getMidiCollector());
@@ -95,5 +96,12 @@ void GameBoySynthAudioProcessorEditor::comboBoxChanged(juce::ComboBox *comboBox)
         audioProcessor.synth.setTranspose(0, comboBox->getSelectedId() - 48 - 1);
     } else if (comboBox == &osc2.transposePicker) {
         audioProcessor.synth.setTranspose(1, comboBox->getSelectedId() - 48 - 1);
+    }
+}
+
+void GameBoySynthAudioProcessorEditor::changeListenerCallback(juce::ChangeBroadcaster* source)
+{
+    if (source == &osc3.wavetable) {
+        audioProcessor.synth.setWaveTable(osc3.wavetable.wavetable);
     }
 }

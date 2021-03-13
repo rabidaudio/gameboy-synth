@@ -23,6 +23,8 @@ public:
     WaveOscComponent();
     ~WaveOscComponent() override;
 
+    WavetableComponent wavetable;
+
     void paint (juce::Graphics&) override;
     void resized() override;
 
@@ -30,7 +32,6 @@ public:
 
 private:
     juce::ComboBox shapePicker;
-    WavetableComponent wavetable;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (WaveOscComponent)
 };
