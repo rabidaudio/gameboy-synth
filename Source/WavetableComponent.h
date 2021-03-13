@@ -16,7 +16,8 @@
 //==============================================================================
 /*
 */
-class WavetableComponent  : public juce::Component
+class WavetableComponent  : public juce::Component,
+                            public juce::ComboBox::Listener
 {
 public:
     WavetableComponent();
@@ -33,8 +34,11 @@ public:
     void mouseDrag(const juce::MouseEvent &event) override;
     void mouseUp(const juce::MouseEvent &event) override;
 
+    void comboBoxChanged(juce::ComboBox* comboBoxThatHasChanged) override;
+
 private:
     bool changed_ = false;
+    juce::ComboBox shapePicker;
 
     int padX();
     int padY();
