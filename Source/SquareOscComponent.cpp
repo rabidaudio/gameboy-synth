@@ -30,5 +30,6 @@ void SquareOscComponent::paint(juce::Graphics& g)
 
 void SquareOscComponent::resized()
 {
-    controls.setBounds(getLocalBounds());
+    int upperBlockUnit = getLocalBounds().proportionOfHeight(0.25);
+    controls.setBounds(0, 0, getLocalBounds().getWidth(), upperBlockUnit);
 }

@@ -589,6 +589,7 @@ static const unsigned char temp_binary_data_2[] =
 "#pragma once\n"
 "\n"
 "#include <JuceHeader.h>\n"
+"#include \"BasicControlsComponent.h\"\n"
 "#include \"WavetableComponent.h\"\n"
 "\n"
 "//==============================================================================\n"
@@ -609,6 +610,7 @@ static const unsigned char temp_binary_data_2[] =
 "    void comboBoxChanged(juce::ComboBox* comboBoxThatHasChanged) override;\n"
 "\n"
 "private:\n"
+"    BasicControlsComponent controls;\n"
 "    juce::ComboBox shapePicker;\n"
 "\n"
 "    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (WaveOscComponent)\n"
@@ -629,7 +631,7 @@ const char* getNamedResource (const char* resourceNameUTF8, int& numBytes)
     {
         case 0x34bc1021:  numBytes = 35147; return LICENSE;
         case 0x64791dc8:  numBytes = 2733; return README_md;
-        case 0xc563c4a0:  numBytes = 898; return WaveOscComponent_h;
+        case 0xc563c4a0:  numBytes = 971; return WaveOscComponent_h;
         default: break;
     }
 

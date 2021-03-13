@@ -11,6 +11,7 @@
 #pragma once
 
 #include <JuceHeader.h>
+#include "BasicControlsComponent.h"
 #include "WavetableComponent.h"
 
 //==============================================================================
@@ -31,6 +32,7 @@ public:
     void comboBoxChanged(juce::ComboBox* comboBoxThatHasChanged) override;
 
 private:
+    BasicControlsComponent controls;
     juce::ComboBox shapePicker;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (WaveOscComponent)

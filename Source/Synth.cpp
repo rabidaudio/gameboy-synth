@@ -190,8 +190,7 @@ void WaveOscillator::setEvent(MidiEvent event)
 
 void WaveOscillator::afterInit()
 {
-    static uint8_t zeros[32] = { 0 };
-    setWaveTable(zeros);
+    apu_->writeRegister(startAddr_ + NRX0, 0x80); // enable the dac
 }
 
 void NoiseOscillator::setEvent(MidiEvent event)

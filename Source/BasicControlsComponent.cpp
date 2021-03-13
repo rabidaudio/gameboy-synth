@@ -44,12 +44,14 @@ BasicControlsComponent::BasicControlsComponent(OSCID id) :
     // enable
     addAndMakeVisible(enableButton);
     // volume
-    volSlider.setSliderStyle(juce::Slider::Rotary);
-    volSlider.setRange(0, 15, 1);
-    volSlider.setTextBoxStyle(pwmSlider.TextBoxBelow, true, 0, 0);
-    volSlider.setNumDecimalPlacesToDisplay(0);
-    volSlider.setValue(15);
-    addAndMakeVisible(volSlider);
+    if (id != 2) {
+        volSlider.setSliderStyle(juce::Slider::Rotary);
+        volSlider.setRange(0, 15, 1);
+        volSlider.setValue(15);
+        volSlider.setTextBoxStyle(pwmSlider.TextBoxBelow, true, 0, 0);
+        volSlider.setNumDecimalPlacesToDisplay(0);
+        addAndMakeVisible(volSlider);
+    }
     // pwm
     if (id == 0 || id == 1) {
         pwmSlider.setSliderStyle(juce::Slider::Rotary);
@@ -83,6 +85,8 @@ BasicControlsComponent::BasicControlsComponent(OSCID id) :
     volSlider.addListener(this);
     pwmSlider.addListener(this);
     voicePicker.addListener(this);
+    channelPicker.addListener(this);
+    transposePicker.addListener(this);
 }
 
 BasicControlsComponent::~BasicControlsComponent() {}
@@ -92,27 +96,27 @@ void BasicControlsComponent::paint (juce::Graphics& g) {}
 void BasicControlsComponent::resized()
 {
     juce::Rectangle<int> bounds = getLocalBounds();
-    int upperBlockUnit = bounds.proportionOfHeight(0.25);
     int left = 0;
+    int height = bounds.getHeight();
     // enable
-    enableButton.setBounds(left, 0, upperBlockUnit, upperBlockUnit);
+    enableButton.setBounds(left, 0, height, height);
     left = enableButton.getBounds().getRight();
     // volume
-    volSlider.setBounds(left, 0, upperBlockUnit, upperBlockUnit);
+    volSlider.setBounds(left, 0, height, height);
     volSlider.setTextBoxStyle(pwmSlider.TextBoxBelow, true, volSlider.getBounds().getWidth(), volSlider.getBounds().getHeight()/4);
     left = volSlider.getBounds().getRight();
     // pwm
     if (id_ == 0 || id_ == 1) {
-        pwmSlider.setBounds(left, 0, upperBlockUnit, upperBlockUnit);
+        pwmSlider.setBounds(left, 0, height, height);
         pwmSlider.setTextBoxStyle(pwmSlider.TextBoxBelow, true, pwmSlider.getBounds().getWidth(), pwmSlider.getBounds().getHeight()/4);
         left = pwmSlider.getBounds().getRight();
     }
     // pickers
     static int pickerHeight = 25;
-    int pickerPad = (upperBlockUnit - (3 * pickerHeight)) / 2;
-    voicePicker.setBounds(left, pickerPad, upperBlockUnit, pickerHeight);
-    channelPicker.setBounds(left, voicePicker.getBounds().getBottom(), upperBlockUnit, pickerHeight);
-    transposePicker.setBounds(left, channelPicker.getBounds().getBottom(), upperBlockUnit, pickerHeight);
+    int pickerPad = std::max((height - (3 * pickerHeight)) / 2, 0);
+    voicePicker.setBounds(left, pickerPad, height, pickerHeight);
+    channelPicker.setBounds(left, voicePicker.getBounds().getBottom(), height, pickerHeight);
+    transposePicker.setBounds(left, channelPicker.getBounds().getBottom(), height, pickerHeight);
 }
 
 void BasicControlsComponent::buttonClicked(juce::Button* button)
@@ -126,7 +130,7 @@ void BasicControlsComponent::sliderValueChanged(juce::Slider *slider)
         jassert(id_ == 0 || id_ == 1);
         Synth::INSTANCE.setDutyCycle(id_, slider->getValue());
     } else if (slider == &volSlider) {
-        // TODO: less if osc3
+        jassert(id_ != 2);
         Synth::INSTANCE.setVolume(id_, ((float) slider->getValue()) / 15.0);
     }
 }

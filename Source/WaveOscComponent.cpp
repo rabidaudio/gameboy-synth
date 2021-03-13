@@ -13,8 +13,10 @@
 #include "Theme.h"
 
 //==============================================================================
-WaveOscComponent::WaveOscComponent() : shapePicker("Shape")
+WaveOscComponent::WaveOscComponent() : controls(2), shapePicker("Shape")
 {
+    addAndMakeVisible(controls);
+
     shapePicker.addItem("sine", 1);
     shapePicker.addItem("square", 2);
     shapePicker.addItem("triangle", 3);
@@ -37,12 +39,15 @@ void WaveOscComponent::paint(juce::Graphics& g) {
 
 void WaveOscComponent::resized()
 {
+    int upperBlockUnit = getLocalBounds().proportionOfHeight(0.25);
+    controls.setBounds(0, 0, getLocalBounds().getWidth(), upperBlockUnit);
+
     static int pickerPad = 5;
     static int pickerHeight = 25;
     static int pickerWidth = 150;
-    shapePicker.setBounds(getLocalBounds().getWidth() - pickerWidth - pickerPad, pickerPad, pickerWidth, pickerHeight);
+    shapePicker.setBounds(getLocalBounds().getWidth() - pickerWidth - pickerPad, upperBlockUnit + pickerPad, pickerWidth, pickerHeight);
     juce::Rectangle<int> wavetableBounds = getLocalBounds();
-    wavetableBounds.removeFromTop(pickerHeight + 2*pickerPad);
+    wavetableBounds.removeFromTop(upperBlockUnit + pickerHeight + 2*pickerPad);
     wavetable.setBounds(wavetableBounds);
 }
 
