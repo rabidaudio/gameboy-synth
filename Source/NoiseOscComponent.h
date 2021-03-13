@@ -1,8 +1,8 @@
 /*
   ==============================================================================
 
-    SquareOscComponent.h
-    Created: 21 Feb 2021 5:09:02pm
+    NoiseOscComponent.h
+    Created: 13 Mar 2021 2:09:59pm
     Author:  Charles Julian Knight
 
   ==============================================================================
@@ -16,16 +16,16 @@
 //==============================================================================
 /*
 */
-class SquareOscComponent  : public juce::Component
+class NoiseOscComponent  : public juce::Component
 {
 public:
-    SquareOscComponent(OSCID id);
-    ~SquareOscComponent() override;
+    NoiseOscComponent();
+    ~NoiseOscComponent() override;
 
     void paint(juce::Graphics&) override;
     void resized() override;
 
 private:
     BasicControlsComponent controls;
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(SquareOscComponent)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(NoiseOscComponent)
 };

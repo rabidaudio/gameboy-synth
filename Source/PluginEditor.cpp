@@ -24,6 +24,7 @@ GameBoySynthAudioProcessorEditor::GameBoySynthAudioProcessorEditor(GameBoySynthA
     addAndMakeVisible(osc0);
     addAndMakeVisible(osc1);
     addAndMakeVisible(osc2);
+    addAndMakeVisible(osc3);
     // keyboard
     keyboardState.addListener(audioProcessor.getMidiCollector());
     addAndMakeVisible(keyboard);
@@ -42,6 +43,6 @@ void GameBoySynthAudioProcessorEditor::resized()
     osc0.setBounds(0, 0, OscBoxWidth, OscBoxHeight);
     osc1.setBounds(OscBoxWidth, 0, OscBoxWidth, OscBoxHeight);
     osc2.setBounds(0, OscBoxHeight, OscBoxWidth, OscBoxHeight);
+    osc3.setBounds(OscBoxWidth, OscBoxHeight, OscBoxWidth, OscBoxHeight);
     keyboard.setBounds(0, WindowHeight-KeyboardHeight, WindowWidth, KeyboardHeight);
 }
-

@@ -543,13 +543,13 @@ static const unsigned char temp_binary_data_1[] =
 "- [ ] Build basic UI\n"
 "- [x] Use finer time resolution than 1/60s\n"
 "- [x] Custom BlipBuffer to avoid extra buffer copy for int16->float conversion\n"
-"- [ ] wave osc\n"
+"- [x] wave osc\n"
 "- [ ] noise osc\n"
 "- [ ] vol envelopes (native at low periods, then manual)\n"
 "- [ ] LFOs - vol and freq (quantize option? native for osc 1 at low periods?)\n"
 "- [x] Arbitrary wavetable drawing\n"
 "- [ ] Multiple MIDI channels\n"
-"- [ ] UI for stereo control\n"
+"- [ ] UI for stereo control and tone\n"
 "- [ ] Better AU compatibility\n"
 "- [ ] Pretty UI\n"
 "- [ ] package for multiple platforms\n"
@@ -596,7 +596,8 @@ static const unsigned char temp_binary_data_2[] =
 "/*\n"
 "*/\n"
 "class WaveOscComponent  : public juce::Component,\n"
-"                            public juce::ComboBox::Listener\n"
+"                            public juce::ComboBox::Listener,\n"
+"                            public juce::ChangeListener\n"
 "{\n"
 "public:\n"
 "    WaveOscComponent();\n"
@@ -608,6 +609,7 @@ static const unsigned char temp_binary_data_2[] =
 "    void resized() override;\n"
 "\n"
 "    void comboBoxChanged(juce::ComboBox* comboBoxThatHasChanged) override;\n"
+"    void changeListenerCallback(juce::ChangeBroadcaster* source) override;\n"
 "\n"
 "private:\n"
 "    BasicControlsComponent controls;\n"
@@ -630,8 +632,8 @@ const char* getNamedResource (const char* resourceNameUTF8, int& numBytes)
     switch (hash)
     {
         case 0x34bc1021:  numBytes = 35147; return LICENSE;
-        case 0x64791dc8:  numBytes = 2733; return README_md;
-        case 0xc563c4a0:  numBytes = 971; return WaveOscComponent_h;
+        case 0x64791dc8:  numBytes = 2742; return README_md;
+        case 0xc563c4a0:  numBytes = 1103; return WaveOscComponent_h;
         default: break;
     }
 

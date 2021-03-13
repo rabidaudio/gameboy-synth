@@ -12,6 +12,7 @@
 #include "PluginProcessor.h"
 #include "SquareOscComponent.h"
 #include "WaveOscComponent.h"
+#include "NoiseOscComponent.h"
 #include "Theme.h"
 
 //==============================================================================
@@ -34,6 +35,7 @@ private:
     SquareOscComponent osc0;
     SquareOscComponent osc1;
     WaveOscComponent osc2;
+    NoiseOscComponent osc3;
     juce::MidiKeyboardState keyboardState;
     juce::MidiKeyboardComponent keyboard;
 
