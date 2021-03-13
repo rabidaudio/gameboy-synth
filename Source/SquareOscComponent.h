@@ -25,7 +25,11 @@ public:
     void resized() override;
 
     juce::ToggleButton enableButton;
+    juce::Slider volSlider;
     juce::Slider pwmSlider;
+    juce::ComboBox voicePicker;
+    juce::ComboBox channelPicker;
+    juce::ComboBox transposePicker;
 
 private:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SquareOscComponent)

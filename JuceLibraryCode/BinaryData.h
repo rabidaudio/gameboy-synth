@@ -12,7 +12,7 @@ namespace BinaryData
     const int            LICENSESize = 35147;
 
     extern const char*   README_md;
-    const int            README_mdSize = 2163;
+    const int            README_mdSize = 2733;
 
     // Number of elements in the namedResourceList and originalFileNames arrays.
     const int namedResourceListSize = 2;

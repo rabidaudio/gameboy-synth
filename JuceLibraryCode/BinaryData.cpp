@@ -536,6 +536,25 @@ static const unsigned char temp_binary_data_1[] =
 "inear volume envelope. One of the square waves has a linear frequency envelope. The resolution in both time and amplitude is relatively low, so the pitches are slightly out of tune. There's no controllable filter, only a static passive high-pass filt"
 "er. The limited CPU of the platform limits the resolution at which these parameters are controllable. All of this adds up to a limited but iconic sound.\n"
 "\n"
+"## TODO\n"
+"\n"
+"- [x] integrate sound core\n"
+"- [x] handle midi events\n"
+"- [ ] Build basic UI\n"
+"- [x] Use finer time resolution than 1/60s\n"
+"- [x] Custom BlipBuffer to avoid extra buffer copy for int16->float conversion\n"
+"- [ ] wave osc\n"
+"- [ ] noise osc\n"
+"- [ ] vol envelopes (native at low periods, then manual)\n"
+"- [ ] LFOs - vol and freq (quantize option? native for osc 1 at low periods?)\n"
+"- [ ] Arbitrary wavetable drawing\n"
+"- [ ] Multiple MIDI channels\n"
+"- [ ] UI for stereo control\n"
+"- [ ] Better AU compatibility\n"
+"- [ ] Pretty UI\n"
+"- [ ] package for multiple platforms\n"
+"- [ ] throw on app store\n"
+"\n"
 "## Reference\n"
 "\n"
 "- https://gbdev.io/pandocs/#sound-controller\n"
@@ -567,7 +586,7 @@ const char* getNamedResource (const char* resourceNameUTF8, int& numBytes)
     switch (hash)
     {
         case 0x34bc1021:  numBytes = 35147; return LICENSE;
-        case 0x64791dc8:  numBytes = 2163; return README_md;
+        case 0x64791dc8:  numBytes = 2733; return README_md;
         default: break;
     }
 

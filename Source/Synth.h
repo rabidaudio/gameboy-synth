@@ -162,6 +162,17 @@ public:
         }
     }
 
+    static double normalizeDutyCycle(double value)
+    {
+        DutyCycle d = dutyCycleFromValue(value);
+        switch (d) {
+            case DutyCycle::duty12_5: return 12.5;
+            case DutyCycle::duty25: return 25.0;
+            case DutyCycle::duty50: return 50.0;
+            case DutyCycle::duty75: return 75.0;
+        }
+    }
+
 protected:
     void afterInit();
 };

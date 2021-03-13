@@ -11,6 +11,7 @@
 #include <JuceHeader.h>
 #include "PluginProcessor.h"
 #include "SquareOscComponent.h"
+#include "Theme.h"
 
 //==============================================================================
 /**
@@ -35,6 +36,7 @@ private:
     // access the processor object that created it.
     GameBoySynthAudioProcessor& audioProcessor;
     SquareOscComponent osc1;
+    SquareOscComponent osc2;
     juce::MidiKeyboardState keyboardState;
     juce::MidiKeyboardComponent keyboard;
 
