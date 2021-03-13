@@ -547,7 +547,7 @@ static const unsigned char temp_binary_data_1[] =
 "- [ ] noise osc\n"
 "- [ ] vol envelopes (native at low periods, then manual)\n"
 "- [ ] LFOs - vol and freq (quantize option? native for osc 1 at low periods?)\n"
-"- [ ] Arbitrary wavetable drawing\n"
+"- [x] Arbitrary wavetable drawing\n"
 "- [ ] Multiple MIDI channels\n"
 "- [ ] UI for stereo control\n"
 "- [ ] Better AU compatibility\n"
@@ -574,6 +574,48 @@ static const unsigned char temp_binary_data_1[] =
 
 const char* README_md = (const char*) temp_binary_data_1;
 
+//================== WaveOscComponent.h ==================
+static const unsigned char temp_binary_data_2[] =
+"/*\n"
+"  ==============================================================================\n"
+"\n"
+"    WaveOscComponent.h\n"
+"    Created: 13 Mar 2021 2:27:35am\n"
+"    Author:  Charles Julian Knight\n"
+"\n"
+"  ==============================================================================\n"
+"*/\n"
+"\n"
+"#pragma once\n"
+"\n"
+"#include <JuceHeader.h>\n"
+"#include \"WavetableComponent.h\"\n"
+"\n"
+"//==============================================================================\n"
+"/*\n"
+"*/\n"
+"class WaveOscComponent  : public juce::Component,\n"
+"                            public juce::ComboBox::Listener\n"
+"{\n"
+"public:\n"
+"    WaveOscComponent();\n"
+"    ~WaveOscComponent() override;\n"
+"\n"
+"    WavetableComponent wavetable;\n"
+"\n"
+"    void paint (juce::Graphics&) override;\n"
+"    void resized() override;\n"
+"\n"
+"    void comboBoxChanged(juce::ComboBox* comboBoxThatHasChanged) override;\n"
+"\n"
+"private:\n"
+"    juce::ComboBox shapePicker;\n"
+"\n"
+"    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (WaveOscComponent)\n"
+"};\n";
+
+const char* WaveOscComponent_h = (const char*) temp_binary_data_2;
+
 
 const char* getNamedResource (const char* resourceNameUTF8, int& numBytes)
 {
@@ -587,6 +629,7 @@ const char* getNamedResource (const char* resourceNameUTF8, int& numBytes)
     {
         case 0x34bc1021:  numBytes = 35147; return LICENSE;
         case 0x64791dc8:  numBytes = 2733; return README_md;
+        case 0xc563c4a0:  numBytes = 898; return WaveOscComponent_h;
         default: break;
     }
 
@@ -597,13 +640,15 @@ const char* getNamedResource (const char* resourceNameUTF8, int& numBytes)
 const char* namedResourceList[] =
 {
     "LICENSE",
-    "README_md"
+    "README_md",
+    "WaveOscComponent_h"
 };
 
 const char* originalFilenames[] =
 {
     "LICENSE",
-    "README.md"
+    "README.md",
+    "WaveOscComponent.h"
 };
 
 const char* getNamedResourceOriginalFilename (const char* resourceNameUTF8)

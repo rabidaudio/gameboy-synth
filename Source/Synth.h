@@ -301,6 +301,8 @@ private:
 public:
     Synth();
 
+    static Synth INSTANCE;
+
     void configure(double sampleRate, int channels);
 
     void setEnabled(OSCID oscillator, bool enabled);

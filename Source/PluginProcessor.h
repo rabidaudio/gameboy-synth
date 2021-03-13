@@ -9,8 +9,6 @@
 #pragma once
 
 #include <JuceHeader.h>
-#include "Gb_Snd_Emu-0.1.4/Basic_Gb_Apu.h"
-#include "Synth.h"
 
 //==============================================================================
 /**
@@ -23,14 +21,14 @@ public:
     ~GameBoySynthAudioProcessor() override;
 
     //==============================================================================
-    void prepareToPlay (double sampleRate, int samplesPerBlock) override;
+    void prepareToPlay(double sampleRate, int samplesPerBlock) override;
     void releaseResources() override;
 
    #ifndef JucePlugin_PreferredChannelConfigurations
-    bool isBusesLayoutSupported (const BusesLayout& layouts) const override;
+    bool isBusesLayoutSupported(const BusesLayout& layouts) const override;
    #endif
 
-    void processBlock (juce::AudioBuffer<float>&, juce::MidiBuffer&) override;
+    void processBlock(juce::AudioBuffer<float>&, juce::MidiBuffer&) override;
 
     //==============================================================================
     juce::AudioProcessorEditor* createEditor() override;
@@ -47,18 +45,16 @@ public:
     //==============================================================================
     int getNumPrograms() override;
     int getCurrentProgram() override;
-    void setCurrentProgram (int index) override;
-    const juce::String getProgramName (int index) override;
-    void changeProgramName (int index, const juce::String& newName) override;
+    void setCurrentProgram(int index) override;
+    const juce::String getProgramName(int index) override;
+    void changeProgramName(int index, const juce::String& newName) override;
 
     //==============================================================================
-    void getStateInformation (juce::MemoryBlock& destData) override;
-    void setStateInformation (const void* data, int sizeInBytes) override;
+    void getStateInformation(juce::MemoryBlock& destData) override;
+    void setStateInformation(const void* data, int sizeInBytes) override;
 
     //==============================================================================
     juce::MidiMessageCollector* getMidiCollector() { return &midiCollector_; }
-
-    Synth synth;
 
 private:
     //==============================================================================

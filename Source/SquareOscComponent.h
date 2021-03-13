@@ -11,6 +11,8 @@
 #pragma once
 
 #include <JuceHeader.h>
+#include "Synth.h"
+#include "BasicControlsComponent.h"
 
 //==============================================================================
 /*
@@ -18,19 +20,13 @@
 class SquareOscComponent  : public juce::Component
 {
 public:
-    SquareOscComponent();
+    SquareOscComponent(OSCID id);
     ~SquareOscComponent() override;
 
     void paint (juce::Graphics&) override;
     void resized() override;
 
-    juce::ToggleButton enableButton;
-    juce::Slider volSlider;
-    juce::Slider pwmSlider;
-    juce::ComboBox voicePicker;
-    juce::ComboBox channelPicker;
-    juce::ComboBox transposePicker;
-
 private:
+    BasicControlsComponent controls;
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SquareOscComponent)
 };

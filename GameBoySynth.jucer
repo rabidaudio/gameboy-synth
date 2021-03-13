@@ -11,9 +11,14 @@
     <FILE id="DqHiij" name="LICENSE" compile="0" resource="1" file="LICENSE"/>
     <FILE id="ZmNejr" name="README.md" compile="0" resource="1" file="README.md"/>
     <GROUP id="{547F6CC2-A1E7-5511-1621-1739E99809BE}" name="Source">
+      <FILE id="LHD1xa" name="SharedSynth.h" compile="0" resource="0" file="Source/SharedSynth.h"/>
+      <FILE id="oC6zqR" name="BasicControlsComponent.cpp" compile="1" resource="0"
+            file="Source/BasicControlsComponent.cpp"/>
+      <FILE id="VUJQ1q" name="BasicControlsComponent.h" compile="0" resource="0"
+            file="Source/BasicControlsComponent.h"/>
       <FILE id="myKu9m" name="WaveOscComponent.cpp" compile="1" resource="0"
             file="Source/WaveOscComponent.cpp"/>
-      <FILE id="U0Tp3C" name="WaveOscComponent.h" compile="0" resource="0"
+      <FILE id="U0Tp3C" name="WaveOscComponent.h" compile="0" resource="1"
             file="Source/WaveOscComponent.h"/>
       <FILE id="MCSTeY" name="WavetableComponent.cpp" compile="1" resource="0"
             file="Source/WavetableComponent.cpp"/>

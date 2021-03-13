@@ -8,6 +8,9 @@
 
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
+#include "Synth.h"
+
+Synth Synth::INSTANCE;
 
 //==============================================================================
 GameBoySynthAudioProcessor::GameBoySynthAudioProcessor()
@@ -24,9 +27,7 @@ GameBoySynthAudioProcessor::GameBoySynthAudioProcessor()
 {
 }
 
-GameBoySynthAudioProcessor::~GameBoySynthAudioProcessor()
-{
-}
+GameBoySynthAudioProcessor::~GameBoySynthAudioProcessor() {}
 
 //==============================================================================
 const juce::String GameBoySynthAudioProcessor::getName() const
@@ -77,23 +78,23 @@ int GameBoySynthAudioProcessor::getCurrentProgram()
     return 0;
 }
 
-void GameBoySynthAudioProcessor::setCurrentProgram (int index)
+void GameBoySynthAudioProcessor::setCurrentProgram(int index)
 {
 }
 
-const juce::String GameBoySynthAudioProcessor::getProgramName (int index)
+const juce::String GameBoySynthAudioProcessor::getProgramName(int index)
 {
     return {};
 }
 
-void GameBoySynthAudioProcessor::changeProgramName (int index, const juce::String& newName)
+void GameBoySynthAudioProcessor::changeProgramName(int index, const juce::String& newName)
 {
 }
 
 //==============================================================================
-void GameBoySynthAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
+void GameBoySynthAudioProcessor::prepareToPlay(double sampleRate, int samplesPerBlock)
 {
-    synth.configure(sampleRate, getTotalNumOutputChannels());
+    Synth::INSTANCE.configure(sampleRate, getTotalNumOutputChannels());
     midiCollector_.reset(sampleRate);
 }
 
@@ -101,11 +102,11 @@ void GameBoySynthAudioProcessor::releaseResources()
 {
     // When playback stops, you can use this as an opportunity to free up any
     // spare memory, etc.
-    synth.stop();
+    Synth::INSTANCE.stop();
 }
 
 #ifndef JucePlugin_PreferredChannelConfigurations
-bool GameBoySynthAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) const
+bool GameBoySynthAudioProcessor::isBusesLayoutSupported(const BusesLayout& layouts) const
 {
   #if JucePlugin_IsMidiEffect
     juce::ignoreUnused (layouts);
@@ -130,15 +131,15 @@ bool GameBoySynthAudioProcessor::isBusesLayoutSupported (const BusesLayout& layo
 }
 #endif
 
-void GameBoySynthAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
+void GameBoySynthAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
 {
     juce::ScopedNoDenormals noDenormals;
     if (!buffer.hasBeenCleared()) buffer.clear();
 
     // also append any events from the collector
     midiCollector_.removeNextBlockOfMessages(midiMessages, (int) buffer.getNumSamples());
-    synth.handleMIDI(midiMessages);
-    synth.readSamples(&buffer);
+    Synth::INSTANCE.handleMIDI(midiMessages);
+    Synth::INSTANCE.readSamples(&buffer);
 }
 
 //==============================================================================
@@ -149,18 +150,18 @@ bool GameBoySynthAudioProcessor::hasEditor() const
 
 juce::AudioProcessorEditor* GameBoySynthAudioProcessor::createEditor()
 {
-    return new GameBoySynthAudioProcessorEditor (*this);
+    return new GameBoySynthAudioProcessorEditor(*this);
 }
 
 //==============================================================================
-void GameBoySynthAudioProcessor::getStateInformation (juce::MemoryBlock& destData)
+void GameBoySynthAudioProcessor::getStateInformation(juce::MemoryBlock& destData)
 {
     // You should use this method to store your parameters in the memory block.
     // You could do that either as raw data, or use the XML or ValueTree classes
     // as intermediaries to make it easy to save and load complex data.
 }
 
-void GameBoySynthAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
+void GameBoySynthAudioProcessor::setStateInformation(const void* data, int sizeInBytes)
 {
     // You should use this method to restore your parameters from this memory block,
     // whose contents will have been created by the getStateInformation() call.

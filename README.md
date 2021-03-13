@@ -17,7 +17,7 @@ As an instrument, the Game Boy APU is a pretty constrained synthesizer. It conta
 - [ ] noise osc
 - [ ] vol envelopes (native at low periods, then manual)
 - [ ] LFOs - vol and freq (quantize option? native for osc 1 at low periods?)
-- [ ] Arbitrary wavetable drawing
+- [x] Arbitrary wavetable drawing
 - [ ] Multiple MIDI channels
 - [ ] UI for stereo control
 - [ ] Better AU compatibility
