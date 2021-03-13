@@ -43,7 +43,7 @@ SquareOscComponent::SquareOscComponent() :
     addAndMakeVisible(enableButton);
     // volume
     volSlider.setSliderStyle(juce::Slider::Rotary);
-    volSlider.setRange(0, 16, 1);
+    volSlider.setRange(0, 15, 1);
     volSlider.setTextBoxStyle(pwmSlider.TextBoxBelow, true, 0, 0);
     volSlider.setNumDecimalPlacesToDisplay(0);
     volSlider.setValue(15);

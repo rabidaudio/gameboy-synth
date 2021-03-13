@@ -106,6 +106,7 @@ class Oscillator {
 protected:
     Apu* apu_;
     uint16_t startAddr_;
+    OSCID id_;
 
     virtual void afterInit() = 0;
 
@@ -114,6 +115,7 @@ public:
     {
         static const uint16_t addrs[NUM_OSC] = {Sq1Addr, Sq2Addr, WaveAddr, NoiseAddr};
         startAddr_ = addrs[id];
+        id_ = id;
     }
     virtual ~Oscillator() = 0;
 
@@ -123,6 +125,8 @@ public:
         afterInit();
     }
     virtual void setEvent(MidiEvent event) = 0;
+
+    float volume = 1.0;
 
 private:
     uint16_t midiNoteToPeriod(uint8_t note);
@@ -144,7 +148,9 @@ private:
     DutyCycle duty_ = DutyCycle::duty50;
 
 public:
-    SquareOscilator(OSCID id) : Oscillator(id) {};
+    SquareOscilator(OSCID id) : Oscillator(id) {
+        jassert(id == 0 || id == 1);
+    };
     ~SquareOscilator() {}
     void setDuty(DutyCycle duty);
     void setEvent(MidiEvent event);
@@ -257,6 +263,12 @@ public:
             case 1: return osc2.setDuty(duty);
             default: return;
         }
+    }
+
+    void setVolume(OSCID oscillator, double value)
+    {
+        jassert(value >= 0.0 && value <= 1.0);
+        oscs_[oscillator]->volume = value;
     }
 
     void setWaveTable(uint8_t* samples)

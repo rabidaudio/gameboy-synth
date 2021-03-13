@@ -117,12 +117,14 @@ void Oscillator::set11BitPeriod(uint8_t note)
     apu_->writeRegister(startAddr_ + NRX4, (uint8_t)(period >> 8) | 0x80);
 }
 
-// NRX2, Osc 1,2,4 only
+// NRX2, Osc 0,1,3 only
 // Note: if you want to trigger the envelope, you must set it before NRX3
 void Oscillator::setVolumeEnvelope(uint8_t startVelocity, bool increasing, uint8_t period)
 {
-    uint8_t volume = midiVelocityTo4BitVolume(startVelocity);
-    apu_->writeRegister(startAddr_ + NRX2, volume << 4 | (increasing ? 0x08 : 0x00) | (period & 0x03));
+    jassert(id_ != 2);
+    uint8_t v = midiVelocityTo4BitVolume(startVelocity);
+    v = (uint8_t)((float) v * volume); // scaled
+    apu_->writeRegister(startAddr_ + NRX2, v << 4 | (increasing ? 0x08 : 0x00) | (period & 0x03));
 }
 
 void Oscillator::setConstantVolume(uint8_t velocity)
@@ -259,8 +261,10 @@ void Synth::reconfigure(OSCID oscillator)
     // TODO: allow changing settings without resetting all keys
     uint8_t voices = 0;
     uint voicesRequired = 0;
+    uint8_t enabled = 0;
     for (uint i = 0; i < NUM_OSC; i++) {
         if (!configs_[i].enabled) continue;
+        enabled |= (1 << i);
         if ((voices >> configs_[i].voice) & 0x01) {
             continue;
         }
@@ -270,7 +274,7 @@ void Synth::reconfigure(OSCID oscillator)
     manager_.setVoices(voicesRequired);
     // TODO: support stereo assignment
     apu_.writeRegister(NR50, 0x7F);
-    apu_.writeRegister(NR51, (voices << 4) | voices); // enable voices
+    apu_.writeRegister(NR51, (enabled << 4) | enabled); // enable voices
 }
 
 void Synth::handleMIDI(juce::MidiBuffer& midiMessages)
@@ -300,7 +304,7 @@ void Synth::handleMIDIEvent(juce::MidiMessage msg)
         return;
     }
     // now pass that midi info to the oscillators
-    for (uint i = 0; i < NUM_OSC; i++) {
+    for (OSCID i = 0; i < NUM_OSC; i++) {
         if (!configs_[i].enabled) continue;
         MidiEvent e = manager_.get(configs_[i].voice);
         // NOTE: transposes can cause notes to wrap. I'm choosing to call this

@@ -19,11 +19,17 @@ GameBoySynthAudioProcessorEditor::GameBoySynthAudioProcessorEditor(GameBoySynthA
     setSize(WindowWidth, WindowHeight);
     osc1.enableButton.addListener(this);
     osc1.enableButton.setToggleState(true, juce::sendNotification);
+    osc1.volSlider.addListener(this);
     osc1.pwmSlider.addListener(this);
+    osc1.voicePicker.addListener(this);
+    osc1.transposePicker.addListener(this);
     addAndMakeVisible(osc1);
     osc2.enableButton.addListener(this);
     osc2.enableButton.setToggleState(true, juce::sendNotification);
+    osc2.volSlider.addListener(this);
     osc2.pwmSlider.addListener(this);
+    osc2.voicePicker.addListener(this);
+    osc2.transposePicker.addListener(this);
     addAndMakeVisible(osc2);
     keyboardState.addListener(audioProcessor.getMidiCollector());
     addAndMakeVisible(keyboard);
@@ -62,5 +68,26 @@ void GameBoySynthAudioProcessorEditor::sliderValueChanged(juce::Slider *slider)
         audioProcessor.synth.setDutyCycle(0, slider->getValue());
     } else if (slider == &osc2.pwmSlider) {
         audioProcessor.synth.setDutyCycle(1, slider->getValue());
+    } else if (slider == &osc1.volSlider) {
+        audioProcessor.synth.setVolume(0, ((float) slider->getValue()) / 15.0);
+    } else if (slider == &osc2.volSlider) {
+        audioProcessor.synth.setVolume(1, ((float) slider->getValue()) / 15.0);
+    }
+}
+
+void GameBoySynthAudioProcessorEditor::comboBoxChanged(juce::ComboBox *comboBox)
+{
+    if (comboBox == &osc1.voicePicker) {
+        audioProcessor.synth.setMIDIVoice(0, comboBox->getSelectedId() - 1);
+    } else if (comboBox == &osc2.voicePicker) {
+        audioProcessor.synth.setMIDIVoice(1, comboBox->getSelectedId() - 1);
+    } else if (comboBox == &osc1.channelPicker) {
+        audioProcessor.synth.setMIDIChannel(0, comboBox->getSelectedId() - 1);
+    } else if (comboBox == &osc2.channelPicker) {
+        audioProcessor.synth.setMIDIChannel(1, comboBox->getSelectedId() - 1);
+    } else if (comboBox == &osc1.transposePicker) {
+        audioProcessor.synth.setTranspose(0, comboBox->getSelectedId() - 48 - 1);
+    } else if (comboBox == &osc2.transposePicker) {
+        audioProcessor.synth.setTranspose(1, comboBox->getSelectedId() - 48 - 1);
     }
 }
