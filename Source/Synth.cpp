@@ -143,6 +143,10 @@ void SquareOscilator::setDuty(DutyCycle duty)
 
 void SquareOscilator::setEvent(MidiEvent event)
 {
+    if (event.note < 36 || event.note > 108) {
+        setConstantVolume(0); // ignore it
+        return;
+    }
     setConstantVolume(event.velocity);
     set11BitPeriod(event.note);
 }
@@ -184,6 +188,10 @@ void WaveOscillator::setWaveTable(uint8_t* samples)
 
 void WaveOscillator::setEvent(MidiEvent event)
 {
+    if (event.note < 36 || event.note > 120) {
+        setVelocity(0); // ignore it
+        return;
+    }
     setVelocity(event.velocity);
     set11BitPeriod(event.note);
 }
@@ -308,8 +316,6 @@ void Synth::handleMIDIEvent(juce::MidiMessage msg)
     for (OSCID i = 0; i < NUM_OSC; i++) {
         if (!configs_[i].enabled) continue;
         MidiEvent e = manager_.get(configs_[i].voice);
-        // NOTE: transposes can cause notes to wrap. I'm choosing to call this
-        // expected behavior.
         e.note += configs_[i].transpose;
         oscs_[i]->setEvent(e);
     }
