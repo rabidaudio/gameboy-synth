@@ -42,9 +42,12 @@ BasicControlsComponent::BasicControlsComponent(OSCID id) :
     id_ = id;
 
     // enable
+    enableButton.addListener(this);
+    enableButton.setToggleState(id == 0 || id == 1, juce::sendNotification);
     addAndMakeVisible(enableButton);
     // volume
     if (id != 2) {
+        volSlider.addListener(this);
         volSlider.setSliderStyle(juce::Slider::Rotary);
         volSlider.setRange(0, 15, 1);
         volSlider.setValue(15);
@@ -54,6 +57,7 @@ BasicControlsComponent::BasicControlsComponent(OSCID id) :
     }
     // pwm
     if (id == 0 || id == 1) {
+        pwmSlider.addListener(this);
         pwmSlider.setSliderStyle(juce::Slider::Rotary);
         pwmSlider.setNormalisableRange(PWMRange());
         pwmSlider.setTextBoxStyle(pwmSlider.TextBoxBelow, true, 0, 0);
@@ -65,28 +69,23 @@ BasicControlsComponent::BasicControlsComponent(OSCID id) :
     for (int i = 1; i <= 4; i++) {
         voicePicker.addItem(std::to_string(i), i);
     }
-    voicePicker.setSelectedId(1);
+    voicePicker.addListener(this);
+    voicePicker.setSelectedId(id == 1 ? 2 : 1);
     addAndMakeVisible(voicePicker);
     // channel
     for (int i = 1; i <= 16; i++) {
         channelPicker.addItem(std::to_string(i), i);
     }
+    channelPicker.addListener(this);
     channelPicker.setSelectedId(1);
     addAndMakeVisible(channelPicker);
     // transpose
     for (int i = -48; i <= 48; i++) {
         transposePicker.addItem(std::to_string(i), i + 48 + 1);
     }
+    transposePicker.addListener(this);
     transposePicker.setSelectedId(48 + 1);
     addAndMakeVisible(transposePicker);
-
-    enableButton.addListener(this);
-    enableButton.setToggleState(true, juce::sendNotification);
-    volSlider.addListener(this);
-    pwmSlider.addListener(this);
-    voicePicker.addListener(this);
-    channelPicker.addListener(this);
-    transposePicker.addListener(this);
 }
 
 BasicControlsComponent::~BasicControlsComponent() {}

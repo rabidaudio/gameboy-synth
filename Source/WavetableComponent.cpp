@@ -88,6 +88,9 @@ void WavetableComponent::enableWavePixel(const juce::MouseEvent &event)
     int y = heightUnits - ((event.getPosition().getY() - padY()) / sf) - 1;
     uint8_t currentValue = wavetable[x];
     if (currentValue != y) {
+        if (!changed_) {
+            sendSynchronousChangeMessage();
+        }
         changed_ = true;
         wavetable[x] = y;
         repaint(drawingBounds());
@@ -98,12 +101,11 @@ void WavetableComponent::loadDefaultWavetable(const uint8_t* defaultWavetable)
 {
     std::memcpy(wavetable, defaultWavetable, WAVE_TABLE_SIZE);
     wavetableChanged();
-
 }
 
 void WavetableComponent::wavetableChanged()
 {
     repaint(drawingBounds());
-    sendSynchronousChangeMessage();
+    Synth::INSTANCE.setWaveTable(wavetable);
     changed_ = false;
 }

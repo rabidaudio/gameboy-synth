@@ -18,7 +18,8 @@
 /*
 */
 class WaveOscComponent  : public juce::Component,
-                            public juce::ComboBox::Listener
+                            public juce::ComboBox::Listener,
+                            public juce::ChangeListener
 {
 public:
     WaveOscComponent();
@@ -30,6 +31,7 @@ public:
     void resized() override;
 
     void comboBoxChanged(juce::ComboBox* comboBoxThatHasChanged) override;
+    void changeListenerCallback(juce::ChangeBroadcaster* source) override;
 
 private:
     BasicControlsComponent controls;

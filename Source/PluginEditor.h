@@ -17,8 +17,7 @@
 //==============================================================================
 /**
 */
-class GameBoySynthAudioProcessorEditor  : public juce::AudioProcessorEditor,
-                                            public juce::ChangeListener
+class GameBoySynthAudioProcessorEditor  : public juce::AudioProcessorEditor
 {
 public:
     GameBoySynthAudioProcessorEditor(GameBoySynthAudioProcessor&);
@@ -27,8 +26,6 @@ public:
     //==============================================================================
     void paint(juce::Graphics&) override;
     void resized() override;
-
-    void changeListenerCallback(juce::ChangeBroadcaster* source) override;
 
 private:
     // This reference is provided as a quick way for your editor to

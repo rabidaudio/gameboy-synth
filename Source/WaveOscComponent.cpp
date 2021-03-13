@@ -17,16 +17,17 @@ WaveOscComponent::WaveOscComponent() : controls(2), shapePicker("Shape")
 {
     addAndMakeVisible(controls);
 
-    shapePicker.addItem("sine", 1);
-    shapePicker.addItem("square", 2);
+    shapePicker.addItem("square", 1);
+    shapePicker.addItem("sine", 2);
     shapePicker.addItem("triangle", 3);
-    shapePicker.addItem("ramp up", 4);
-    shapePicker.addItem("ramp down", 5);
-    shapePicker.addItem("noise", 6);
+    shapePicker.addItem("saw", 4);
+    shapePicker.addItem("noise", 5);
     shapePicker.addListener(this);
-    shapePicker.setSelectedId(1);
+    shapePicker.setSelectedId(2);
+    shapePicker.setTextWhenNothingSelected("custom");
     addAndMakeVisible(shapePicker);
 
+    wavetable.addChangeListener(this);
     addAndMakeVisible(wavetable);
 }
 
@@ -56,16 +57,20 @@ void WaveOscComponent::comboBoxChanged(juce::ComboBox *comboBox)
     jassert(comboBox == &shapePicker);
     switch (comboBox->getSelectedId()) {
         case 1:
-            return wavetable.loadDefaultWavetable(WAVE_TABLE_SINE);
-        case 2:
             return wavetable.loadDefaultWavetable(WAVE_TABLE_SQUARE);
+        case 2:
+            return wavetable.loadDefaultWavetable(WAVE_TABLE_SINE);
         case 3:
             return wavetable.loadDefaultWavetable(WAVE_TABLE_TRIANGLE);
         case 4:
-            return wavetable.loadDefaultWavetable(WAVE_TABLE_RAMP_UP);
+            return wavetable.loadDefaultWavetable(WAVE_TABLE_SAW);
         case 5:
-            return wavetable.loadDefaultWavetable(WAVE_TABLE_RAMP_DOWN);
-        case 6:
             return wavetable.loadDefaultWavetable(WAVE_TABLE_NOISE);
     }
+}
+
+void WaveOscComponent::changeListenerCallback(juce::ChangeBroadcaster* source)
+{
+    jassert(source == &wavetable);
+    shapePicker.setSelectedId(0);
 }

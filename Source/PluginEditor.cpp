@@ -23,7 +23,6 @@ GameBoySynthAudioProcessorEditor::GameBoySynthAudioProcessorEditor(GameBoySynthA
 
     addAndMakeVisible(osc0);
     addAndMakeVisible(osc1);
-    osc2.wavetable.addChangeListener(this); // TODO: move down
     addAndMakeVisible(osc2);
     // keyboard
     keyboardState.addListener(audioProcessor.getMidiCollector());
@@ -46,9 +45,3 @@ void GameBoySynthAudioProcessorEditor::resized()
     keyboard.setBounds(0, WindowHeight-KeyboardHeight, WindowWidth, KeyboardHeight);
 }
 
-void GameBoySynthAudioProcessorEditor::changeListenerCallback(juce::ChangeBroadcaster* source)
-{
-    if (source == &osc2.wavetable) {
-        Synth::INSTANCE.setWaveTable(osc2.wavetable.wavetable);
-    }
-}

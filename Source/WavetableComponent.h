@@ -23,27 +23,26 @@ public:
     WavetableComponent();
     ~WavetableComponent() override;
 
-    uint8_t wavetable[WAVE_TABLE_SIZE];
-
     void paint (juce::Graphics&) override;
     void resized() override;
 
     void loadDefaultWavetable(const uint8_t* defaultWavetable);
 
-    void mouseDown(const juce::MouseEvent &event) override;
-    void mouseDrag(const juce::MouseEvent &event) override;
-    void mouseUp(const juce::MouseEvent &event) override;
+    void mouseDown(const juce::MouseEvent& event) override;
+    void mouseDrag(const juce::MouseEvent& event) override;
+    void mouseUp(const juce::MouseEvent& event) override;
 
 private:
     bool changed_ = false;
+    uint8_t wavetable[WAVE_TABLE_SIZE];
 
     int padX();
     int padY();
     int scaleFactor();
     juce::Rectangle<int> drawingBounds();
     juce::Rectangle<int> boundsOfWavePixel(int x, int y);
-    void enableWavePixel(const juce::MouseEvent &event);
+    void enableWavePixel(const juce::MouseEvent& event);
     void wavetableChanged();
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (WavetableComponent)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(WavetableComponent)
 };
