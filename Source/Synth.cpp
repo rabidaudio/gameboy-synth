@@ -201,14 +201,98 @@ void WaveOscillator::afterInit()
     apu_->writeRegister(startAddr_ + NRX0, 0x80); // enable the dac
 }
 
+static bool switch_ = false; // TODO: super hacky temp
+static int offset_ = 0;
+
 void NoiseOscillator::setEvent(MidiEvent event)
 {
-    // TODO:
+
+    // s=0, w=0, r=0 -> very white noise
+    // increasing s, w=0, r=0 -> increasing tone, eventually sparse clicky
+    // s=0, w=0, increasing r -> each step reduces tone by steps, seems like roughly 3rds, 5ths and octaves?
+    // s=0, w=1, r=0 -> much more tonal
+    // increasing s, w=1, r=0 -> each step reduces octave of tone by 1, eventually sparse clicky
+    // s=0, w=1, increasing r -> each step reduces tone, but not by octave, seems like roughly  3rds, 5ths and octaves?
+    // s=3,w=1,r=1 == s=2,w=1,r=2 (texture might be different but tone is the same
+    // this pattern seems to hold roughly - increasing s and decresing r keeps the same tone but a different texture
+    // s:0,w:1,r:2 == s:2,w:1,r:0
+
+    // s:0,w:1,r:4 (C5) == s:4,w:1,r:0 (Bflat3) very different texture but the same sound
+    // s:0,w:1,r:6 (G#5) == s:6,w:1,r:0 (B3) B3 is much clicker, tonal difference is significant, but probably the same actual tone
+
+    // s:0,w:0,r:4 (E2) == s:4,w:0,r:0 (D1) both white noise, comparable texture but different low-frequency "beats"
+
+
+    // 23 for even s+r range
+    // *2 for width
+    // *8 for offset but really a lot of these sound the same
+    uint8_t n = event.note; // 7 bits
+    if (n >= 41 && n < 36+23) {
+        bool width = switch_;
+        int sum = n - 41;
+        int s, r;
+        r = offset_ + 4;
+        s = sum - r;
+        // shrink the allowed range of r at the bounds, but keeping the s/r sum
+        if (s < 0) {
+            s = 0;
+            r = sum - s;
+        } else if (s > 15) {
+            s = 15;
+            r = sum - s;
+        }
+
+        if (event.velocity > 0) {
+            printf("sum:%d,s:%d,w:%d,r:%d\n", sum, s, width, r);
+        }
+
+        jassert(s >= 0 && s < 16);
+        jassert(r >= 0 && r < 8);
+
+        uint8_t v = ((uint8_t)s << 4) | (width ? 0x80 : 0x00) | (uint8_t)r;
+        apu_->writeRegister(startAddr_ + NRX3, v);
+
+        setConstantVolume(event.velocity);
+        apu_->writeRegister(startAddr_ + NRX4, 0x80); // also need to set the trigger
+    }
+
+
+//    if (n >= 36 && n < 36+64) {
+//        n -= 36;
+//        ;
+//        uint8_t s = (n >> 1);
+//    }
+//    if (s >= 36 && s < (36+64)) {
+//
+//        setShiftFrequency(s);
+//        setCounterWidth(width);
+//    }
 }
 
 void NoiseOscillator::afterInit()
 {
-    // TODO
+    apu_->writeRegister(startAddr_ + NRX3, 0x00); // TODO: initial value?
+}
+
+void NoiseOscillator::setShiftFrequency(uint8_t s)
+{
+//    uint8_t v = apu_->readRegister(startAddr_ + NRX3);
+//    v = (v & 0x0F) | ((s & 0x0F) << 4);
+//    apu_->writeRegister(startAddr_ + NRX3, v);
+}
+void NoiseOscillator::setCounterWidth(bool narrow)
+{
+//    uint8_t v = apu_->readRegister(startAddr_ + NRX3);
+//    v = (v & 0xF7) | (narrow ? 0x08 : 0x00);
+//    apu_->writeRegister(startAddr_ + NRX3, v);
+    switch_ = narrow;
+}
+void NoiseOscillator::setDividerRatio(uint8_t r)
+{
+//    uint8_t v = apu_->readRegister(startAddr_ + NRX3);
+//    v = (v & 0xF8) | (r & 0x07);
+//    apu_->writeRegister(startAddr_ + NRX3, v);
+    offset_ = ((int)r) - 4;
 }
 
 Synth::Synth()

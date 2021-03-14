@@ -265,6 +265,10 @@ public:
     ~NoiseOscillator() {}
     void setEvent(MidiEvent event);
 
+    void setShiftFrequency(uint8_t s);
+    void setCounterWidth(bool narrow);
+    void setDividerRatio(uint8_t r);
+
 protected:
     void afterInit();
 };
@@ -321,6 +325,19 @@ public:
     void setWaveTable(uint8_t* samples)
     {
         osc3.setWaveTable(samples);
+    }
+
+    void setNoiseShiftFrequency(uint8_t s)
+    {
+        osc4.setShiftFrequency(s);
+    }
+    void setNoiseCounterWidth(bool narrow)
+    {
+        osc4.setCounterWidth(narrow);
+    }
+    void setNoiseDividerRatio(uint8_t r)
+    {
+        osc4.setDividerRatio(r);
     }
 
     void handleMIDI(juce::MidiBuffer& midiMessages);

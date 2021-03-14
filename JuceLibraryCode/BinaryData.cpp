@@ -540,7 +540,7 @@ static const unsigned char temp_binary_data_1[] =
 "\n"
 "- [x] integrate sound core\n"
 "- [x] handle midi events\n"
-"- [ ] Build basic UI\n"
+"- [x] Build basic UI\n"
 "- [x] Use finer time resolution than 1/60s\n"
 "- [x] Custom BlipBuffer to avoid extra buffer copy for int16->float conversion\n"
 "- [x] wave osc\n"
@@ -568,9 +568,8 @@ static const unsigned char temp_binary_data_1[] =
 "\n"
 "## License\n"
 "\n"
-"This project [contains code](Source/Gb_Snd_Emu-0.1.4) from [Gb_Snd_Emu](http://blargg.8bitalley.com/libs/audio.html#Gb_Snd_Emu) which is copyright Shay Green. This code is licenced under LGPL. It also [contains code](Source/midimanager) from [my sepa"
-"rate polyphonic MIDI state machine](https://github.com/rabidaudio/midi-voicesteal) which is MIT licensed. The project is created using the [JUCE framework](https://juce.com/) under their GPLv3 license. Thus the remaining code of this project is GPLv3"
-".\n";
+"This project [contains code](Source/Gb_Snd_Emu-0.1.4) from [Gb_Snd_Emu](http://blargg.8bitalley.com/libs/audio.html#Gb_Snd_Emu) which is copyright Shay Green and licenced under LGPL. It also [contains code](Source/midimanager) from [my separate polyp"
+"honic MIDI state machine](https://github.com/rabidaudio/midi-voicesteal) which is MIT licensed. The project is created using the [JUCE framework](https://juce.com/) under their GPLv3 license. Thus the remaining code of this project is GPLv3.\n";
 
 const char* README_md = (const char*) temp_binary_data_1;
 
@@ -632,7 +631,7 @@ const char* getNamedResource (const char* resourceNameUTF8, int& numBytes)
     switch (hash)
     {
         case 0x34bc1021:  numBytes = 35147; return LICENSE;
-        case 0x64791dc8:  numBytes = 2742; return README_md;
+        case 0x64791dc8:  numBytes = 2732; return README_md;
         case 0xc563c4a0:  numBytes = 1103; return WaveOscComponent_h;
         default: break;
     }

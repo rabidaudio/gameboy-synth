@@ -10,7 +10,7 @@ As an instrument, the Game Boy APU is a pretty constrained synthesizer. It conta
 
 - [x] integrate sound core
 - [x] handle midi events
-- [ ] Build basic UI
+- [x] Build basic UI
 - [x] Use finer time resolution than 1/60s
 - [x] Custom BlipBuffer to avoid extra buffer copy for int16->float conversion
 - [x] wave osc
@@ -18,6 +18,11 @@ As an instrument, the Game Boy APU is a pretty constrained synthesizer. It conta
 - [ ] vol envelopes (native at low periods, then manual)
 - [ ] LFOs - vol and freq (quantize option? native for osc 1 at low periods?)
 - [x] Arbitrary wavetable drawing
+- [ ] Some aliasing on the wave osc. normal?
+- [ ] wave osc square setting is an octave high
+- [ ] With only 3 vol levels on wave osc, does it make sense to use velocity, or better to use knob?
+- [ ] round-robin-ing voice stealing doesn't actually make sense
+- [ ] take MIDI event timing into consideration
 - [ ] Multiple MIDI channels
 - [ ] UI for stereo control and tone
 - [ ] Better AU compatibility
@@ -38,4 +43,4 @@ As an instrument, the Game Boy APU is a pretty constrained synthesizer. It conta
 
 ## License
 
-This project [contains code](Source/Gb_Snd_Emu-0.1.4) from [Gb_Snd_Emu](http://blargg.8bitalley.com/libs/audio.html#Gb_Snd_Emu) which is copyright Shay Green. This code is licenced under LGPL. It also [contains code](Source/midimanager) from [my separate polyphonic MIDI state machine](https://github.com/rabidaudio/midi-voicesteal) which is MIT licensed. The project is created using the [JUCE framework](https://juce.com/) under their GPLv3 license. Thus the remaining code of this project is GPLv3.
+This project [contains code](Source/Gb_Snd_Emu-0.1.4) from [Gb_Snd_Emu](http://blargg.8bitalley.com/libs/audio.html#Gb_Snd_Emu) which is copyright Shay Green and licenced under LGPL. It also [contains code](Source/midimanager) from [my separate polyphonic MIDI state machine](https://github.com/rabidaudio/midi-voicesteal) which is MIT licensed. The project is created using the [JUCE framework](https://juce.com/) under their GPLv3 license. Thus the remaining code of this project is GPLv3.
