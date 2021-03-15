@@ -548,6 +548,11 @@ static const unsigned char temp_binary_data_1[] =
 "- [ ] vol envelopes (native at low periods, then manual)\n"
 "- [ ] LFOs - vol and freq (quantize option? native for osc 1 at low periods?)\n"
 "- [x] Arbitrary wavetable drawing\n"
+"- [ ] Some aliasing on the wave osc. normal?\n"
+"- [ ] wave osc square setting is an octave high\n"
+"- [ ] With only 3 vol levels on wave osc, does it make sense to use velocity, or better to use knob?\n"
+"- [ ] round-robin-ing voice stealing doesn't actually make sense\n"
+"- [ ] take MIDI event timing into consideration\n"
 "- [ ] Multiple MIDI channels\n"
 "- [ ] UI for stereo control and tone\n"
 "- [ ] Better AU compatibility\n"
@@ -631,7 +636,7 @@ const char* getNamedResource (const char* resourceNameUTF8, int& numBytes)
     switch (hash)
     {
         case 0x34bc1021:  numBytes = 35147; return LICENSE;
-        case 0x64791dc8:  numBytes = 2732; return README_md;
+        case 0x64791dc8:  numBytes = 3039; return README_md;
         case 0xc563c4a0:  numBytes = 1103; return WaveOscComponent_h;
         default: break;
     }

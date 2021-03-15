@@ -225,48 +225,38 @@ void NoiseOscillator::setEvent(MidiEvent event)
 
     // 23 for even s+r range
     // *2 for width
-    // *8 for offset but really a lot of these sound the same
-    uint8_t n = event.note; // 7 bits
-    if (n >= 41 && n < 36+23) {
-        bool width = switch_;
-        int sum = n - 41;
-        int s, r;
-        r = offset_ + 4;
-        s = sum - r;
-        // shrink the allowed range of r at the bounds, but keeping the s/r sum
-        if (s < 0) {
-            s = 0;
-            r = sum - s;
-        } else if (s > 15) {
-            s = 15;
-            r = sum - s;
-        }
-
-        if (event.velocity > 0) {
-            printf("sum:%d,s:%d,w:%d,r:%d\n", sum, s, width, r);
-        }
-
-        jassert(s >= 0 && s < 16);
-        jassert(r >= 0 && r < 8);
-
-        uint8_t v = ((uint8_t)s << 4) | (width ? 0x80 : 0x00) | (uint8_t)r;
-        apu_->writeRegister(startAddr_ + NRX3, v);
-
-        setConstantVolume(event.velocity);
-        apu_->writeRegister(startAddr_ + NRX4, 0x80); // also need to set the trigger
-    }
-
-
-//    if (n >= 36 && n < 36+64) {
-//        n -= 36;
-//        ;
-//        uint8_t s = (n >> 1);
-//    }
-//    if (s >= 36 && s < (36+64)) {
+    // *8 for offset but really a lot of these sound the sames
+//    uint8_t n = event.note; // 7 bits
+//    if (n >= 41 && n < 36+23) {
+//        bool width = switch_;
+//        int sum = n - 41;
+//        int s, r;
+//        r = offset_ + 4;
+//        s = sum - r;
+//        // shrink the allowed range of r at the bounds, but keeping the s/r sum
+//        if (s < 0) {
+//            s = 0;
+//            r = sum - s;
+//        } else if (s > 15) {
+//            s = 15;
+//            r = sum - s;
+//        }
 //
-//        setShiftFrequency(s);
-//        setCounterWidth(width);
+//        if (event.velocity > 0) {
+//            printf("sum:%d,s:%d,w:%d,r:%d\n", sum, s, width, r);
+//        }
+//
+//        jassert(s >= 0 && s < 16);
+//        jassert(r >= 0 && r < 8);
+//
+//        uint8_t v = ((uint8_t)s << 4) | (width ? 0x80 : 0x00) | (uint8_t)r;
+//        apu_->writeRegister(startAddr_ + NRX3, v);
+//
+//
 //    }
+
+    setConstantVolume(event.velocity);
+    apu_->writeRegister(startAddr_ + NRX4, 0x80); // also need to set the trigger
 }
 
 void NoiseOscillator::afterInit()
@@ -276,23 +266,23 @@ void NoiseOscillator::afterInit()
 
 void NoiseOscillator::setShiftFrequency(uint8_t s)
 {
-//    uint8_t v = apu_->readRegister(startAddr_ + NRX3);
-//    v = (v & 0x0F) | ((s & 0x0F) << 4);
-//    apu_->writeRegister(startAddr_ + NRX3, v);
+    uint8_t v = apu_->readRegister(startAddr_ + NRX3);
+    v = (v & 0x0F) | ((s & 0x0F) << 4);
+    apu_->writeRegister(startAddr_ + NRX3, v);
 }
 void NoiseOscillator::setCounterWidth(bool narrow)
 {
-//    uint8_t v = apu_->readRegister(startAddr_ + NRX3);
-//    v = (v & 0xF7) | (narrow ? 0x08 : 0x00);
-//    apu_->writeRegister(startAddr_ + NRX3, v);
-    switch_ = narrow;
+    uint8_t v = apu_->readRegister(startAddr_ + NRX3);
+    v = (v & 0xF7) | (narrow ? 0x08 : 0x00);
+    apu_->writeRegister(startAddr_ + NRX3, v);
+//    switch_ = narrow;
 }
 void NoiseOscillator::setDividerRatio(uint8_t r)
 {
-//    uint8_t v = apu_->readRegister(startAddr_ + NRX3);
-//    v = (v & 0xF8) | (r & 0x07);
-//    apu_->writeRegister(startAddr_ + NRX3, v);
-    offset_ = ((int)r) - 4;
+    uint8_t v = apu_->readRegister(startAddr_ + NRX3);
+    v = (v & 0xF8) | (r & 0x07);
+    apu_->writeRegister(startAddr_ + NRX3, v);
+//    offset_ = ((int)r) - 4;
 }
 
 Synth::Synth()

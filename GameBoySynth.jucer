@@ -62,7 +62,7 @@
                 file="Source/Gb_Snd_Emu-0.1.4/gb_apu/Multi_Buffer.cpp"/>
           <FILE id="xkNlZa" name="Multi_Buffer.h" compile="0" resource="0" file="Source/Gb_Snd_Emu-0.1.4/gb_apu/Multi_Buffer.h"/>
         </GROUP>
-        <FILE id="dU6bRV" name="Basic_Gb_Apu.cpp" compile="1" resource="0"
+        <FILE id="dU6bRV" name="Basic_Gb_Apu.cpp" compile="0" resource="0"
               file="Source/Gb_Snd_Emu-0.1.4/Basic_Gb_Apu.cpp"/>
         <FILE id="d68kUq" name="Basic_Gb_Apu.h" compile="0" resource="0" file="Source/Gb_Snd_Emu-0.1.4/Basic_Gb_Apu.h"/>
         <FILE id="vmstmX" name="changes.txt" compile="0" resource="0" file="Source/Gb_Snd_Emu-0.1.4/changes.txt"/>
@@ -72,6 +72,7 @@
         <FILE id="T9pGfp" name="readme.txt" compile="0" resource="0" file="Source/Gb_Snd_Emu-0.1.4/readme.txt"/>
         <FILE id="rIW6GB" name="usage.txt" compile="0" resource="0" file="Source/Gb_Snd_Emu-0.1.4/usage.txt"/>
         <FILE id="rLPfZQ" name="Wave_Writer.cpp" compile="0" resource="0" file="Source/Gb_Snd_Emu-0.1.4/Wave_Writer.cpp"/>
+        <FILE id="btSaJF" name="Wave_Writer.h" compile="0" resource="0" file="Source/Gb_Snd_Emu-0.1.4/Wave_Writer.h"/>
       </GROUP>
       <FILE id="PxpC7A" name="PluginProcessor.cpp" compile="1" resource="0"
             file="Source/PluginProcessor.cpp"/>
