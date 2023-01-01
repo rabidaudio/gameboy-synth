@@ -22,9 +22,6 @@
 #ifndef  JucePlugin_Build_AUv3
  #define JucePlugin_Build_AUv3             1
 #endif
-#ifndef  JucePlugin_Build_RTAS
- #define JucePlugin_Build_RTAS             0
-#endif
 #ifndef  JucePlugin_Build_AAX
  #define JucePlugin_Build_AAX              0
 #endif
@@ -34,8 +31,14 @@
 #ifndef  JucePlugin_Build_Unity
  #define JucePlugin_Build_Unity            0
 #endif
+#ifndef  JucePlugin_Build_LV2
+ #define JucePlugin_Build_LV2              0
+#endif
 #ifndef  JucePlugin_Enable_IAA
  #define JucePlugin_Enable_IAA             0
+#endif
+#ifndef  JucePlugin_Enable_ARA
+ #define JucePlugin_Enable_ARA             0
 #endif
 #ifndef  JucePlugin_Name
  #define JucePlugin_Name                   "GameBoySynth"
@@ -62,7 +65,7 @@
  #define JucePlugin_IsSynth                1
 #endif
 #ifndef  JucePlugin_WantsMidiInput
- #define JucePlugin_WantsMidiInput         1
+ #define JucePlugin_WantsMidiInput         0
 #endif
 #ifndef  JucePlugin_ProducesMidiOutput
  #define JucePlugin_ProducesMidiOutput     0
@@ -89,7 +92,7 @@
  #define JucePlugin_VSTCategory            kPlugCategSynth
 #endif
 #ifndef  JucePlugin_Vst3Category
- #define JucePlugin_Vst3Category           "Instrument|Synth"
+ #define JucePlugin_Vst3Category           "Instrument"
 #endif
 #ifndef  JucePlugin_AUMainType
  #define JucePlugin_AUMainType             'aumu'
@@ -108,21 +111,6 @@
 #endif
 #ifndef  JucePlugin_CFBundleIdentifier
  #define JucePlugin_CFBundleIdentifier     audio.rabid.gameboysynth
-#endif
-#ifndef  JucePlugin_RTASCategory
- #define JucePlugin_RTASCategory           2048
-#endif
-#ifndef  JucePlugin_RTASManufacturerCode
- #define JucePlugin_RTASManufacturerCode   JucePlugin_ManufacturerCode
-#endif
-#ifndef  JucePlugin_RTASProductId
- #define JucePlugin_RTASProductId          JucePlugin_PluginCode
-#endif
-#ifndef  JucePlugin_RTASDisableBypass
- #define JucePlugin_RTASDisableBypass      0
-#endif
-#ifndef  JucePlugin_RTASDisableMultiMono
- #define JucePlugin_RTASDisableMultiMono   0
 #endif
 #ifndef  JucePlugin_AAXIdentifier
  #define JucePlugin_AAXIdentifier          audio.rabid.gameboysynth
@@ -143,7 +131,7 @@
  #define JucePlugin_AAXDisableMultiMono    0
 #endif
 #ifndef  JucePlugin_IAAType
- #define JucePlugin_IAAType                0x61757269
+ #define JucePlugin_IAAType                0x61757267
 #endif
 #ifndef  JucePlugin_IAASubType
  #define JucePlugin_IAASubType             JucePlugin_PluginCode
@@ -156,4 +144,19 @@
 #endif
 #ifndef  JucePlugin_VSTNumMidiOutputs
  #define JucePlugin_VSTNumMidiOutputs      16
+#endif
+#ifndef  JucePlugin_ARAContentTypes
+ #define JucePlugin_ARAContentTypes        0
+#endif
+#ifndef  JucePlugin_ARATransformationFlags
+ #define JucePlugin_ARATransformationFlags  0
+#endif
+#ifndef  JucePlugin_ARAFactoryID
+ #define JucePlugin_ARAFactoryID           "com.RabidAudio.GameBoySynth.factory"
+#endif
+#ifndef  JucePlugin_ARADocumentArchiveID
+ #define JucePlugin_ARADocumentArchiveID   "com.RabidAudio.GameBoySynth.aradocumentarchive.1.0.0"
+#endif
+#ifndef  JucePlugin_ARACompatibleArchiveIDs
+ #define JucePlugin_ARACompatibleArchiveIDs  ""
 #endif

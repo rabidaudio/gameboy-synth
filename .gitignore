@@ -1,3 +1,9 @@
 Builds/
 .DS_Store
 
+analyzer/CMakeFiles/
+analyzer/samples/
+analyzer/cmake_install.cmake
+analyzer/CMakeCache.txt
+analyzer/GameBoySynth
+analyzer/Makefile

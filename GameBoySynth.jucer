@@ -4,9 +4,9 @@
               addUsingNamespaceToJuceHeader="0" jucerFormatVersion="1" companyName="RabidAudio"
               companyCopyright="Charles Julian Knight" companyWebsite="https://rabid.audio"
               companyEmail="cjk@rabidaudio.com" bundleIdentifier="audio.rabid.gameboysynth"
-              pluginFormats="buildAUv3,buildStandalone,buildVST3" pluginCharacteristicsValue="pluginIsSynth,pluginWantsMidiIn"
+              pluginFormats="buildAUv3,buildStandalone,buildVST3" pluginCharacteristicsValue="pluginIsSynth"
               pluginCode="Gbas" aaxIdentifier="audio.rabid.gameboysynth" pluginAUIsSandboxSafe="1"
-              projectLineFeed="&#10;">
+              projectLineFeed="&#10;" pluginVST3Category="Instrument">
   <MAINGROUP id="l9BrHS" name="GameBoySynth">
     <FILE id="DqHiij" name="LICENSE" compile="0" resource="1" file="LICENSE"/>
     <FILE id="ZmNejr" name="README.md" compile="0" resource="1" file="README.md"/>
