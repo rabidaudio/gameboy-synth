@@ -96,6 +96,7 @@
 
 #ifndef BOOST
 	#if BLARGG_USE_NAMESPACE
+		namespace boost {}
 		#define BOOST boost
 	#else
 		#define BOOST
