@@ -180,7 +180,7 @@ void WaveOscillator::setWaveTable(uint8_t* samples)
 {
     // TODO: pandocs say you should only change the wavetable while the osc is off
     // apu_->writeRegister(startAddr_ + NRX0, 0x00);
-    for (uint i = 0; i < 32; i += 2) {
+    for (uint16_t i = 0; i < 32; i += 2) {
         uint8_t value = ((*(samples+i) & 0x0F) << 4) | (*(samples+i+1) & 0x0F);
         apu_->writeRegister(WaveTableAddr + i / 2, value);
     }
@@ -269,9 +269,9 @@ void Synth::reconfigure(OSCID oscillator)
 {
     // TODO: allow changing settings without resetting all keys
     uint8_t voices = 0;
-    uint voicesRequired = 0;
+    size_t voicesRequired = 0;
     uint8_t enabled = 0;
-    for (uint i = 0; i < NUM_OSC; i++) {
+    for (OSCID i = 0; i < NUM_OSC; i++) {
         if (!configs_[i].enabled) continue;
         enabled |= (1 << i);
         if ((voices >> configs_[i].voice) & 0x01) {

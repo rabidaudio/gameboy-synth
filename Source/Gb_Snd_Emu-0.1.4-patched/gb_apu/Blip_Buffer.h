@@ -15,7 +15,7 @@ class Blip_Reader;
 typedef long blip_time_t;
 
 // Type of sample produced. Signed 16-bit format.
-typedef BOOST::int16_t blip_sample_t;
+typedef STD::int16_t blip_sample_t;
 
 // Make buffer as large as possible (currently about 65000 samples)
 const int blip_default_length = 0;
@@ -111,7 +111,7 @@ private:
 	public:
 		enum { sample_offset_ = 0x7F7F }; // repeated byte allows memset to clear buffer
 		enum { widest_impulse_ = 24 };
-		typedef BOOST::uint16_t buf_t_;
+		typedef STD::uint16_t buf_t_;
 		
 		unsigned long factor_;
 		blip_resampled_time_t offset_;
@@ -182,10 +182,10 @@ public:
 
 const int blip_res_bits_ = 5;
 
-typedef BOOST::uint32_t blip_pair_t_;
+typedef STD::uint32_t blip_pair_t_;
 
 class Blip_Impulse_ {
-	typedef BOOST::uint16_t imp_t;
+	typedef STD::uint16_t imp_t;
 	
 	blip_eq_t eq;
 	double  volume_unit_;
@@ -199,8 +199,8 @@ class Blip_Impulse_ {
 	void fine_volume_unit();
 	void scale_impulse( int unit, imp_t* ) const;
 public:
-	Blip_Buffer*    buf;
-	BOOST::uint32_t offset;
+	Blip_Buffer*  buf;
+	STD::uint32_t offset;
 	
 	void init( blip_pair_t_* impulses, int width, int res, int fine_bits = 0 );
 	void volume_unit( double );

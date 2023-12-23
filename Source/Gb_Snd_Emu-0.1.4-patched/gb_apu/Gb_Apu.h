@@ -69,7 +69,7 @@ private:
 	Gb_Square   square2;
 	Gb_Wave     wave;
 	Gb_Noise    noise;
-	BOOST::uint8_t regs [register_count];
+	STD::uint8_t regs [register_count];
 	Gb_Square::Synth square_synth; // shared between squares
 	Gb_Wave::Synth   other_synth;  // shared between wave and noise
 	

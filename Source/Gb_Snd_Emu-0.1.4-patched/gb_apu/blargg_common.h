@@ -96,6 +96,7 @@
 
 #ifndef BOOST
 	#if BLARGG_USE_NAMESPACE
+		namespace boost {}
 		#define BOOST boost
 	#else
 		#define BOOST
@@ -118,18 +119,17 @@
 	#define STD
 #endif
 
-// BOOST::uint8_t, BOOST::int16_t, etc.
-#include "../boost/cstdint.hpp"
-
 // BOOST_STATIC_ASSERT( expr )
 #include "../boost/static_assert.hpp"
 
 // Common standard headers
 #if BLARGG_COMPILER_HAS_NAMESPACE
 	#include <cstddef>
+	#include <cstdint>
 	#include <cassert>
 #else
 	#include <stddef.h>
+	#include <stdint.h>
 	#include <assert.h>
 #endif
 

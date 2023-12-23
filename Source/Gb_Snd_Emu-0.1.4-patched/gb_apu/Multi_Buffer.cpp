@@ -175,13 +175,13 @@ void Stereo_Buffer::mix_stereo( blip_sample_t* out, long count )
 		out [1] = r;
 		out += 2;
 		
-		if ( (BOOST::int16_t) l != l )
+		if ( (STD::int16_t) l != l )
 			out [-2] = 0x7FFF - (l >> 24);
 		
 		left.next( bass );
 		right.next( bass );
 		
-		if ( (BOOST::int16_t) r != r )
+		if ( (STD::int16_t) r != r )
 			out [-1] = 0x7FFF - (r >> 24);
 	}
 	
@@ -203,7 +203,7 @@ void Stereo_Buffer::mix_mono( blip_sample_t* out, long count )
 		out [1] = s;
 		out += 2;
 		
-		if ( (BOOST::int16_t) s != s ) {
+		if ( (STD::int16_t) s != s ) {
 			s = 0x7FFF - (s >> 24);
 			out [-2] = s;
 			out [-1] = s;
