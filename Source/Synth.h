@@ -12,8 +12,8 @@
 
 #include <JuceHeader.h>
 #include "midimanager/midimanager.h"
-#include "Gb_Snd_Emu-0.1.4/gb_apu/Gb_Apu.h"
-#include "Gb_Snd_Emu-0.1.4/gb_apu/Multi_Buffer.h"
+#include "Gb_Snd_Emu-0.1.4-patched/gb_apu/Gb_Apu.h"
+#include "Gb_Snd_Emu-0.1.4-patched/gb_apu/Multi_Buffer.h"
 
 static const gb_time_t CLOCK_SPEED = 4194304;
 static const gb_time_t CLOCKS_PER_INSTRUCTION = 4;

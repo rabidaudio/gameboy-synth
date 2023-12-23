@@ -6,7 +6,7 @@
               companyEmail="cjk@rabidaudio.com" bundleIdentifier="audio.rabid.gameboysynth"
               pluginFormats="buildAUv3,buildStandalone,buildVST3" pluginCharacteristicsValue="pluginIsSynth,pluginWantsMidiIn"
               pluginCode="Gbas" aaxIdentifier="audio.rabid.gameboysynth" pluginAUIsSandboxSafe="1"
-              projectLineFeed="&#10;">
+              projectLineFeed="&#10;" displaySplashScreen="1">
   <MAINGROUP id="l9BrHS" name="GameBoySynth">
     <FILE id="DqHiij" name="LICENSE" compile="0" resource="1" file="LICENSE"/>
     <FILE id="ZmNejr" name="README.md" compile="0" resource="1" file="README.md"/>
@@ -41,37 +41,36 @@
               file="Source/midimanager/staticlinkedlist.h"/>
         <FILE id="zKizms" name="types.h" compile="0" resource="0" file="Source/midimanager/types.h"/>
       </GROUP>
-      <GROUP id="{B274B02E-3093-3768-AC80-8F364BCD1F7D}" name="Gb_Snd_Emu-0.1.4">
+      <GROUP id="{B274B02E-3093-3768-AC80-8F364BCD1F7D}" name="Gb_Snd_Emu-0.1.4-patched">
         <GROUP id="{AB038AF8-1EEE-6F41-6BC1-C9066048A005}" name="boost">
-          <FILE id="tj4uUh" name="config.hpp" compile="0" resource="0" file="Source/Gb_Snd_Emu-0.1.4/boost/config.hpp"/>
-          <FILE id="wnzwdT" name="cstdint.hpp" compile="0" resource="0" file="Source/Gb_Snd_Emu-0.1.4/boost/cstdint.hpp"/>
+          <FILE id="tj4uUh" name="config.hpp" compile="0" resource="0" file="Source/Gb_Snd_Emu-0.1.4-patched/boost/config.hpp"/>
           <FILE id="flBgod" name="static_assert.hpp" compile="0" resource="0"
-                file="Source/Gb_Snd_Emu-0.1.4/boost/static_assert.hpp"/>
+                file="Source/Gb_Snd_Emu-0.1.4-patched/boost/static_assert.hpp"/>
         </GROUP>
         <GROUP id="{D4D946CC-061A-7BCC-BBA4-246E13316521}" name="gb_apu">
-          <FILE id="aLMN1m" name="blargg_common.h" compile="0" resource="0" file="Source/Gb_Snd_Emu-0.1.4/gb_apu/blargg_common.h"/>
-          <FILE id="DZPLAm" name="blargg_source.h" compile="0" resource="0" file="Source/Gb_Snd_Emu-0.1.4/gb_apu/blargg_source.h"/>
-          <FILE id="XB00Vz" name="Blip_Buffer.cpp" compile="1" resource="0" file="Source/Gb_Snd_Emu-0.1.4/gb_apu/Blip_Buffer.cpp"/>
-          <FILE id="BSgalo" name="Blip_Buffer.h" compile="0" resource="0" file="Source/Gb_Snd_Emu-0.1.4/gb_apu/Blip_Buffer.h"/>
-          <FILE id="j8UCk9" name="Blip_Synth.h" compile="0" resource="0" file="Source/Gb_Snd_Emu-0.1.4/gb_apu/Blip_Synth.h"/>
-          <FILE id="jxt0QV" name="Gb_Apu.cpp" compile="1" resource="0" file="Source/Gb_Snd_Emu-0.1.4/gb_apu/Gb_Apu.cpp"/>
-          <FILE id="CH9S8r" name="Gb_Apu.h" compile="0" resource="0" file="Source/Gb_Snd_Emu-0.1.4/gb_apu/Gb_Apu.h"/>
-          <FILE id="aGycGu" name="Gb_Oscs.cpp" compile="1" resource="0" file="Source/Gb_Snd_Emu-0.1.4/gb_apu/Gb_Oscs.cpp"/>
-          <FILE id="jdxnaQ" name="Gb_Oscs.h" compile="0" resource="0" file="Source/Gb_Snd_Emu-0.1.4/gb_apu/Gb_Oscs.h"/>
+          <FILE id="aLMN1m" name="blargg_common.h" compile="0" resource="0" file="Source/Gb_Snd_Emu-0.1.4-patched/gb_apu/blargg_common.h"/>
+          <FILE id="DZPLAm" name="blargg_source.h" compile="0" resource="0" file="Source/Gb_Snd_Emu-0.1.4-patched/gb_apu/blargg_source.h"/>
+          <FILE id="XB00Vz" name="Blip_Buffer.cpp" compile="1" resource="0" file="Source/Gb_Snd_Emu-0.1.4-patched/gb_apu/Blip_Buffer.cpp"/>
+          <FILE id="BSgalo" name="Blip_Buffer.h" compile="0" resource="0" file="Source/Gb_Snd_Emu-0.1.4-patched/gb_apu/Blip_Buffer.h"/>
+          <FILE id="j8UCk9" name="Blip_Synth.h" compile="0" resource="0" file="Source/Gb_Snd_Emu-0.1.4-patched/gb_apu/Blip_Synth.h"/>
+          <FILE id="jxt0QV" name="Gb_Apu.cpp" compile="1" resource="0" file="Source/Gb_Snd_Emu-0.1.4-patched/gb_apu/Gb_Apu.cpp"/>
+          <FILE id="CH9S8r" name="Gb_Apu.h" compile="0" resource="0" file="Source/Gb_Snd_Emu-0.1.4-patched/gb_apu/Gb_Apu.h"/>
+          <FILE id="aGycGu" name="Gb_Oscs.cpp" compile="1" resource="0" file="Source/Gb_Snd_Emu-0.1.4-patched/gb_apu/Gb_Oscs.cpp"/>
+          <FILE id="jdxnaQ" name="Gb_Oscs.h" compile="0" resource="0" file="Source/Gb_Snd_Emu-0.1.4-patched/gb_apu/Gb_Oscs.h"/>
           <FILE id="xmwkW8" name="Multi_Buffer.cpp" compile="1" resource="0"
-                file="Source/Gb_Snd_Emu-0.1.4/gb_apu/Multi_Buffer.cpp"/>
+                file="Source/Gb_Snd_Emu-0.1.4-patched/gb_apu/Multi_Buffer.cpp"/>
           <FILE id="xkNlZa" name="Multi_Buffer.h" compile="0" resource="0" file="Source/Gb_Snd_Emu-0.1.4/gb_apu/Multi_Buffer.h"/>
         </GROUP>
         <FILE id="dU6bRV" name="Basic_Gb_Apu.cpp" compile="1" resource="0"
-              file="Source/Gb_Snd_Emu-0.1.4/Basic_Gb_Apu.cpp"/>
-        <FILE id="d68kUq" name="Basic_Gb_Apu.h" compile="0" resource="0" file="Source/Gb_Snd_Emu-0.1.4/Basic_Gb_Apu.h"/>
-        <FILE id="vmstmX" name="changes.txt" compile="0" resource="0" file="Source/Gb_Snd_Emu-0.1.4/changes.txt"/>
-        <FILE id="PHPsYq" name="demo.cpp" compile="0" resource="0" file="Source/Gb_Snd_Emu-0.1.4/demo.cpp"/>
-        <FILE id="cZOVqu" name="LGPL.txt" compile="0" resource="0" file="Source/Gb_Snd_Emu-0.1.4/LGPL.txt"/>
-        <FILE id="kyfn1V" name="notes.txt" compile="0" resource="0" file="Source/Gb_Snd_Emu-0.1.4/notes.txt"/>
-        <FILE id="T9pGfp" name="readme.txt" compile="0" resource="0" file="Source/Gb_Snd_Emu-0.1.4/readme.txt"/>
-        <FILE id="rIW6GB" name="usage.txt" compile="0" resource="0" file="Source/Gb_Snd_Emu-0.1.4/usage.txt"/>
-        <FILE id="rLPfZQ" name="Wave_Writer.cpp" compile="0" resource="0" file="Source/Gb_Snd_Emu-0.1.4/Wave_Writer.cpp"/>
+              file="Source/Gb_Snd_Emu-0.1.4-patched/Basic_Gb_Apu.cpp"/>
+        <FILE id="d68kUq" name="Basic_Gb_Apu.h" compile="0" resource="0" file="Source/Gb_Snd_Emu-0.1.4-patched/Basic_Gb_Apu.h"/>
+        <FILE id="vmstmX" name="changes.txt" compile="0" resource="0" file="Source/Gb_Snd_Emu-0.1.4-patched/changes.txt"/>
+        <FILE id="PHPsYq" name="demo.cpp" compile="0" resource="0" file="Source/Gb_Snd_Emu-0.1.4-patched/demo.cpp"/>
+        <FILE id="cZOVqu" name="LGPL.txt" compile="0" resource="0" file="Source/Gb_Snd_Emu-0.1.4-patched/LGPL.txt"/>
+        <FILE id="kyfn1V" name="notes.txt" compile="0" resource="0" file="Source/Gb_Snd_Emu-0.1.4-patched/notes.txt"/>
+        <FILE id="T9pGfp" name="readme.txt" compile="0" resource="0" file="Source/Gb_Snd_Emu-0.1.4-patched/readme.txt"/>
+        <FILE id="rIW6GB" name="usage.txt" compile="0" resource="0" file="Source/Gb_Snd_Emu-0.1.4-patched/usage.txt"/>
+        <FILE id="rLPfZQ" name="Wave_Writer.cpp" compile="0" resource="0" file="Source/Gb_Snd_Emu-0.1.4-patched/Wave_Writer.cpp"/>
       </GROUP>
       <FILE id="PxpC7A" name="PluginProcessor.cpp" compile="1" resource="0"
             file="Source/PluginProcessor.cpp"/>
@@ -104,6 +103,46 @@
         <MODULEPATH id="juce_gui_extra" path="../../../../Applications/JUCE/modules"/>
       </MODULEPATHS>
     </XCODE_MAC>
+    <VS2022 targetFolder="Builds/VisualStudio2022">
+      <CONFIGURATIONS>
+        <CONFIGURATION isDebug="1" name="Debug"/>
+        <CONFIGURATION isDebug="0" name="Release"/>
+      </CONFIGURATIONS>
+      <MODULEPATHS>
+        <MODULEPATH id="juce_audio_basics" path="../../../../Applications/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_devices" path="../../../../Applications/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_formats" path="../../../../Applications/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_plugin_client" path="../../../../Applications/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_processors" path="../../../../Applications/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_utils" path="../../../../Applications/JUCE/modules"/>
+        <MODULEPATH id="juce_core" path="../../../../Applications/JUCE/modules"/>
+        <MODULEPATH id="juce_data_structures" path="../../../../Applications/JUCE/modules"/>
+        <MODULEPATH id="juce_events" path="../../../../Applications/JUCE/modules"/>
+        <MODULEPATH id="juce_graphics" path="../../../../Applications/JUCE/modules"/>
+        <MODULEPATH id="juce_gui_basics" path="../../../../Applications/JUCE/modules"/>
+        <MODULEPATH id="juce_gui_extra" path="../../../../Applications/JUCE/modules"/>
+      </MODULEPATHS>
+    </VS2022>
+    <LINUX_MAKE targetFolder="Builds/LinuxMakefile">
+      <CONFIGURATIONS>
+        <CONFIGURATION isDebug="1" name="Debug"/>
+        <CONFIGURATION isDebug="0" name="Release"/>
+      </CONFIGURATIONS>
+      <MODULEPATHS>
+        <MODULEPATH id="juce_audio_basics" path="../../../../Applications/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_devices" path="../../../../Applications/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_formats" path="../../../../Applications/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_plugin_client" path="../../../../Applications/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_processors" path="../../../../Applications/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_utils" path="../../../../Applications/JUCE/modules"/>
+        <MODULEPATH id="juce_core" path="../../../../Applications/JUCE/modules"/>
+        <MODULEPATH id="juce_data_structures" path="../../../../Applications/JUCE/modules"/>
+        <MODULEPATH id="juce_events" path="../../../../Applications/JUCE/modules"/>
+        <MODULEPATH id="juce_graphics" path="../../../../Applications/JUCE/modules"/>
+        <MODULEPATH id="juce_gui_basics" path="../../../../Applications/JUCE/modules"/>
+        <MODULEPATH id="juce_gui_extra" path="../../../../Applications/JUCE/modules"/>
+      </MODULEPATHS>
+    </LINUX_MAKE>
   </EXPORTFORMATS>
   <MODULES>
     <MODULE id="juce_audio_basics" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
