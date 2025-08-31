@@ -16,7 +16,9 @@
 //==============================================================================
 /*
 */
-class NoiseOscComponent  : public juce::Component
+class NoiseOscComponent  : public juce::Component,
+                           public juce::Slider::Listener,
+                           public juce::ComboBox::Listener
 {
 public:
     NoiseOscComponent();
@@ -25,7 +27,14 @@ public:
     void paint(juce::Graphics&) override;
     void resized() override;
 
+    void sliderValueChanged(juce::Slider* slider) override;
+    void comboBoxChanged(juce::ComboBox* comboBox) override;
+
 private:
     BasicControlsComponent controls;
+    juce::Slider ratioSlider;
+    juce::ComboBox shiftWidthPicker;
+    juce::Slider shiftFrequencySlider;
+
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(NoiseOscComponent)
 };

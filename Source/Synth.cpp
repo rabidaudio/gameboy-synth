@@ -201,14 +201,44 @@ void WaveOscillator::afterInit()
     apu_->writeRegister(startAddr_ + NRX0, 0x80); // enable the dac
 }
 
+void NoiseOscillator::writeNoiseConfiguration()
+{
+    uint8_t value = frequency_ << 4 | (uint8_t) width_ << 3 | ratio_;
+    apu_->writeRegister(startAddr_ + NRX3, value);
+}
+
+void NoiseOscillator::setDividingRatio(uint8_t ratio)
+{
+    jassert(ratio < 8);
+    if (ratio == ratio_) return;
+    ratio_ = ratio;
+    writeNoiseConfiguration();
+}
+
+void NoiseOscillator::setShiftWidth(NoiseShiftWidth width)
+{
+    if (width == width_) return;
+    width_ = width;
+    writeNoiseConfiguration();
+}
+
+void NoiseOscillator::setShiftFrequency(uint8_t frequency)
+{
+    jassert(frequency < 16);
+    if (frequency == frequency_) return;
+    frequency_ = frequency;
+    writeNoiseConfiguration();
+}
+
 void NoiseOscillator::setEvent(MidiEvent event)
 {
-    // TODO:
+    setConstantVolume(event.velocity);
+    apu_->writeRegister(startAddr_ + NRX4, 0x80); // start sound
 }
 
 void NoiseOscillator::afterInit()
 {
-    // TODO
+    writeNoiseConfiguration();
 }
 
 Synth::Synth()

@@ -112,6 +112,11 @@ enum class DutyCycle: uint8_t
     duty12_5 = 0x00, duty25 = 0x01, duty50 = 0x02, duty75 = 0x03
 };
 
+enum class NoiseShiftWidth: uint8_t
+{
+    b15 = 0x00, b7 = 0x01
+};
+
 // unlike the square and noise waves with velocity of 4 bits,
 // the wave has 2 bits: 00=0%, 01=100%, 10=50%, 11=25%
 enum GBWaveVolume: uint8_t
@@ -260,10 +265,19 @@ private:
 
 class NoiseOscillator : public Oscillator
 {
+private:
+    uint8_t ratio_ = 7;
+    NoiseShiftWidth width_ = NoiseShiftWidth::b15;
+    uint8_t frequency_ = 5;
+
+    void writeNoiseConfiguration();
 public:
     NoiseOscillator(): Oscillator(3) {}
     ~NoiseOscillator() {}
     void setEvent(MidiEvent event);
+    void setDividingRatio(uint8_t ratio);
+    void setShiftWidth(NoiseShiftWidth width);
+    void setShiftFrequency(uint8_t frequency);
 
 protected:
     void afterInit();
@@ -321,6 +335,21 @@ public:
     void setWaveTable(uint8_t* samples)
     {
         osc3.setWaveTable(samples);
+    }
+
+    void setDividingRatio(uint8_t ratio)
+    {
+        osc4.setDividingRatio(ratio);
+    }
+
+    void setShiftWidth(NoiseShiftWidth width)
+    {
+        osc4.setShiftWidth(width);
+    }
+
+    void setShiftFrequency(uint8_t frequency)
+    {
+        osc4.setShiftFrequency(frequency);
     }
 
     void handleMIDI(juce::MidiBuffer& midiMessages);
