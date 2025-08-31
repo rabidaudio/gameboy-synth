@@ -120,17 +120,18 @@ void Oscillator::set11BitPeriod(uint8_t note)
 
 // NRX2, Osc 0,1,3 only
 // Note: if you want to trigger the envelope, you must set it before NRX3
-void Oscillator::setVolumeEnvelope(uint8_t startVelocity, bool increasing, uint8_t period)
+void Oscillator::setVolumeEnvelope(uint8_t startVelocity, EnvelopeDirection envelopeDir, uint8_t period)
 {
     jassert(id_ != 2);
     uint8_t v = midiVelocityTo4BitVolume(startVelocity);
     v = (uint8_t)((float) v * volume); // scaled
+    bool increasing = envelopeDir == EnvelopeDirection::increasing;
     apu_->writeRegister(startAddr_ + NRX2, v << 4 | (increasing ? 0x08 : 0x00) | (period & 0x03));
 }
 
 void Oscillator::setConstantVolume(uint8_t velocity)
 {
-    setVolumeEnvelope(velocity, false, 0);
+    setVolumeEnvelope(velocity, EnvelopeDirection::decreasing, 0);
 }
 
 Oscillator::~Oscillator() {};
@@ -148,7 +149,7 @@ void SquareOscilator::setEvent(MidiEvent event)
         setConstantVolume(0); // ignore it
         return;
     }
-    setConstantVolume(event.velocity);
+    setVolumeEnvelope(event.velocity, envelopeDir, envelopeStep);
     set11BitPeriod(event.note);
 }
 
@@ -218,6 +219,7 @@ void NoiseOscillator::setEvent(MidiEvent event)
 
 void NoiseOscillator::afterInit()
 {
+    // nothing to do
 }
 
 Synth::Synth()

@@ -114,7 +114,12 @@ enum class DutyCycle: uint8_t
 
 enum class NoiseShiftWidth: uint8_t
 {
-    b15 = 0x00, b7 = 0x01
+    full15bit = 0x00, short7bit = 0x01
+};
+
+enum class EnvelopeDirection: uint8_t
+{
+    decreasing = 0x00, increasing = 0x01
 };
 
 // unlike the square and noise waves with velocity of 4 bits,
@@ -177,6 +182,8 @@ public:
     virtual void setEvent(MidiEvent event) = 0;
 
     float volume = 1.0;
+    EnvelopeDirection envelopeDir = EnvelopeDirection::decreasing;
+    uint8_t envelopeStep = 0;
 
 private:
     uint16_t midiNoteToPeriod(uint8_t note);
@@ -188,7 +195,7 @@ protected:
 
     // NRX2, Osc 1,2,4 only
     // Note: if you want to trigger the envelope, you must set it before NRX3
-    void setVolumeEnvelope(uint8_t startVelocity, bool increasing, uint8_t period);
+    void setVolumeEnvelope(uint8_t startVelocity, EnvelopeDirection envelopeDir, uint8_t period);
     void setConstantVolume(uint8_t velocity);
 };
 
@@ -324,6 +331,17 @@ public:
     {
         jassert(value >= 0.0 && value <= 1.0);
         oscs_[oscillator]->volume = value;
+    }
+
+    void setEnvelopeStep(OSCID oscillator, uint8_t value)
+    {
+        jassert(value < 8);
+        oscs_[oscillator]->envelopeStep = value;
+    }
+
+    void setEnvelopeDirection(OSCID oscillator, EnvelopeDirection dir)
+    {
+        oscs_[oscillator]->envelopeDir = dir;
     }
 
     void setWaveTable(uint8_t* samples)
