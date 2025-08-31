@@ -40,6 +40,8 @@ private:
     juce::ComboBox voicePicker;
     juce::ComboBox channelPicker;
     juce::ComboBox transposePicker;
+    juce::Slider envelopeStepSlider;
+    juce::ComboBox envelopeDirPicker;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (BasicControlsComponent)
 };
