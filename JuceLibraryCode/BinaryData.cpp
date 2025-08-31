@@ -546,7 +546,7 @@ static const unsigned char temp_binary_data_1[] =
 "- [x] Use finer time resolution than 1/60s\n"
 "- [x] Custom BlipBuffer to avoid extra buffer copy for int16->float conversion\n"
 "- [x] wave osc\n"
-"- [ ] noise osc\n"
+"- [x] noise osc\n"
 "- [ ] vol envelopes (native at low periods, then manual)\n"
 "- [ ] LFOs - vol and freq (quantize option? native for osc 1 at low periods?)\n"
 "- [x] Arbitrary wavetable drawing\n"
