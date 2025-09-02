@@ -15,6 +15,8 @@
             file="Source/NoiseOscComponent.cpp"/>
       <FILE id="cZgdK8" name="NoiseOscComponent.h" compile="0" resource="0"
             file="Source/NoiseOscComponent.h"/>
+      <FILE id="M42UC8" name="NoiseFrequencyTable.h" compile="0" resource="0"
+            file="Source/NoiseFrequencyTable.h"/>
       <FILE id="oC6zqR" name="BasicControlsComponent.cpp" compile="1" resource="0"
             file="Source/BasicControlsComponent.cpp"/>
       <FILE id="VUJQ1q" name="BasicControlsComponent.h" compile="0" resource="0"

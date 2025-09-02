@@ -266,18 +266,12 @@ private:
 class NoiseOscillator : public Oscillator
 {
 private:
-    uint8_t ratio_ = 7;
     NoiseShiftWidth width_ = NoiseShiftWidth::b15;
-    uint8_t frequency_ = 5;
-
-    void writeNoiseConfiguration();
 public:
     NoiseOscillator(): Oscillator(3) {}
     ~NoiseOscillator() {}
     void setEvent(MidiEvent event);
-    void setDividingRatio(uint8_t ratio);
     void setShiftWidth(NoiseShiftWidth width);
-    void setShiftFrequency(uint8_t frequency);
 
 protected:
     void afterInit();
@@ -337,19 +331,9 @@ public:
         osc3.setWaveTable(samples);
     }
 
-    void setDividingRatio(uint8_t ratio)
-    {
-        osc4.setDividingRatio(ratio);
-    }
-
     void setShiftWidth(NoiseShiftWidth width)
     {
         osc4.setShiftWidth(width);
-    }
-
-    void setShiftFrequency(uint8_t frequency)
-    {
-        osc4.setShiftFrequency(frequency);
     }
 
     void handleMIDI(juce::MidiBuffer& midiMessages);
