@@ -33,13 +33,12 @@ public:
 
 BasicControlsComponent::BasicControlsComponent(OSCID id) :
     enableButton("Enable"),
-    volSlider("Volume"),
     pwmSlider("PWM"),
     voicePicker("Voice"),
     channelPicker("Channel"),
     transposePicker("Transpose"),
-    envelopeStepSlider("Env step"),
-    envelopeDirPicker("Env dir")
+    attackSlider("Attack"),
+    releaseSlider("Release")
 {
     id_ = id;
 
@@ -47,16 +46,6 @@ BasicControlsComponent::BasicControlsComponent(OSCID id) :
     enableButton.addListener(this);
     enableButton.setToggleState(id == 0 || id == 1, juce::sendNotification);
     addAndMakeVisible(enableButton);
-    // volume
-    if (id != 2) {
-        volSlider.addListener(this);
-        volSlider.setSliderStyle(juce::Slider::Rotary);
-        volSlider.setRange(0, 15, 1);
-        volSlider.setValue(15);
-        volSlider.setTextBoxStyle(pwmSlider.TextBoxBelow, true, 0, 0);
-        volSlider.setNumDecimalPlacesToDisplay(0);
-        addAndMakeVisible(volSlider);
-    }
     // pwm
     if (id == 0 || id == 1) {
         pwmSlider.addListener(this);
@@ -90,19 +79,21 @@ BasicControlsComponent::BasicControlsComponent(OSCID id) :
     addAndMakeVisible(transposePicker);
     // envelope
     if (id != 2) {
-        envelopeStepSlider.addListener(this);
-        envelopeStepSlider.setSliderStyle(juce::Slider::Rotary);
-        envelopeStepSlider.setRange(0, 7, 1);
-        envelopeStepSlider.setValue(0);
-        envelopeStepSlider.setTextBoxStyle(envelopeStepSlider.TextBoxBelow, true, 0, 0);
-        envelopeStepSlider.setNumDecimalPlacesToDisplay(0);
-        addAndMakeVisible(envelopeStepSlider);
-
-        envelopeDirPicker.addListener(this);
-        envelopeDirPicker.addItem("-", 1);
-        envelopeDirPicker.addItem("+", 2);
-        envelopeDirPicker.setSelectedId(1);
-        addAndMakeVisible(envelopeDirPicker);
+        attackSlider.addListener(this);
+        attackSlider.setSliderStyle(juce::Slider::Rotary);
+        attackSlider.setRange(0, 7, 1);
+        attackSlider.setValue(0);
+        attackSlider.setTextBoxStyle(pwmSlider.TextBoxBelow, true, 0, 0);
+        attackSlider.setNumDecimalPlacesToDisplay(0);
+        addAndMakeVisible(attackSlider);
+        
+        releaseSlider.addListener(this);
+        releaseSlider.setSliderStyle(juce::Slider::Rotary);
+        releaseSlider.setRange(0, 7, 1);
+        releaseSlider.setValue(0);
+        releaseSlider.setTextBoxStyle(pwmSlider.TextBoxBelow, true, 0, 0);
+        releaseSlider.setNumDecimalPlacesToDisplay(0);
+        addAndMakeVisible(releaseSlider);
     }
 }
 
@@ -118,10 +109,6 @@ void BasicControlsComponent::resized()
     // enable
     enableButton.setBounds(left, 0, height, height);
     left = enableButton.getBounds().getRight();
-    // volume
-    volSlider.setBounds(left, 0, height, height);
-    volSlider.setTextBoxStyle(pwmSlider.TextBoxBelow, true, volSlider.getBounds().getWidth(), volSlider.getBounds().getHeight()/4);
-    left = volSlider.getBounds().getRight();
     // pwm
     if (id_ == 0 || id_ == 1) {
         pwmSlider.setBounds(left, 0, height, height);
@@ -135,12 +122,14 @@ void BasicControlsComponent::resized()
     channelPicker.setBounds(left, voicePicker.getBounds().getBottom(), height, pickerHeight);
     transposePicker.setBounds(left, channelPicker.getBounds().getBottom(), height, pickerHeight);
     left = transposePicker.getBounds().getRight();
-    // envelope step slider
-    envelopeStepSlider.setBounds(left, 0, height, height);
-    envelopeStepSlider.setTextBoxStyle(envelopeStepSlider.TextBoxBelow, true, envelopeStepSlider.getBounds().getWidth(), envelopeStepSlider.getBounds().getHeight() / 4);
-    left = envelopeStepSlider.getBounds().getRight();
-    // envelope direction picker
-    envelopeDirPicker.setBounds(left, height - pickerHeight, height, pickerHeight);
+    // envelope
+    attackSlider.setBounds(left, 0, height, height);
+    attackSlider.setTextBoxStyle(attackSlider.TextBoxBelow, true, attackSlider.getBounds().getWidth(), attackSlider.getBounds().getHeight()/4);
+    left = attackSlider.getBounds().getRight();
+    
+    releaseSlider.setBounds(left, 0, height, height);
+    releaseSlider.setTextBoxStyle(releaseSlider.TextBoxBelow, true, releaseSlider.getBounds().getWidth(), releaseSlider.getBounds().getHeight()/4);
+    left = releaseSlider.getBounds().getRight();
 }
 
 void BasicControlsComponent::buttonClicked(juce::Button* button)
@@ -153,12 +142,12 @@ void BasicControlsComponent::sliderValueChanged(juce::Slider *slider)
     if (slider == &pwmSlider) {
         jassert(id_ == 0 || id_ == 1);
         Synth::INSTANCE.setDutyCycle(id_, slider->getValue());
-    } else if (slider == &volSlider) {
+    } else if (slider == &attackSlider) {
         jassert(id_ != 2);
-        Synth::INSTANCE.setVolume(id_, ((float) slider->getValue()) / 15.0);
-    } else if (slider == &envelopeStepSlider) {
+        Synth::INSTANCE.setAttackPeriod(id_, slider->getValue());
+    } else if (slider == &releaseSlider) {
         jassert(id_ != 2);
-        Synth::INSTANCE.setEnvelopeStep(id_, (uint8_t) slider->getValue());
+        Synth::INSTANCE.setReleasePeriod(id_, slider->getValue());
     }
 }
 
@@ -170,7 +159,5 @@ void BasicControlsComponent::comboBoxChanged(juce::ComboBox *comboBox)
         Synth::INSTANCE.setMIDIChannel(id_, comboBox->getSelectedId() - 1);
     } else if (comboBox == &transposePicker) {
         Synth::INSTANCE.setTranspose(id_, comboBox->getSelectedId() - 48 - 1);
-    } else if (comboBox == &envelopeDirPicker) {
-        Synth::INSTANCE.setEnvelopeDirection(id_, (EnvelopeDirection) (comboBox->getSelectedId() - 1));
     }
 }

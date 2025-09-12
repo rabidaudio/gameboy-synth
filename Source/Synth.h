@@ -17,6 +17,7 @@
 
 static const gb_time_t CLOCK_SPEED = 4194304;
 static const gb_time_t CLOCKS_PER_INSTRUCTION = 4;
+static const gb_time_t CLOCKS_PER_FRAME = 16384;
 
 // Register definitions
 typedef uint8_t OSCID;
@@ -119,7 +120,7 @@ enum class NoiseShiftWidth: uint8_t
 
 enum class EnvelopeDirection: uint8_t
 {
-    decreasing = 0x00, increasing = 0x01
+    decreasing = (0 << 3), increasing = (1 << 3)
 };
 
 // unlike the square and noise waves with velocity of 4 bits,
@@ -127,6 +128,15 @@ enum class EnvelopeDirection: uint8_t
 enum GBWaveVolume: uint8_t
 {
     WAVE_VOL_OFF = 0x00, WAVE_VOL_FULL = 0x01, WAVE_VOL_50 = 0x02, WAVE_VOL_25 = 0x03
+};
+
+
+enum EnvelopeState { off, attack, on, release };
+
+class FrameListener {
+public:
+    virtual void onFrame() = 0;
+    virtual ~FrameListener() = default;
 };
 
 class Apu
@@ -139,22 +149,24 @@ private:
     bool stereo_;
     blip_time_t clock_;
     blip_sample_t samples_[2];
+    FrameListener* listener_;
+    blip_time_t timeToNextFrame_;
 
 public:
     Apu();
     ~Apu();
 
-    void configure(double sampleRate, int channels);
+    void configure(double sampleRate, int channels, FrameListener* frameListener);
     void writeRegister(gb_addr_t addr, uint8_t data);
     uint8_t readRegister(gb_addr_t addr);
 
     long samplesAvailable();
-    void readSamples(juce::AudioBuffer<float>* out);
+    gb_time_t readSamples(juce::AudioBuffer<float>* out);
 
     void reset();
 
 private:
-    blip_time_t tick() { return clock_ += 4; }
+    blip_time_t tick(blip_time_t step);
 };
 
 class Oscillator {
@@ -162,6 +174,11 @@ protected:
     Apu* apu_;
     uint16_t startAddr_;
     OSCID id_;
+    EnvelopeState envState_ = EnvelopeState::off;;
+    uint8_t attack_;
+    uint8_t release_;
+    uint8_t velocity_;
+    uint16_t envelopeFramesRemaining_;
 
     virtual void afterInit() = 0;
 
@@ -171,6 +188,7 @@ public:
         static const uint16_t addrs[NUM_OSC] = {Sq1Addr, Sq2Addr, WaveAddr, NoiseAddr};
         startAddr_ = addrs[id];
         id_ = id;
+        envState_ = EnvelopeState::off;
     }
     virtual ~Oscillator() = 0;
 
@@ -180,23 +198,17 @@ public:
         afterInit();
     }
     virtual void setEvent(MidiEvent event) = 0;
-
-    float volume = 1.0;
-    EnvelopeDirection envelopeDir = EnvelopeDirection::decreasing;
-    uint8_t envelopeStep = 0;
-
-private:
-    uint16_t midiNoteToPeriod(uint8_t note);
-    uint8_t midiVelocityTo4BitVolume(uint8_t velocity);
+    
+    // NRX2, Osc 1,2,4 only
+    // Note: if you want to trigger the envelope, you must set it before NRX3
+    void setAttack(uint8_t period);
+    void setRelease(uint8_t period);
+    void onFrame();
 
 protected:
     // NRX3 and lower NRX4, Osc 1,2,3 only
     void set11BitPeriod(uint8_t note);
-
-    // NRX2, Osc 1,2,4 only
-    // Note: if you want to trigger the envelope, you must set it before NRX3
-    void setVolumeEnvelope(uint8_t startVelocity, EnvelopeDirection envelopeDir, uint8_t period);
-    void setConstantVolume(uint8_t velocity);
+    void configureEnvelope(uint8_t velocity);
 };
 
 class SquareOscilator: public Oscillator
@@ -287,7 +299,7 @@ protected:
 // Track MIDI state, which is separate from the register settings,
 // and convert MIDI events into register calls
 // TODO: this guy can also be a FIFO queue for changes from the UI
-class Synth
+class Synth : public FrameListener
 {
 private:
     // since there are only 4 oscillators, we won't need more than
@@ -315,6 +327,8 @@ public:
     void setTranspose(OSCID oscillator, int8_t transpose);
     void setMIDIVoice(OSCID oscillator, uint8_t voice);
     void setMIDIChannel(OSCID oscillator, uint8_t channel);
+    void setAttackPeriod(OSCID oscillator, uint8_t period);
+    void setReleasePeriod(OSCID oscillator, uint8_t period);
 
     void setDutyCycle(OSCID oscillator, double value)
     {
@@ -325,23 +339,6 @@ public:
             case 1: return osc2.setDuty(duty);
             default: return;
         }
-    }
-
-    void setVolume(OSCID oscillator, double value)
-    {
-        jassert(value >= 0.0 && value <= 1.0);
-        oscs_[oscillator]->volume = value;
-    }
-
-    void setEnvelopeStep(OSCID oscillator, uint8_t value)
-    {
-        jassert(value < 8);
-        oscs_[oscillator]->envelopeStep = value;
-    }
-
-    void setEnvelopeDirection(OSCID oscillator, EnvelopeDirection dir)
-    {
-        oscs_[oscillator]->envelopeDir = dir;
     }
 
     void setWaveTable(uint8_t* samples)
@@ -356,6 +353,7 @@ public:
 
     void handleMIDI(juce::MidiBuffer& midiMessages);
     void readSamples(juce::AudioBuffer<float>* out);
+    void onFrame();
 
     void setDefaults();
     void stop();

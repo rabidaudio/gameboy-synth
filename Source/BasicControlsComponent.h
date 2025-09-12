@@ -35,13 +35,12 @@ public:
 private:
     OSCID id_;
     juce::ToggleButton enableButton;
-    juce::Slider volSlider;
     juce::Slider pwmSlider;
     juce::ComboBox voicePicker;
     juce::ComboBox channelPicker;
     juce::ComboBox transposePicker;
-    juce::Slider envelopeStepSlider;
-    juce::ComboBox envelopeDirPicker;
+    juce::Slider attackSlider;
+    juce::Slider releaseSlider;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (BasicControlsComponent)
 };
