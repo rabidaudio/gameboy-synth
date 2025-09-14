@@ -112,6 +112,16 @@ enum class DutyCycle: uint8_t
     duty12_5 = 0x00, duty25 = 0x01, duty50 = 0x02, duty75 = 0x03
 };
 
+enum class NoiseShiftWidth: uint8_t
+{
+    full15bit = 0x00, short7bit = 0x01
+};
+
+enum class EnvelopeDirection: uint8_t
+{
+    decreasing = 0x00, increasing = 0x01
+};
+
 // unlike the square and noise waves with velocity of 4 bits,
 // the wave has 2 bits: 00=0%, 01=100%, 10=50%, 11=25%
 enum GBWaveVolume: uint8_t
@@ -172,6 +182,8 @@ public:
     virtual void setEvent(MidiEvent event) = 0;
 
     float volume = 1.0;
+    EnvelopeDirection envelopeDir = EnvelopeDirection::decreasing;
+    uint8_t envelopeStep = 0;
 
 private:
     uint16_t midiNoteToPeriod(uint8_t note);
@@ -183,7 +195,7 @@ protected:
 
     // NRX2, Osc 1,2,4 only
     // Note: if you want to trigger the envelope, you must set it before NRX3
-    void setVolumeEnvelope(uint8_t startVelocity, bool increasing, uint8_t period);
+    void setVolumeEnvelope(uint8_t startVelocity, EnvelopeDirection envelopeDir, uint8_t period);
     void setConstantVolume(uint8_t velocity);
 };
 
@@ -260,10 +272,13 @@ private:
 
 class NoiseOscillator : public Oscillator
 {
+private:
+    NoiseShiftWidth width_ = NoiseShiftWidth::b15;
 public:
     NoiseOscillator(): Oscillator(3) {}
     ~NoiseOscillator() {}
     void setEvent(MidiEvent event);
+    void setShiftWidth(NoiseShiftWidth width);
 
 protected:
     void afterInit();
@@ -318,9 +333,25 @@ public:
         oscs_[oscillator]->volume = value;
     }
 
+    void setEnvelopeStep(OSCID oscillator, uint8_t value)
+    {
+        jassert(value < 8);
+        oscs_[oscillator]->envelopeStep = value;
+    }
+
+    void setEnvelopeDirection(OSCID oscillator, EnvelopeDirection dir)
+    {
+        oscs_[oscillator]->envelopeDir = dir;
+    }
+
     void setWaveTable(uint8_t* samples)
     {
         osc3.setWaveTable(samples);
+    }
+
+    void setShiftWidth(NoiseShiftWidth width)
+    {
+        osc4.setShiftWidth(width);
     }
 
     void handleMIDI(juce::MidiBuffer& midiMessages);

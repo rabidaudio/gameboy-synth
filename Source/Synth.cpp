@@ -9,6 +9,7 @@
 */
 
 #include "Synth.h"
+#include "NoiseFrequencyTable.h"
 
 Apu::Apu()
 {
@@ -119,17 +120,18 @@ void Oscillator::set11BitPeriod(uint8_t note)
 
 // NRX2, Osc 0,1,3 only
 // Note: if you want to trigger the envelope, you must set it before NRX3
-void Oscillator::setVolumeEnvelope(uint8_t startVelocity, bool increasing, uint8_t period)
+void Oscillator::setVolumeEnvelope(uint8_t startVelocity, EnvelopeDirection envelopeDir, uint8_t period)
 {
     jassert(id_ != 2);
     uint8_t v = midiVelocityTo4BitVolume(startVelocity);
     v = (uint8_t)((float) v * volume); // scaled
+    bool increasing = envelopeDir == EnvelopeDirection::increasing;
     apu_->writeRegister(startAddr_ + NRX2, v << 4 | (increasing ? 0x08 : 0x00) | (period & 0x03));
 }
 
 void Oscillator::setConstantVolume(uint8_t velocity)
 {
-    setVolumeEnvelope(velocity, false, 0);
+    setVolumeEnvelope(velocity, EnvelopeDirection::decreasing, 0);
 }
 
 Oscillator::~Oscillator() {};
@@ -147,7 +149,7 @@ void SquareOscilator::setEvent(MidiEvent event)
         setConstantVolume(0); // ignore it
         return;
     }
-    setConstantVolume(event.velocity);
+    setVolumeEnvelope(event.velocity, envelopeDir, envelopeStep);
     set11BitPeriod(event.note);
 }
 
@@ -201,14 +203,23 @@ void WaveOscillator::afterInit()
     apu_->writeRegister(startAddr_ + NRX0, 0x80); // enable the dac
 }
 
+void NoiseOscillator::setShiftWidth(NoiseShiftWidth width)
+{
+    width_ = width;
+}
+
 void NoiseOscillator::setEvent(MidiEvent event)
 {
-    // TODO:
+    setVolumeEnvelope(event.velocity, envelopeDir, envelopeStep);
+    NoiseFrequencyParams frequencyParams = NOISE_PARAM_TABLE[(event.note + 32) % NOISE_PARAM_TABLE_LEN];
+    uint8_t noiseRegisterValue = frequencyParams.shift << 4 | (uint8_t) width_ << 3 | frequencyParams.div;
+    apu_->writeRegister(startAddr_ + NRX3, noiseRegisterValue);
+    apu_->writeRegister(startAddr_ + NRX4, 0x80); // start sound
 }
 
 void NoiseOscillator::afterInit()
 {
-    // TODO
+    // nothing to do
 }
 
 Synth::Synth()

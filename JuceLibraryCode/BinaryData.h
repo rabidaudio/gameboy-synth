@@ -12,7 +12,7 @@ namespace BinaryData
     const int            LICENSESize = 35147;
 
     extern const char*   README_md;
-    const int            README_mdSize = 2742;
+    const int            README_mdSize = 3940;
 
     extern const char*   WaveOscComponent_h;
     const int            WaveOscComponent_hSize = 1103;

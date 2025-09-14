@@ -13,9 +13,17 @@
 #include "Theme.h"
 
 //==============================================================================
-NoiseOscComponent::NoiseOscComponent() : controls(3)
+NoiseOscComponent::NoiseOscComponent() :
+    controls(3),
+    shiftWidthPicker("Width")
 {
     addAndMakeVisible(controls);
+
+    shiftWidthPicker.addListener(this);
+    shiftWidthPicker.addItem("15", 1);
+    shiftWidthPicker.addItem("7", 2);
+    shiftWidthPicker.setSelectedId(1);
+    addAndMakeVisible(shiftWidthPicker);
 }
 
 NoiseOscComponent::~NoiseOscComponent() {}
@@ -28,6 +36,18 @@ void NoiseOscComponent::paint(juce::Graphics& g)
 
 void NoiseOscComponent::resized()
 {
-    int upperBlockUnit = getLocalBounds().proportionOfHeight(0.25);
-    controls.setBounds(0, 0, getLocalBounds().getWidth(), upperBlockUnit);
+    juce::Rectangle<int> bounds = getLocalBounds();
+    int rowUnit = bounds.proportionOfHeight(0.25);
+    controls.setBounds(0, 0, bounds.getWidth(), rowUnit);
+
+    int left = rowUnit;
+    static int pickerHeight = 25;
+    shiftWidthPicker.setBounds(left, rowUnit + rowUnit / 2 - pickerHeight / 2, rowUnit, pickerHeight);
+}
+
+void NoiseOscComponent::comboBoxChanged(juce::ComboBox* comboBox)
+{
+    if (comboBox == &shiftWidthPicker) {
+        Synth::INSTANCE.setShiftWidth((NoiseShiftWidth) (comboBox->getSelectedId() - 1));
+    }
 }

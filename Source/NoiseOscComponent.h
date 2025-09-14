@@ -16,7 +16,8 @@
 //==============================================================================
 /*
 */
-class NoiseOscComponent  : public juce::Component
+class NoiseOscComponent  : public juce::Component,
+                           public juce::ComboBox::Listener
 {
 public:
     NoiseOscComponent();
@@ -25,7 +26,11 @@ public:
     void paint(juce::Graphics&) override;
     void resized() override;
 
+    void comboBoxChanged(juce::ComboBox* comboBox) override;
+
 private:
     BasicControlsComponent controls;
+    juce::ComboBox shiftWidthPicker;
+
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(NoiseOscComponent)
 };

@@ -14,7 +14,7 @@ As an instrument, the Game Boy APU is a pretty constrained synthesizer. It conta
 - [x] Use finer time resolution than 1/60s
 - [x] Custom BlipBuffer to avoid extra buffer copy for int16->float conversion
 - [x] wave osc
-- [ ] noise osc
+- [x] noise osc
 - [ ] vol envelopes (native at low periods, then manual)
 - [ ] LFOs - vol and freq (quantize option? native for osc 1 at low periods?)
 - [x] Arbitrary wavetable drawing

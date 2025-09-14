@@ -140,6 +140,7 @@ void GameBoySynthAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, 
     midiCollector_.removeNextBlockOfMessages(midiMessages, (int) buffer.getNumSamples());
     Synth::INSTANCE.handleMIDI(midiMessages);
     Synth::INSTANCE.readSamples(&buffer);
+    midiMessages.clear();
 }
 
 //==============================================================================
