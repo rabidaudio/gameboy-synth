@@ -8,9 +8,7 @@
 
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
-#include "Synth.h"
-
-Synth Synth::INSTANCE;
+#include "Apu.h"
 
 //==============================================================================
 GameBoySynthAudioProcessor::GameBoySynthAudioProcessor()
@@ -94,7 +92,7 @@ void GameBoySynthAudioProcessor::changeProgramName(int index, const juce::String
 //==============================================================================
 void GameBoySynthAudioProcessor::prepareToPlay(double sampleRate, int samplesPerBlock)
 {
-    Synth::INSTANCE.configure(sampleRate, getTotalNumOutputChannels());
+//    APU_INSTANCE.configure(sampleRate, getTotalNumOutputChannels());
     midiCollector_.reset(sampleRate);
 }
 
@@ -102,7 +100,7 @@ void GameBoySynthAudioProcessor::releaseResources()
 {
     // When playback stops, you can use this as an opportunity to free up any
     // spare memory, etc.
-    Synth::INSTANCE.stop();
+//    APU_INSTANCE.reset();
 }
 
 #ifndef JucePlugin_PreferredChannelConfigurations
@@ -138,8 +136,8 @@ void GameBoySynthAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, 
 
     // also append any events from the collector
     midiCollector_.removeNextBlockOfMessages(midiMessages, (int) buffer.getNumSamples());
-    Synth::INSTANCE.handleMIDI(midiMessages);
-    Synth::INSTANCE.readSamples(&buffer);
+//    APU_INSTANCE.handleMIDI(midiMessages);
+//    APU_INSTANCE.readSamples(&buffer);
     midiMessages.clear();
 }
 

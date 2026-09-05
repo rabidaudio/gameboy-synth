@@ -20,7 +20,7 @@
  #define JucePlugin_Build_AU               0
 #endif
 #ifndef  JucePlugin_Build_AUv3
- #define JucePlugin_Build_AUv3             1
+ #define JucePlugin_Build_AUv3             0
 #endif
 #ifndef  JucePlugin_Build_AAX
  #define JucePlugin_Build_AAX              0
@@ -53,7 +53,7 @@
  #define JucePlugin_ManufacturerWebsite    "https://rabid.audio"
 #endif
 #ifndef  JucePlugin_ManufacturerEmail
- #define JucePlugin_ManufacturerEmail      "cjk@rabidaudio.com"
+ #define JucePlugin_ManufacturerEmail      "julien@rabidaudio.com"
 #endif
 #ifndef  JucePlugin_ManufacturerCode
  #define JucePlugin_ManufacturerCode       0x4d616e75

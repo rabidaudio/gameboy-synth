@@ -3,7 +3,7 @@
 
     NoiseOscComponent.h
     Created: 13 Mar 2021 2:09:59pm
-    Author:  Charles Julian Knight
+    Author:  Julien Dorothy Knight
 
   ==============================================================================
 */

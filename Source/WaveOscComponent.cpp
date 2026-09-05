@@ -3,7 +3,7 @@
 
     WaveOscComponent.cpp
     Created: 13 Mar 2021 2:27:35am
-    Author:  Charles Julian Knight
+    Author:  Julien Dorothy Knight
 
   ==============================================================================
 */

@@ -595,7 +595,7 @@ static const unsigned char temp_binary_data_2[] =
 "\n"
 "    WaveOscComponent.h\n"
 "    Created: 13 Mar 2021 2:27:35am\n"
-"    Author:  Charles Julian Knight\n"
+"    Author:  Julien Dorothy Knight\n"
 "\n"
 "  ==============================================================================\n"
 "*/\n"

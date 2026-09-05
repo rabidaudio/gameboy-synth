@@ -3,7 +3,7 @@
 
     WavetableComponent.cpp
     Created: 13 Mar 2021 12:19:30am
-    Author:  Charles Julian Knight
+    Author:  Julien Dorothy Knight
 
   ==============================================================================
 */
@@ -106,6 +106,6 @@ void WavetableComponent::loadDefaultWavetable(const uint8_t* defaultWavetable)
 void WavetableComponent::wavetableChanged()
 {
     repaint(drawingBounds());
-    Synth::INSTANCE.setWaveTable(wavetable);
+//    APU_INSTANCE.setWaveTable(wavetable);
     changed_ = false;
 }

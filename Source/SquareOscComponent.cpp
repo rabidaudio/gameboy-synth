@@ -3,7 +3,7 @@
 
     SquareOscComponent.cpp
     Created: 21 Feb 2021 5:09:02pm
-    Author:  Charles Julian Knight
+    Author:  Julien Dorothy Knight
 
   ==============================================================================
 */

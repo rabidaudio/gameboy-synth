@@ -3,7 +3,7 @@
 
     NoiseOscComponent.cpp
     Created: 13 Mar 2021 2:09:59pm
-    Author:  Charles Julian Knight
+    Author:  Julien Dorothy Knight
 
   ==============================================================================
 */
@@ -48,6 +48,6 @@ void NoiseOscComponent::resized()
 void NoiseOscComponent::comboBoxChanged(juce::ComboBox* comboBox)
 {
     if (comboBox == &shiftWidthPicker) {
-        Synth::INSTANCE.setShiftWidth((NoiseShiftWidth) (comboBox->getSelectedId() - 1));
+//        APU_INSTANCE.setShiftWidth((NoiseShiftWidth) (comboBox->getSelectedId() - 1));
     }
 }

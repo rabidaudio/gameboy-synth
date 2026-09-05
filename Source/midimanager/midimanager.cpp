@@ -1,4 +1,4 @@
-// Copyright 2021 Charles Julian Knight
+// Copyright 2021 Julien Dorothy Knight
 // https://github.com/rabidaudio/midi-voicesteal
 #include "./midimanager.h"
 

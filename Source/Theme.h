@@ -3,7 +3,7 @@
 
     Theme.h
     Created: 27 Feb 2021 11:38:27pm
-    Author:  Charles Julian Knight
+    Author:  Julien Dorothy Knight
 
   ==============================================================================
 */

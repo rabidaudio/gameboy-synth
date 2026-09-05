@@ -3,7 +3,7 @@
 
     BasicControlsComponent.h
     Created: 13 Mar 2021 10:16:57am
-    Author:  Charles Julian Knight
+    Author:  Julien Dorothy Knight
 
   ==============================================================================
 */
@@ -11,7 +11,7 @@
 #pragma once
 
 #include <JuceHeader.h>
-#include "Synth.h"
+#include "Apu.h"
 
 //==============================================================================
 /*

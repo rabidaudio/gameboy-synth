@@ -3,14 +3,14 @@
 
     BasicControlsComponent.cpp
     Created: 13 Mar 2021 10:16:57am
-    Author:  Charles Julian Knight
+    Author:  Julien Dorothy Knight
 
   ==============================================================================
 */
 
 #include <JuceHeader.h>
 #include "BasicControlsComponent.h"
-#include "Synth.h"
+#include "Apu.h"
 
 //==============================================================================
 
@@ -26,7 +26,8 @@ public:
     }
     static double snap(double rangeStart, double rangeEnd, double valueToRemap)
     {
-        return SquareOscilator::normalizeDutyCycle(valueToRemap);
+        return 0;
+//        return SquareOscilator::normalizeDutyCycle(valueToRemap);
     }
     PWMRange() : juce::NormalisableRange<double>(0, 100, denormalize, normalize, snap) {}
 };
@@ -134,30 +135,30 @@ void BasicControlsComponent::resized()
 
 void BasicControlsComponent::buttonClicked(juce::Button* button)
 {
-    Synth::INSTANCE.setEnabled(id_, button->getToggleState());
+//    APU_INSTANCE.setEnabled(id_, button->getToggleState());
 }
 
 void BasicControlsComponent::sliderValueChanged(juce::Slider *slider)
 {
     if (slider == &pwmSlider) {
         jassert(id_ == 0 || id_ == 1);
-        Synth::INSTANCE.setDutyCycle(id_, slider->getValue());
+//        APU_INSTANCE.setDutyCycle(id_, slider->getValue());
     } else if (slider == &attackSlider) {
         jassert(id_ != 2);
-        Synth::INSTANCE.setAttackPeriod(id_, slider->getValue());
+//        APU_INSTANCE.setAttackPeriod(id_, slider->getValue());
     } else if (slider == &releaseSlider) {
         jassert(id_ != 2);
-        Synth::INSTANCE.setReleasePeriod(id_, slider->getValue());
+//        APU_INSTANCE.setReleasePeriod(id_, slider->getValue());
     }
 }
 
 void BasicControlsComponent::comboBoxChanged(juce::ComboBox *comboBox)
 {
     if (comboBox == &voicePicker) {
-        Synth::INSTANCE.setMIDIVoice(id_, comboBox->getSelectedId() - 1);
+//        APU_INSTANCE.setMIDIVoice(id_, comboBox->getSelectedId() - 1);
     } else if (comboBox == &channelPicker) {
-        Synth::INSTANCE.setMIDIChannel(id_, comboBox->getSelectedId() - 1);
+//        APU_INSTANCE.setMIDIChannel(id_, comboBox->getSelectedId() - 1);
     } else if (comboBox == &transposePicker) {
-        Synth::INSTANCE.setTranspose(id_, comboBox->getSelectedId() - 48 - 1);
+//        APU_INSTANCE.setTranspose(id_, comboBox->getSelectedId() - 48 - 1);
     }
 }

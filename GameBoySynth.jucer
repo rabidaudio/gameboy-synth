@@ -2,15 +2,17 @@
 
 <JUCERPROJECT id="oyJ7nr" name="GameBoySynth" projectType="audioplug" useAppConfig="0"
               addUsingNamespaceToJuceHeader="0" jucerFormatVersion="1" companyName="RabidAudio"
-              companyCopyright="Charles Julian Knight" companyWebsite="https://rabid.audio"
-              companyEmail="cjk@rabidaudio.com" bundleIdentifier="audio.rabid.gameboysynth"
-              pluginFormats="buildAUv3,buildStandalone,buildVST3" pluginCharacteristicsValue="pluginIsSynth,pluginWantsMidiIn"
+              companyCopyright="Julien Dorothy Knight" companyWebsite="https://rabid.audio"
+              companyEmail="julien@rabidaudio.com" bundleIdentifier="audio.rabid.gameboysynth"
+              pluginFormats="buildStandalone,buildVST3" pluginCharacteristicsValue="pluginIsSynth,pluginWantsMidiIn"
               pluginCode="Gbas" aaxIdentifier="audio.rabid.gameboysynth" pluginAUIsSandboxSafe="1"
               projectLineFeed="&#10;" displaySplashScreen="1">
   <MAINGROUP id="l9BrHS" name="GameBoySynth">
     <FILE id="DqHiij" name="LICENSE" compile="0" resource="1" file="LICENSE"/>
     <FILE id="ZmNejr" name="README.md" compile="0" resource="1" file="README.md"/>
     <GROUP id="{547F6CC2-A1E7-5511-1621-1739E99809BE}" name="Source">
+      <FILE id="UqmGAr" name="Apu.h" compile="0" resource="0" file="Source/Apu.h"/>
+      <FILE id="P02ZwI" name="Apu.cpp" compile="1" resource="0" file="Source/Apu.cpp"/>
       <FILE id="ftvRg5" name="NoiseOscComponent.cpp" compile="1" resource="0"
             file="Source/NoiseOscComponent.cpp"/>
       <FILE id="cZgdK8" name="NoiseOscComponent.h" compile="0" resource="0"
@@ -34,8 +36,6 @@
             file="Source/SquareOscComponent.cpp"/>
       <FILE id="tBkKQ9" name="SquareOscComponent.h" compile="0" resource="0"
             file="Source/SquareOscComponent.h"/>
-      <FILE id="xdW3Ti" name="Synth.cpp" compile="1" resource="0" file="Source/Synth.cpp"/>
-      <FILE id="Ay43E7" name="Synth.h" compile="0" resource="0" file="Source/Synth.h"/>
       <GROUP id="{D33F0277-B008-DA3D-6E61-5B48C4FF6F51}" name="midimanager">
         <FILE id="ow6Mpg" name="midimanager.cpp" compile="1" resource="0" file="Source/midimanager/midimanager.cpp"/>
         <FILE id="QfIIyR" name="midimanager.h" compile="0" resource="0" file="Source/midimanager/midimanager.h"/>
