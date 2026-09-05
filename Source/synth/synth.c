@@ -14,6 +14,37 @@ const uint16_t MIDI_NOTE_NUM_TO_PERIOD[] = {
     2032, /* 120,C9 */ 2033, /* 121,C#9 */ 2034, /* 122,D9 */ 2035, /* 123,D#9 */ 2036, /* 124,E9 */ 2036, /* 125,F9 */ 2037, /* 126,F#9 */ 2038, /* 127,G9 */
 };
 
+// generated with ruby:
+// puts (0...32).map { |i| i < 16 ? 15 : 0 }.map(&:round).each_slice(2).map { |(a, b)| "0x#{a.to_s(16)}#{b.to_s(16)}" }.join(", ")
+static const uint8_t WAVE_TABLE_SQUARE[OSC3_WAV_RAM_SIZE] = {
+    0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+};
+
+// generated with ruby:
+// puts (0...32).map { |i| Math.sin(2*Math::PI*i/32.0) }.map { |v| (v+1)*7.5 }.map(&:round).each_slice(2).map { |(a, b)| "0x#{a.to_s(16)}#{b.to_s(16)}" }.join(", ")
+static const uint8_t WAVE_TABLE_SINE[OSC3_WAV_RAM_SIZE] = {
+    0x89, 0xac, 0xde, 0xef, 0xff, 0xee, 0xdc, 0xa9, 0x86, 0x53, 0x21, 0x10, 0x00, 0x11, 0x23, 0x56
+};
+
+
+// generated with ruby:
+// puts (0...32).map { |v| v / 2 }.each_slice(2).map { |(a, b)| "0x#{a.to_s(16)}#{b.to_s(16)}" }.join(", ")
+static const uint8_t WAVE_TABLE_SAW[OSC3_WAV_RAM_SIZE] = {
+    0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88, 0x99, 0xaa, 0xbb, 0xcc, 0xdd, 0xee, 0xff
+};
+
+// generated with ruby:
+// puts (0...32).map { |v| (v < 16 ? v : 31-v) % 16 }.each_slice(2).map { |(a, b)| "0x#{a.to_s(16)}#{b.to_s(16)}" }.join(", ")
+static const uint8_t WAVE_TABLE_TRIANGLE[OSC3_WAV_RAM_SIZE] = {
+    0x01, 0x23, 0x45, 0x67, 0x89, 0xab, 0xcd, 0xef, 0xfe, 0xdc, 0xba, 0x98, 0x76, 0x54, 0x32, 0x10
+};
+
+// generated with ruby:
+// puts (0...32).map { |v| rand * 15 }.map(&:round).each_slice(2).map { |(a, b)| "0x#{a.to_s(16)}#{b.to_s(16)}" }.join(", ")
+static const uint8_t WAVE_TABLE_NOISE[OSC3_WAV_RAM_SIZE] = {
+    0x0c, 0x8b, 0xed, 0x9e, 0xa5, 0xe6, 0x90, 0x48, 0x65, 0xb4, 0x31, 0x82, 0xe7, 0x80, 0x64, 0x02
+};
+
 void init_common(Osc* osc) {
     osc->noteOffset = 0;
     osc->volume = 0;
@@ -37,30 +68,26 @@ void synth_init(Synth* synth) {
 
     // NR52: Audio master control
     // [7] Audio on/off	 [6:4] __ [3r] CH4 on? [2r] CH3 on? [1r] CH2 on? [0r] CH1 on?
-    apu_setRegister(NR52_REG, (uint8_t)(1 << 7)); // audio on
+    synth->setRegister(NR52_REG, (uint8_t)(1 << 7)); // audio on
     //  NR50: Master volume & VIN panning
     // [7] VIN Left [6:4] Left Volume [3] VIN Right [2:0] Right Volume
-    apu_setRegister(NR50_REG, 0b01110111); // full volume L+R, VIN disabled
+    synth->setRegister(NR50_REG, 0b01110111); // full volume L+R, VIN disabled
     // FF25 — NR51: Sound panning
     //  CH4L CH3L CH2L CH1L CH4R CH3R CH2R CH1R
-    apu_setRegister(NR51_REG, (synth->osc1.common.pan << 0) | (synth->osc2.common.pan << 1));
+    synth->setRegister(NR51_REG, (synth->osc1.common.pan << 0) | (synth->osc2.common.pan << 1));
 
     // NR10: Channel 1 sweep
     // NR11: Channel 1 length timer & duty cycle
-    apu_setRegister(NR11_REG, (synth->osc1.duty << 5) | 50); // set duty cycle, L=50
+    synth->setRegister(NR11_REG, (synth->osc1.duty << 5) | 50); // set duty cycle, L=50
     // NR12: Channel 1 volume & envelope
-    apu_setRegister(NR12_REG, 0b11110000); // full volume, no envelope
+    synth->setRegister(NR12_REG, 0b11110000); // full volume, no envelope
 
     // NR13: Channel 1 period low [write-only]
 }
 
-// void synth_play_note(uint8_t note) {
-//     if (note >= MIDI_NOTE_LOW && note <= 127) {
-//         int16_t period = MIDI_NOTE_NUM_TO_PERIOD[note-MIDI_NOTE_LOW];
-//         NR13_REG = (uint8_t)(period);
-//         NR14_REG = (uint8_t)(period >> 8) | (1 << 7 /* trigger */) | (1 << 6 /* enable len */);
-//     }
-// }
+void synth_stop(Synth* synth) {
+    synth->setRegister(NR52_REG, 0x00); // audio off
+}
 
 // TODO: separate preset-related memory from state machine memory
 // then memcpy presets into synth, reseting state machines

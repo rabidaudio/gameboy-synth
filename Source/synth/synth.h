@@ -45,10 +45,6 @@ extern "C" {
 #define REG_NRX3 2 // period low for osc1+2
 #define REG_NRX4 3 // period high and ctrl for osc1+2
 
-// this is the interface this library uses to control the APU
-extern void apu_setRegister(uint16_t addr, uint8_t value);
-extern uint8_t apu_getRegister(uint16_t addr);
-
 #define SYNTH_OSC1 0
 #define SYNTH_OSC2 1
 #define SYNTH_OSC3 2
@@ -62,6 +58,17 @@ extern uint8_t apu_getRegister(uint16_t addr);
 #define SYNTH_PAN_BOTH 0x11
 #define SYNTH_PAN_L 0x10
 #define SYNTH_PAN_R 0x01
+
+#define SYNTH_ENV_UP (1 << 3)
+#define SYNTH_ENV_DOWN (0 << 3)
+
+// unlike the square and noise waves with velocity of 4 bits,
+// the wave has 2 bits: 00=0%, 01=100%, 10=50%, 11=25%
+#define SYNTH_OSC3_VOLUME_OFF 0x00
+#define SYNTH_OSC3_VOLUME_FULL 0x01
+#define SYNTH_OSC3_VOLUME_50 0x02
+#define SYNTH_OSC3_VOLUME_25 0x03
+
 
 #define SYNTH_CHANNEL_STATE_OMNIMODE (1 << 7)
 #define SYNTH_CHANNEL_STATE_POLYMODE (1 << 6)
@@ -111,12 +118,20 @@ typedef struct {
     // Channel State
     // [7] Omni Mode [6] Poly Mode .. [3] Ch4 enabled [2] Ch3 [1] Ch2 [0] Ch1
     uint8_t channelStates[MIDI_NUM_CHANNELS];
+
+    // // this is the interface this library uses to control the APU
+    void (*setRegister)(uint16_t addr, uint8_t val);
+    uint8_t (*getRegister)(uint16_t addr);
 } Synth;
 
 
 void synth_init(Synth*);
 
+void synth_stop(Synth*);
+
 void synth_handleMidiEvent(Synth*, MidiEvent*);
+
+// void synth_tick(Synth*);
 
 #ifdef __cplusplus
 }
