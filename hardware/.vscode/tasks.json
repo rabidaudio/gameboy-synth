@@ -1,0 +1,16 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Run Make",
+            "type": "shell",
+            "command": "source /Users/personal/projects/gameboy/env.sh && make",
+            "args": [],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": ["$gcc"] // Changes depending on your compiler output
+        }
+    ]
+}

@@ -1,0 +1,18 @@
+https://www.mouser.com/en/Tools/SavedCart/Share?AccessID=4339e60b91 
+
+https://github.com/Gekkio/gb-live32/tree/main
+https://github.com/Gekkio/gb-hardware/tree/main/GB-LIVE32
+https://gbdk.org/docs/api/
+https://gekkio.fi/files/gb-docs/gbctr.pdf
+https://www.printables.com/model/220567-gb-brk-cart32k-a-shell/files
+
+
+
+Features:
+Fixed lengths vs held notes
+full ADSR? or just AR ?
+LFOs:
+    stereo ping pong
+    pitch
+    PWM width
+    volume
