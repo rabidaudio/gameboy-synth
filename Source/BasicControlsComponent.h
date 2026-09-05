@@ -11,7 +11,6 @@
 #pragma once
 
 #include <JuceHeader.h>
-#include "Apu.h"
 
 //==============================================================================
 /*
@@ -22,7 +21,7 @@ class BasicControlsComponent  : public juce::Component,
                                 public juce::ComboBox::Listener
 {
 public:
-    BasicControlsComponent(OSCID id);
+    BasicControlsComponent(size_t id);
     ~BasicControlsComponent() override;
 
     void paint(juce::Graphics&) override;
@@ -33,7 +32,7 @@ public:
     void comboBoxChanged(juce::ComboBox *comboBox) override;
 
 private:
-    OSCID id_;
+    size_t id_;
     juce::ToggleButton enableButton;
     juce::Slider pwmSlider;
     juce::ComboBox voicePicker;

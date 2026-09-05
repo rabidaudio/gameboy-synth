@@ -11,8 +11,14 @@
     <FILE id="DqHiij" name="LICENSE" compile="0" resource="1" file="LICENSE"/>
     <FILE id="ZmNejr" name="README.md" compile="0" resource="1" file="README.md"/>
     <GROUP id="{547F6CC2-A1E7-5511-1621-1739E99809BE}" name="Source">
-      <FILE id="UqmGAr" name="Apu.h" compile="0" resource="0" file="Source/Apu.h"/>
-      <FILE id="P02ZwI" name="Apu.cpp" compile="1" resource="0" file="Source/Apu.cpp"/>
+      <GROUP id="{E423D76D-8B57-EB57-1EBA-2C3FC8D2503A}" name="synth">
+        <FILE id="FqHB4Y" name="midi.h" compile="0" resource="0" file="Source/synth/midi.h"/>
+        <FILE id="WRU90U" name="synth.c" compile="1" resource="0" file="Source/synth/synth.c"/>
+        <FILE id="hvBIwW" name="synth.h" compile="0" resource="0" file="Source/synth/synth.h"/>
+      </GROUP>
+      <FILE id="ypnPvj" name="SynthWrapper.cpp" compile="1" resource="0"
+            file="Source/SynthWrapper.cpp"/>
+      <FILE id="jJlIbe" name="SynthWrapper.h" compile="0" resource="0" file="Source/SynthWrapper.h"/>
       <FILE id="ftvRg5" name="NoiseOscComponent.cpp" compile="1" resource="0"
             file="Source/NoiseOscComponent.cpp"/>
       <FILE id="cZgdK8" name="NoiseOscComponent.h" compile="0" resource="0"

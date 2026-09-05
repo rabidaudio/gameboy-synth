@@ -8,7 +8,6 @@
 
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
-#include "Apu.h"
 
 //==============================================================================
 GameBoySynthAudioProcessor::GameBoySynthAudioProcessor()

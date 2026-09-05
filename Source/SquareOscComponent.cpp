@@ -15,7 +15,7 @@
 
 
 //==============================================================================
-SquareOscComponent::SquareOscComponent(OSCID id) : controls(id)
+SquareOscComponent::SquareOscComponent(size_t id) : controls(id)
 {
     addAndMakeVisible(controls);
 }

@@ -7,131 +7,142 @@ extern "C" {
 
 #include "midi.h"
 
-#ifndef NR50_REG
+#define GB_NR50 0xFF24
+#define GB_NR51 0xFF25
+#define GB_NR52 0xFF26
+#define GB_NR10 0xFF10
+#define GB_NR11 0xFF11
+#define GB_NR12 0xFF12
+#define GB_NR13 0xFF13
+#define GB_NR14 0xFF14
+#define GB_NR21 0xFF16
+#define GB_NR22 0xFF17
+#define GB_NR23 0xFF18
+#define GB_NR24 0xFF19
+#define GB_NR30 0xFF1A
+#define GB_NR31 0xFF1B
+#define GB_NR32 0xFF1C
+#define GB_NR33 0xFF1D
+#define GB_NR34 0xFF1E
+#define GB_NR41 0xFF20
+#define GB_NR42 0xFF21 
+#define GB_NR43 0xFF22
+#define GB_NR44 0xFF23
 
-// if not in GBDK, define the registers
-// define all the register addresses
-#define NR50_REG 0xFF24
-#define NR51_REG 0xFF25
-#define NR52_REG 0xFF26
-#define NR10_REG 0xFF10
-#define NR11_REG 0xFF11
-#define NR12_REG 0xFF12
-#define NR13_REG 0xFF13
-#define NR14_REG 0xFF14
-#define NR21_REG 0xFF16
-#define NR22_REG 0xFF17
-#define NR23_REG 0xFF18
-#define NR24_REG 0xFF19
-#define NR30_REG 0xFF1A
-#define NR31_REG 0xFF1B
-#define NR32_REG 0xFF1C
-#define NR33_REG 0xFF1D
-#define NR34_REG 0xFF1E
-#define NR41_REG 0xFF20
-#define NR42_REG 0xFF21 
-#define NR43_REG 0xFF22
-#define NR44_REG 0xFF23
-
-#endif
+#define SYNTH_NUM_OSCS 4
 
 #define OSC3_WAV_RAM 0xFF30
 #define OSC3_WAV_RAM_SIZE 16 // 32x 4bit samples
-
-#define REG_OSC1 NR11_REG
-#define REG_OSC2 NR21_REG
-#define REG_NRX1 0 // length+duty for osc1+2
-#define REG_NRX2 1 // vol+env for osc1+2
-#define REG_NRX3 2 // period low for osc1+2
-#define REG_NRX4 3 // period high and ctrl for osc1+2
 
 #define SYNTH_OSC1 0
 #define SYNTH_OSC2 1
 #define SYNTH_OSC3 2
 #define SYNTH_OSC4 3
 
+#define REG_OSC1 NR11_REG
+#define REG_OSC2 NR21_REG
+// volume+env for 1,2,4
+#define NRX2(oscid) (GB_NR12 + 5*oscid)
+// period-low for 1,2,3
+#define NRX3(oscid) (GB_NR13 + 5*oscid)
+// trigger,len-enable, period high for 1,2,3
+#define NRX4(oscid) (GB_NR14 + 5*oscid)
+
 #define SYNTH_DUTY_12_5 0x00
 #define SYNTH_DUTY_25 0x01
 #define SYNTH_DUTY_50 0x02
 #define SYNTH_DUTY_75 0x03
 
-#define SYNTH_PAN_BOTH 0x11
-#define SYNTH_PAN_L 0x10
-#define SYNTH_PAN_R 0x01
+
+#define SYNTH_PAN_L (1 << 4)
+#define SYNTH_PAN_R (1 << 0)
+#define SYNTH_PAN_BOTH (SYNTH_PAN_L | SYNTH_PAN_R)
 
 #define SYNTH_ENV_UP (1 << 3)
 #define SYNTH_ENV_DOWN (0 << 3)
 
-// unlike the square and noise waves with velocity of 4 bits,
-// the wave has 2 bits: 00=0%, 01=100%, 10=50%, 11=25%
-#define SYNTH_OSC3_VOLUME_OFF 0x00
-#define SYNTH_OSC3_VOLUME_FULL 0x01
-#define SYNTH_OSC3_VOLUME_50 0x02
-#define SYNTH_OSC3_VOLUME_25 0x03
-
+#define SYNTH_FULL_VOLUME 0x0F // 4 bits
 
 #define SYNTH_CHANNEL_STATE_OMNIMODE (1 << 7)
 #define SYNTH_CHANNEL_STATE_POLYMODE (1 << 6)
 
+// state byte holds note playback state machine:
+// [0] note on or off
+// [1] is in envelope (attack or release)
+// [2] _reserved_
+// [3] if in envelope, is it attack (1) or release (0). matches `SYNTH_ENV_UP/_DOWN`
+// [4] is the note being held until midi release (1), or is it using a fixed length (0)
+#define SYNTH_STATE_OFF 0
+#define SYTNTH_STATE_ON 1
+//#define SYNTH_STATE_ENV_ACTIVE (1 << 1)
+//#define SYNTH_STATE_ENV_UP SYNTH_ENV_UP // or down
+#define SYNTH_STATE_HOLD (1 << 4)
+
+
+/*
+ [Channel]      [Sweep] [Frequency]     [Wave Form] [Length Timer]  [Volume]
+ Square 1       Sweep   Period Counter  Duty        Length Timer    Envelope
+ Square 2               Period Counter  Duty        Length Timer    Envelope
+ Wave                   Period Counter  Wave        Length Timer    Volume
+ Noise                  Period Counter  LFSR        Length Timer    Envelope
+ */
+
+// this is for state that would persist across presets
 typedef struct {
+    // the id of the osc (1-4)
+    uint8_t id;
+    // offset the incoming MIDI note
+    int8_t transpose;
+    uint8_t volume; // 2 bits for osc3 else 4 bits
+    uint8_t pan; // 4 bits, see SYNTH_PAN_*
+    
+    // if 0, keep note active for as long as note is held down
+    // otherwise use the note-length trigger.
+    // ticks at 256Hz, counting up to 64 (CH1, CH2, and CH4) or 256 (CH3)
+    // meaning max length is 250ms or 1s
+    uint8_t length; // 6 bits for osc1,2 4. 8 bits for 3
+    // TODO: can this bit go elsewhere?
+    bool applyVelocity; // if true, adjust volume by current velocity
+    
+    // TODO: union
+    struct {
+        uint8_t duty; // 2 bits
+    } osc12;
+} OscConfig;
+
+// this is for transient state
+typedef struct {
+    // the note currently played on keys (independant of other pitch offsets)
     uint8_t note;
     uint8_t velocity;
     // envelope state
-
-    // for LFOs and pitch bends, the amount to adjust the
-    // period by
-    int16_t pitchOffset;
+    
+    // need to store this separately for pitch bends, portamento, lfos, etc
+    int16_t periodOffset;    
 } OscState;
 
-// settings common to all 4 osc
 typedef struct {
-    // offset the incoming MIDI note
-    int8_t noteOffset;
-    uint8_t volume; // 4 bits
-    uint8_t pan; // 2 bits, SYNTH_PAN_*
-    bool applyVelocity; // if true, adjust volume by current velocity
-    
-    OscState state;
-} Osc;
+    OscConfig confs[SYNTH_NUM_OSCS];
+    OscState states[SYNTH_NUM_OSCS];
+    // store this here so it isn't duplicated
+    uint8_t osc3_wavetable[OSC3_WAV_RAM_SIZE];
 
-typedef struct {
-    Osc common;
-    uint8_t duty; // 2 bits
-    uint8_t envelope; // 4 bits attack, 4 bits release
-} Osc12;
-
-typedef struct {
-    Osc common;
-    uint8_t wavetable[OSC3_WAV_RAM_SIZE];
-} Osc3;
-
-typedef struct {
-    Osc common;
-} Osc4;
-
-typedef struct {
-    Osc12 osc1;
-    Osc12 osc2;
-    // Osc3 osc3;
-    // Osc4 osc4;
-
-    // Channel State
+    // MIDI Channel State
     // [7] Omni Mode [6] Poly Mode .. [3] Ch4 enabled [2] Ch3 [1] Ch2 [0] Ch1
     uint8_t channelStates[MIDI_NUM_CHANNELS];
 
     // // this is the interface this library uses to control the APU
-    void (*setRegister)(uint16_t addr, uint8_t val);
-    uint8_t (*getRegister)(uint16_t addr);
+    void (*writeRegister)(uint16_t addr, uint8_t val);
+    uint8_t (*readRegister)(uint16_t addr);
 } Synth;
-
 
 void synth_init(Synth*);
 
-void synth_stop(Synth*);
-
 void synth_handleMidiEvent(Synth*, MidiEvent*);
 
-// void synth_tick(Synth*);
+// TODO: getter and setter methods for synth params
+
+void synth_stop(Synth*);
 
 #ifdef __cplusplus
 }

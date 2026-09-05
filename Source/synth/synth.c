@@ -1,5 +1,13 @@
 #include "synth.h"
 
+// unlike the square and noise waves with velocity of 4 bits,
+// the wave has 2 bits: 00=0%, 01=100%, 10=50%, 11=25%
+#define SYNTH_OSC3_VOLUME_OFF 0x00
+#define SYNTH_OSC3_VOLUME_FULL 0x01
+#define SYNTH_OSC3_VOLUME_50 0x02
+#define SYNTH_OSC3_VOLUME_25 0x03
+
+// OSC 1+2 only
 // MIDI: 36 to 127 (C2 to G9)
 #define MIDI_NOTE_LOW 36
 // generate via ruby:
@@ -13,6 +21,8 @@ const uint16_t MIDI_NOTE_NUM_TO_PERIOD[] = {
     2017, /* 108,C8 */ 2018, /* 109,C#8 */ 2020, /* 110,D8 */ 2022, /* 111,D#8 */ 2023, /* 112,E8 */ 2025, /* 113,F8 */ 2026, /* 114,F#8 */ 2027, /* 115,G8 */ 2028, /* 116,G#8 */ 2029, /* 117,A8 */ 2030, /* 118,A#8 */ 2031, /* 119,B8 */
     2032, /* 120,C9 */ 2033, /* 121,C#9 */ 2034, /* 122,D9 */ 2035, /* 123,D#9 */ 2036, /* 124,E9 */ 2036, /* 125,F9 */ 2037, /* 126,F#9 */ 2038, /* 127,G9 */
 };
+
+// OSC 3 only
 
 // generated with ruby:
 // puts (0...32).map { |i| i < 16 ? 15 : 0 }.map(&:round).each_slice(2).map { |(a, b)| "0x#{a.to_s(16)}#{b.to_s(16)}" }.join(", ")
@@ -45,22 +55,67 @@ static const uint8_t WAVE_TABLE_NOISE[OSC3_WAV_RAM_SIZE] = {
     0x0c, 0x8b, 0xed, 0x9e, 0xa5, 0xe6, 0x90, 0x48, 0x65, 0xb4, 0x31, 0x82, 0xe7, 0x80, 0x64, 0x02
 };
 
-void init_common(Osc* osc) {
-    osc->noteOffset = 0;
-    osc->volume = 0;
-    osc->pan = SYNTH_PAN_BOTH; // both
+// OSC4
+
+// TODO: midi note to NR43 (shift,width,div)
+
+void synth_writeMaskedRegister(Synth* synth, uint16_t addr, uint8_t val, uint8_t mask) {
+    uint8_t current = synth->readRegister(addr);
+    val = (current & ~mask) | (val & mask); // TODO: is this right?
+    synth->writeRegister(addr, val);
 }
 
-void init_osc12(Osc12* osc) {
-    init_common(&osc->common);
-    osc->duty = SYNTH_DUTY_50;
-    osc->envelope = 0;
+// set a 4 bit volume
+void synth_setVolume(Synth* synth, uint8_t oscid, uint8_t volume) {
+    volume &= 0x0F; // ensure 4 bits
+    if (oscid == SYNTH_OSC3) {
+        volume = volume >> 2;
+        if (volume == 0) synth->confs[SYNTH_OSC3].volume = SYNTH_OSC3_VOLUME_OFF;
+        else if (volume == 1) synth->confs[SYNTH_OSC3].volume = SYNTH_OSC3_VOLUME_25;
+        else if (volume == 2) synth->confs[SYNTH_OSC3].volume = SYNTH_OSC3_VOLUME_50;
+        else synth->confs[SYNTH_OSC3].volume = SYNTH_OSC3_VOLUME_FULL;
+        synth->writeRegister(GB_NR32, synth->confs[SYNTH_OSC3].volume << 5);
+    } else {
+        synth->confs[oscid].volume = volume;
+        // TODO: set now or as part of envelope?
+    }
+}
+
+void synth_setPan(Synth* synth, uint8_t oscid, uint8_t pan) {
+    synth->confs[oscid].pan = pan;
+    synth_writeMaskedRegister(synth, GB_NR51, pan << oscid, SYNTH_PAN_BOTH << oscid);
+}
+
+void synth_setNote(Synth* s, uint8_t oscid, uint8_t note) {
+    s->states[oscid].note = note;
+    // period is 11 bits for osc1,2,3
+    if (oscid == SYNTH_OSC4) {
+        // TODO
+    } else {
+        uint8_t trueNote = note + s->confs[oscid].transpose;
+        uint16_t period = MIDI_NOTE_NUM_TO_PERIOD[trueNote];
+        period += s->states[oscid].periodOffset;
+        // period low
+        s->writeRegister(NRX3(oscid), (uint8_t)(period & 0xFF));
+        // period high and trigger
+        uint8_t lenEnable = s->confs[oscid].length == 0 ? 0 : (1 << 6);
+        s->writeRegister(NRX4(oscid), (uint8_t)(period > 8) | lenEnable | (1 << 7) /*trigger*/);
+    }
 }
 
 void synth_init(Synth* synth) {
-    init_osc12(&synth->osc1);
-    init_osc12(&synth->osc2);
-    // TODO: init 3 and 4
+    // initialize default settings
+    for (uint8_t i = 0; i < SYNTH_NUM_OSCS; i++) {
+        synth_setVolume(synth, i, SYNTH_FULL_VOLUME);
+        synth_setPan(synth, i, SYNTH_PAN_BOTH);
+        synth->confs[i].applyVelocity = false;
+        synth->confs[i].transpose = 0;
+        
+        if (i == SYNTH_OSC1 || i == SYNTH_OSC2) {
+            synth->confs[i].osc12.duty = SYNTH_DUTY_50;
+        }
+    }
+//    memcpy(synth->osc3_wavetable, WAVE_TABLE_SQUARE, OSC3_WAV_RAM_SIZE);
 
     for (uint8_t c = 0; c < MIDI_NUM_CHANNELS; c++) {
         synth->channelStates[c] = 0;
@@ -68,29 +123,30 @@ void synth_init(Synth* synth) {
 
     // NR52: Audio master control
     // [7] Audio on/off	 [6:4] __ [3r] CH4 on? [2r] CH3 on? [1r] CH2 on? [0r] CH1 on?
-    synth->setRegister(NR52_REG, (uint8_t)(1 << 7)); // audio on
+    synth->writeRegister(GB_NR52, (1 << 7)); // audio on
     //  NR50: Master volume & VIN panning
     // [7] VIN Left [6:4] Left Volume [3] VIN Right [2:0] Right Volume
-    synth->setRegister(NR50_REG, 0b01110111); // full volume L+R, VIN disabled
-    // FF25 — NR51: Sound panning
-    //  CH4L CH3L CH2L CH1L CH4R CH3R CH2R CH1R
-    synth->setRegister(NR51_REG, (synth->osc1.common.pan << 0) | (synth->osc2.common.pan << 1));
-
-    // NR10: Channel 1 sweep
-    // NR11: Channel 1 length timer & duty cycle
-    synth->setRegister(NR11_REG, (synth->osc1.duty << 5) | 50); // set duty cycle, L=50
-    // NR12: Channel 1 volume & envelope
-    synth->setRegister(NR12_REG, 0b11110000); // full volume, no envelope
-
-    // NR13: Channel 1 period low [write-only]
+    synth->writeRegister(GB_NR50, 0b01110111); // full volume L+R, VIN disabled
 }
 
-void synth_stop(Synth* synth) {
-    synth->setRegister(NR52_REG, 0x00); // audio off
+void synth_triggerNote(Synth* s, uint8_t oscid) {
+    // TODO: handle envelopes
+    uint8_t trueNote = s->states[oscid].note + s->confs[oscid].transpose;
+    if (oscid == SYNTH_OSC4) {
+        // TODO
+    } else {
+        if (trueNote >= MIDI_NOTE_LOW && trueNote < 127) {
+            uint8_t period = MIDI_NOTE_NUM_TO_PERIOD[trueNote - MIDI_NOTE_LOW];
+            period += s->states[oscid].periodOffset;
+            // set period low
+            s->writeRegister(NRX3(oscid), (uint8_t) (period & 0xFF));
+            // set period high and trigger
+            uint8_t lenEnable = s->confs[oscid].length == 0 ? 0 : (1 << 6);
+            uint8_t periodUpper = (uint8_t)(period >> 8) & 0x07;
+            s->writeRegister(NRX4(oscid), periodUpper|lenEnable|(1<<7) /* trigger */);
+        }
+    }
 }
-
-// TODO: separate preset-related memory from state machine memory
-// then memcpy presets into synth, reseting state machines
 
 void synth_handleMidiEvent(Synth* s, MidiEvent* e) {
     uint8_t channel = midi_getChannel(e);
@@ -123,47 +179,49 @@ void synth_handleMidiEvent(Synth* s, MidiEvent* e) {
     } else if (e-> type == MIDI_EVENT_PROGRAM_CHANGE) {
         // TODO: switch preset
     }
-
-    if (synth_isChannelEnabled(channelState, SYNTH_OSC1)) {
-        synth_commonHandleMidiEvent(&s->osc1.common, e);
+    
+    for (uint8_t oscid = 0; oscid < SYNTH_NUM_OSCS; oscid++) {
+        // TODO: handle polyphony
+        // TODO: handle voice memory
+        OscState* state = &s->states[oscid];
+        OscConfig* conf = &s->confs[oscid];
+        if (e->type == MIDI_EVENT_NOTE_ON) {
+            // immediately change notes
+            state->note = e->note;
+            state->velocity = e->velocity;
+            synth_triggerNote(s, oscid);
+        } else if (e->type == MIDI_EVENT_NOTE_OFF) {
+            // turn off only if note matches
+            if (e->note == state->note) {
+                state->velocity = 0; // ignore velocity value
+            }
+            // TODO: if len==0 stop note
+        } else if (e->type == MIDI_EVENT_NOTE_AFTERTOUCH) {
+            if (e->note == state->note) {
+                state->velocity = e->velocity;
+                // TODO: if velocity volume enabled, update volume
+            }
+        } else if (e->type == MIDI_EVENT_CONTROLLER_EVENT) {
+            if (e->controller == MIDI_CONTROLLER_VOLUME) {
+                synth_setVolume(s, oscid, e->controllerEventValue >> 3); // 7 bits to 4 bits
+            } else if (e->controller == MIDI_CONTROLLER_PAN) {
+                // only support hard-pan settings
+                if (e->controllerEventValue == 0x00) {
+                    synth_setPan(s, oscid, SYNTH_PAN_L);
+                } else if (e->controllerEventValue == 0x3F) {
+                    synth_setPan(s, oscid, SYNTH_PAN_R);
+                } else {
+                    synth_setPan(s, oscid, SYNTH_PAN_BOTH);
+                }
+            } else if (e->controller == MIDI_CONTROLLER_ALL_NOTES_OFF) {
+                // if we got here, we aren't in omni mode
+                state->velocity = 0;
+                // TODO: if len==0 stop note (define synth_updateVelocity)
+            }
+        }
     }
-    if (synth_isChannelEnabled(channelState, SYNTH_OSC2)) {
-        synth_osc12HandleMidiEvent(&s->osc2, e);
-    }
-    // TODO: 3 and 4
 }
 
-void synth_commonHandleMidiEvent(Osc* o, MidiEvent* e) {
-    // TODO: handle polyphony
-    // TODO: handle voice memory
-    if (e->type == MIDI_EVENT_NOTE_ON) {
-        // immediately change notes
-        o->state.note = e->note;
-        o->state.velocity = e->velocity;
-    } else if (e->type == MIDI_EVENT_NOTE_OFF) {
-        if (e->note == o->state.note) {
-            o->state.velocity = 0; // ignore velocity value
-        }
-    } else if (e->type == MIDI_EVENT_NOTE_AFTERTOUCH) {
-        if (e->note == o->state.note) {
-            o->state.velocity = e->velocity;
-        }
-    } else if (e->type == MIDI_EVENT_CONTROLLER_EVENT) {
-        if (e->controller == MIDI_CONTROLLER_VOLUME) {
-            o->volume = e->controllerEventValue >> 3; // 7 bits to 4 bits
-        } else if (e->controller == MIDI_CONTROLLER_PAN) {
-            // only support hard-pan settings
-            if (e->controllerEventValue == 0x00) {
-                o->pan = SYNTH_PAN_L;
-            } else if (e->controllerEventValue == 0x3F) {
-                o->pan = SYNTH_PAN_R;
-            } else {
-                o->pan = SYNTH_PAN_BOTH;
-            }
-        } else if (e->controller == MIDI_CONTROLLER_ALL_NOTES_OFF) {
-            // if we got here, we aren't in omni mode
-            o->state.velocity = e->velocity;
-        }
-    }
-    // TODO set registers immediately or on next audio tick?
+void synth_stop(Synth* synth) {
+    synth->writeRegister(GB_NR52, 0x00); // audio off
 }

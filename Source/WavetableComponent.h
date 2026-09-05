@@ -11,7 +11,8 @@
 #pragma once
 
 #include <JuceHeader.h>
-#include "Apu.h"
+
+#define WAVE_TABLE_SIZE 32
 
 //==============================================================================
 /*

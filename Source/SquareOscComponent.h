@@ -19,7 +19,7 @@
 class SquareOscComponent  : public juce::Component
 {
 public:
-    SquareOscComponent(OSCID id);
+    SquareOscComponent(size_t id);
     ~SquareOscComponent() override;
 
     void paint(juce::Graphics&) override;

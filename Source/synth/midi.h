@@ -43,10 +43,11 @@ extern "C" {
 // timing? clock can't be synchronized, but LFO timers could
 
 // MIDI event, 3 bytes
+// TODO: create union from uint8_t[3]
 typedef struct {
     uint8_t type;
     union {
-        uint16_t data;
+        uint8_t args[2];
         // note on/off, aftertouch
         struct {
             uint8_t note;

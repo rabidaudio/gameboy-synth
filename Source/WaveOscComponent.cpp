@@ -55,18 +55,18 @@ void WaveOscComponent::resized()
 void WaveOscComponent::comboBoxChanged(juce::ComboBox *comboBox)
 {
     jassert(comboBox == &shapePicker);
-    switch (comboBox->getSelectedId()) {
-        case 1:
-            return wavetable.loadDefaultWavetable(WAVE_TABLE_SQUARE);
-        case 2:
-            return wavetable.loadDefaultWavetable(WAVE_TABLE_SINE);
-        case 3:
-            return wavetable.loadDefaultWavetable(WAVE_TABLE_TRIANGLE);
-        case 4:
-            return wavetable.loadDefaultWavetable(WAVE_TABLE_SAW);
-        case 5:
-            return wavetable.loadDefaultWavetable(WAVE_TABLE_NOISE);
-    }
+//    switch (comboBox->getSelectedId()) {
+//        case 1:
+//            return wavetable.loadDefaultWavetable(WAVE_TABLE_SQUARE);
+//        case 2:
+//            return wavetable.loadDefaultWavetable(WAVE_TABLE_SINE);
+//        case 3:
+//            return wavetable.loadDefaultWavetable(WAVE_TABLE_TRIANGLE);
+//        case 4:
+//            return wavetable.loadDefaultWavetable(WAVE_TABLE_SAW);
+//        case 5:
+//            return wavetable.loadDefaultWavetable(WAVE_TABLE_NOISE);
+//    }
 }
 
 void WaveOscComponent::changeListenerCallback(juce::ChangeBroadcaster* source)

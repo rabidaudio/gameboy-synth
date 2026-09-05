@@ -10,7 +10,6 @@
 
 #include <JuceHeader.h>
 #include "BasicControlsComponent.h"
-#include "Apu.h"
 
 //==============================================================================
 
@@ -32,7 +31,7 @@ public:
     PWMRange() : juce::NormalisableRange<double>(0, 100, denormalize, normalize, snap) {}
 };
 
-BasicControlsComponent::BasicControlsComponent(OSCID id) :
+BasicControlsComponent::BasicControlsComponent(size_t id) :
     enableButton("Enable"),
     pwmSlider("PWM"),
     voicePicker("Voice"),
