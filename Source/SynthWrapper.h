@@ -40,7 +40,6 @@ private:
     
 public:
     SynthWrapper();
-    ~SynthWrapper();
     
     static SynthWrapper INSTANCE;
     

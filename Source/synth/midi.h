@@ -45,6 +45,7 @@ extern "C" {
 // MIDI event, 3 bytes
 // TODO: create union from uint8_t[3]
 typedef struct {
+    // [7:4] type [3:0] channel
     uint8_t type;
     union {
         uint8_t args[2];
@@ -68,14 +69,6 @@ typedef struct {
         };
     };
 } MidiEvent;
-
-uint8_t midi_getChannel(MidiEvent* e) {
-    return e->type & 0x0F;
-}
-
-uint8_t midi_getEventType(MidiEvent* e) {
-    return e->type & 0xF0;
-}
 
 #ifdef __cplusplus
 }

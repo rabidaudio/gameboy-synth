@@ -28,8 +28,6 @@ SynthWrapper::SynthWrapper() {
     synth_.readRegister = &apuGetRegister;
 }
 
-SynthWrapper::~SynthWrapper() {}
-
 void SynthWrapper::configure(double sampleRate, int channels) {
     stereo_ = channels != 1;
     if (stereo_) {

@@ -120,6 +120,7 @@ void synth_init(Synth* synth) {
     for (uint8_t c = 0; c < MIDI_NUM_CHANNELS; c++) {
         synth->channelStates[c] = 0;
     }
+    synth->channelStates[0] = (1 << SYNTH_OSC1);
 
     // NR52: Audio master control
     // [7] Audio on/off	 [6:4] __ [3r] CH4 on? [2r] CH3 on? [1r] CH2 on? [0r] CH1 on?
@@ -135,8 +136,8 @@ void synth_triggerNote(Synth* s, uint8_t oscid) {
     if (oscid == SYNTH_OSC4) {
         // TODO
     } else {
-        if (trueNote >= MIDI_NOTE_LOW && trueNote < 127) {
-            uint8_t period = MIDI_NOTE_NUM_TO_PERIOD[trueNote - MIDI_NOTE_LOW];
+        if (trueNote >= MIDI_NOTE_LOW && trueNote <= 127) {
+            uint16_t period = MIDI_NOTE_NUM_TO_PERIOD[trueNote - MIDI_NOTE_LOW];
             period += s->states[oscid].periodOffset;
             // set period low
             s->writeRegister(NRX3(oscid), (uint8_t) (period & 0xFF));
@@ -149,7 +150,7 @@ void synth_triggerNote(Synth* s, uint8_t oscid) {
 }
 
 void synth_handleMidiEvent(Synth* s, MidiEvent* e) {
-    uint8_t channel = midi_getChannel(e);
+    uint8_t channel = e->type & 0x0F;
     uint8_t channelState = s->channelStates[channel];
 
     if (e->type == MIDI_EVENT_CONTROLLER_EVENT) {
@@ -181,6 +182,10 @@ void synth_handleMidiEvent(Synth* s, MidiEvent* e) {
     }
     
     for (uint8_t oscid = 0; oscid < SYNTH_NUM_OSCS; oscid++) {
+        if ((channelState & (1 << oscid)) == 0) {
+            continue; // osc not enabled for this channel
+        }
+        
         // TODO: handle polyphony
         // TODO: handle voice memory
         OscState* state = &s->states[oscid];
