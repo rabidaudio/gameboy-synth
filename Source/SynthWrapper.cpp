@@ -10,11 +10,11 @@
 
 #include "SynthWrapper.h"
 
-void apuSetRegister(uint16_t addr, uint8_t value) {
+void apu_writeRegister(uint16_t addr, uint8_t value) {
     SynthWrapper::INSTANCE.writeRegister(addr, value);
 }
 
-uint8_t apuGetRegister(uint16_t addr) {
+uint8_t apu_readRegister(uint16_t addr) {
     return SynthWrapper::INSTANCE.readRegister(addr);
 }
 
@@ -23,9 +23,6 @@ SynthWrapper::SynthWrapper() {
     buf_ = &sbuf_; // default streo
     clock_ = 0;
     timeToNextFrame_ = CLOCKS_PER_FRAME;
-    
-    synth_.writeRegister = &apuSetRegister;
-    synth_.readRegister = &apuGetRegister;
 }
 
 void SynthWrapper::configure(double sampleRate, int channels) {
@@ -45,7 +42,7 @@ void SynthWrapper::configure(double sampleRate, int channels) {
     // TODO: expose these parameters
     apu_.treble_eq(-20.0); // lower values muffle it more
     buf_->bass_freq(461); // higher values simulate smaller speaker
-    synth_init(&synth_);
+    synth_init();
 }
 
 inline long SynthWrapper::samplesAvailable() {
@@ -108,13 +105,13 @@ void SynthWrapper::handleMIDI(juce::MidiBuffer& midiMessages)
         for (size_t i = 1; i < metadata.numBytes; i++) {
             e.args[i-1] = metadata.data[i];
         }
-        synth_handleMidiEvent(&synth_, &e);
+        synth_handleMidiEvent(&e);
     }
 }
 
 void SynthWrapper::reset()
 {
-    synth_stop(&synth_);
+    synth_stop();
     sbuf_.clear();
     mbuf_.clear();
     clock_ = 0;

@@ -20,16 +20,12 @@ static const gb_time_t CLOCK_SPEED = 4194304;
 static const gb_time_t CLOCKS_PER_INSTRUCTION = 4;
 static const gb_time_t CLOCKS_PER_FRAME = 16384;
 
-void apuSetRegister(uint16_t addr, uint8_t value);
-uint8_t apuGetRegister(uint16_t addr);
-
 // This class bridges JUCE, GB_Apu, and synth together.
 // It has a singleton INSTANCE
 class SynthWrapper
 {
 private:
     Gb_Apu apu_;
-    Synth synth_;
     Stereo_Buffer sbuf_;
     Mono_Buffer mbuf_;
     Multi_Buffer* buf_;
@@ -54,3 +50,7 @@ public:
 private:
     blip_time_t tick(blip_time_t step);
 };
+
+// declare requirements for synth.h
+void apu_writeRegister(uint16_t addr, uint8_t value);
+uint8_t apu_readRegister(uint16_t addr);

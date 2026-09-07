@@ -88,8 +88,6 @@ extern "C" {
 
 // this is for state that would persist across presets
 typedef struct {
-    // the id of the osc (1-4)
-    uint8_t id;
     // offset the incoming MIDI note
     int8_t transpose;
     uint8_t volume; // stored as 8 bits for better resolution. Hardware resolution is 2 bits for osc3 else 4 bits
@@ -130,19 +128,62 @@ typedef struct {
     // MIDI Channel State
     // [7] Omni Mode [6] Poly Mode .. [3] Ch4 enabled [2] Ch3 [1] Ch2 [0] Ch1
     uint8_t channelStates[MIDI_NUM_CHANNELS];
-
-    // // this is the interface this library uses to control the APU
-    void (*writeRegister)(uint16_t addr, uint8_t val);
-    uint8_t (*readRegister)(uint16_t addr);
+    
+    uint8_t masterVolume;
+    int8_t masterPan;
 } Synth;
 
-void synth_init(Synth*);
+// By declaring a single instance, we keep the gameboy arguments minimal.
+// by declaring as extern, we allow the calling code to configure it's memory location
+extern Synth GLOBAL_SYNTH;
+// // this is the interface this library uses to control the APU
+extern void apu_writeRegister(uint16_t addr, uint8_t val);
+extern uint8_t apu_readRegister(uint16_t addr);
 
-void synth_handleMidiEvent(Synth*, MidiEvent*);
+void synth_init(void);
+
+// load the configuration of a preset from memory location into the synth.
+// if data == NULL, loads the default settings
+void synth_loadPreset(uint8_t* data);
+
+// write the current configuration as a preset to the given memory location. Returns number of bytes written
+uint8_t synth_savePreset(uint8_t* data);
+
+/**
+ midiChannel: 0-15
+ flags:
+    `SYNTH_CHANNEL_STATE_OMNIMODE` allow oscillator to respond to all channels
+    `SYNTH_CHANNEL_STATE_POLYMODE` enable polyphonic playback (notes will be round-robined through assigned oscillators)
+    `(1 << SYNTH_OSCx)` to turn on oscillators for the given MIDI channel. An oscillator assigned to multiple channels
+ */
+//void synth_setChannel(Synth*, uint8_t midiChannel, uint8_t flags);
+
+/**
+Volume has resolution of 8 bits but will be scaled down to the oscillator's resolution (4 or 2 bits)
+ */
+void synth_setVolume(uint8_t oscid, uint8_t volume);
+
+/**
+ pan: one of `SYNTH_PAN_*`
+ */
+void synth_setPan(uint8_t oscid, uint8_t pan);
+
+/**
+ Volume has a set resolution of 8 bits. Actual resolution is at most 3 bits, but will be dependant on masterPan as it's the same register.
+ */
+//void synth_setMasterVolume(Synth*, uint8_t volume);
+
+/**
+ Unlike per-oscillator pan, this has a resolution of 4 bits signed. 0=center, -7 = full left, 7=full right.
+ The resolution will be dependant on masterVolume as it's the same register.
+ */
+//void synth_setMasterPan(Synth*, uint8_t oscid, int8_t pan);
+
+void synth_handleMidiEvent(MidiEvent*);
 
 // TODO: getter and setter methods for synth params
 
-void synth_stop(Synth*);
+void synth_stop(void);
 
 #ifdef __cplusplus
 }

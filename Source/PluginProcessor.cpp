@@ -10,6 +10,7 @@
 #include "PluginEditor.h"
 
 SynthWrapper SynthWrapper::INSTANCE;
+Synth GLOBAL_SYNTH = {0};
 
 //==============================================================================
 GameBoySynthAudioProcessor::GameBoySynthAudioProcessor()
