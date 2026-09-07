@@ -65,22 +65,6 @@ void synth_writeMaskedRegister(Synth* synth, uint16_t addr, uint8_t val, uint8_t
     synth->writeRegister(addr, val);
 }
 
-// set a 4 bit volume
-void synth_setVolume(Synth* synth, uint8_t oscid, uint8_t volume) {
-    volume &= 0x0F; // ensure 4 bits
-    if (oscid == SYNTH_OSC3) {
-        volume = volume >> 2;
-        if (volume == 0) synth->confs[SYNTH_OSC3].volume = SYNTH_OSC3_VOLUME_OFF;
-        else if (volume == 1) synth->confs[SYNTH_OSC3].volume = SYNTH_OSC3_VOLUME_25;
-        else if (volume == 2) synth->confs[SYNTH_OSC3].volume = SYNTH_OSC3_VOLUME_50;
-        else synth->confs[SYNTH_OSC3].volume = SYNTH_OSC3_VOLUME_FULL;
-        synth->writeRegister(GB_NR32, synth->confs[SYNTH_OSC3].volume << 5);
-    } else {
-        synth->confs[oscid].volume = volume;
-        // TODO: set now or as part of envelope?
-    }
-}
-
 void synth_setPan(Synth* synth, uint8_t oscid, uint8_t pan) {
     synth->confs[oscid].pan = pan;
     synth_writeMaskedRegister(synth, GB_NR51, pan << oscid, SYNTH_PAN_BOTH << oscid);
@@ -106,7 +90,7 @@ void synth_setNote(Synth* s, uint8_t oscid, uint8_t note) {
 void synth_init(Synth* synth) {
     // initialize default settings
     for (uint8_t i = 0; i < SYNTH_NUM_OSCS; i++) {
-        synth_setVolume(synth, i, SYNTH_FULL_VOLUME);
+        synth->confs[i].volume = 0xFF; // full volume
         synth_setPan(synth, i, SYNTH_PAN_BOTH);
         synth->confs[i].applyVelocity = false;
         synth->confs[i].transpose = 0;
@@ -115,38 +99,77 @@ void synth_init(Synth* synth) {
             synth->confs[i].osc12.duty = SYNTH_DUTY_50;
         }
     }
+    // disable period sweep on osc 1
+    synth->writeRegister(GB_NR10, 0);
+    
 //    memcpy(synth->osc3_wavetable, WAVE_TABLE_SQUARE, OSC3_WAV_RAM_SIZE);
 
     for (uint8_t c = 0; c < MIDI_NUM_CHANNELS; c++) {
         synth->channelStates[c] = 0;
     }
-    synth->channelStates[0] = (1 << SYNTH_OSC1);
+    synth->channelStates[0] = (1 << SYNTH_OSC1) | (1 << SYNTH_OSC2);
+    synth->confs[SYNTH_OSC2].transpose = 7; // 5th above
 
     // NR52: Audio master control
     // [7] Audio on/off	 [6:4] __ [3r] CH4 on? [2r] CH3 on? [1r] CH2 on? [0r] CH1 on?
-    synth->writeRegister(GB_NR52, (1 << 7)); // audio on
+    synth->writeRegister(GB_NR52, 0x8F); // audio on
     //  NR50: Master volume & VIN panning
     // [7] VIN Left [6:4] Left Volume [3] VIN Right [2:0] Right Volume
-    synth->writeRegister(GB_NR50, 0b01110111); // full volume L+R, VIN disabled
+    synth->writeRegister(GB_NR50, 0x77); // full volume L+R, VIN disabled
 }
 
 void synth_triggerNote(Synth* s, uint8_t oscid) {
-    // TODO: handle envelopes
-    uint8_t trueNote = s->states[oscid].note + s->confs[oscid].transpose;
+    OscState* state = &s->states[oscid];
+    OscConfig* conf = &s->confs[oscid];
+    uint8_t trueNote =state->note + conf->transpose;
     if (oscid == SYNTH_OSC4) {
         // TODO
     } else {
         if (trueNote >= MIDI_NOTE_LOW && trueNote <= 127) {
             uint16_t period = MIDI_NOTE_NUM_TO_PERIOD[trueNote - MIDI_NOTE_LOW];
-            period += s->states[oscid].periodOffset;
+            period += state->periodOffset;
+            // volume
+            uint8_t volume = conf->volume;
+            if (conf->applyVelocity) {
+                // TODO: apply velocity
+                // multiplication/division is too expensive for the gameboy
+                // since we only have 2-4 bits of volume resolution anyway, a precise
+                // scaling is not important.
+                // instead, we can take the source volume and divide it by 2
+                // for the most significant bit of velocity.
+                // velocity == 0x7F -> no shift
+                // velocity == 0x3F -> shift 1
+                // velocity == 0x1F -> shift 2
+                // velocity == 0x0F -> shift 3
+                // velocity == 0x07 -> shift 4
+                // velocity == 0x03 -> shift 5
+                // velocity == 0x01 -> shift 6
+                // velocity == 0 -> set volume to zero
+            }
+            if (oscid == SYNTH_OSC3) {
+                // TODO: apply 2 bit velocity
+//                if (volume == 0) synth->confs[SYNTH_OSC3].volume = SYNTH_OSC3_VOLUME_OFF;
+//                else if (volume == 1) synth->confs[SYNTH_OSC3].volume = SYNTH_OSC3_VOLUME_25;
+//                else if (volume == 2) synth->confs[SYNTH_OSC3].volume = SYNTH_OSC3_VOLUME_50;
+//                else synth->confs[SYNTH_OSC3].volume = SYNTH_OSC3_VOLUME_FULL;
+//                synth->writeRegister(GB_NR32, synth->confs[SYNTH_OSC3].volume << 5);
+            } else {
+                // TODO: compute envelope
+                uint8_t envelope = 0x00;
+                s->writeRegister(NRX2(oscid), (volume & 0xF0) | envelope);
+            }
             // set period low
             s->writeRegister(NRX3(oscid), (uint8_t) (period & 0xFF));
             // set period high and trigger
-            uint8_t lenEnable = s->confs[oscid].length == 0 ? 0 : (1 << 6);
+            uint8_t lenEnable = conf->length == 0 ? 0 : (1 << 6);
             uint8_t periodUpper = (uint8_t)(period >> 8) & 0x07;
             s->writeRegister(NRX4(oscid), periodUpper|lenEnable|(1<<7) /* trigger */);
         }
     }
+}
+
+void synth_stopNote(Synth* s, uint8_t oscid) {
+    s->writeRegister(NRX2(oscid), 0x00);
 }
 
 void synth_handleMidiEvent(Synth* s, MidiEvent* e) {
@@ -159,7 +182,14 @@ void synth_handleMidiEvent(Synth* s, MidiEvent* e) {
         if (e->controller == MIDI_CONTROLLER_BANK_SELECT) {
             channelState = (channelState & 0xF0) | (e->controllerEventValue | 0x0F);
         } else if (e->controller == MIDI_CONTROLLER_ALL_SOUND_OFF) {
-            // TODO: disable all oscillators immediately
+            // disable all channels
+            s->writeRegister(GB_NR52, 0x00);
+            // stop all notes
+            for (uint8_t i = 0; i < SYNTH_NUM_OSCS; i++) {
+                synth_stopNote(s, i);
+            }
+            // re-enable channels
+            s->writeRegister(GB_NR52, 0x8F);
         } else if (e->controller == MIDI_CONTROLLER_ALL_NOTES_OFF) {
             if (channelState & SYNTH_CHANNEL_STATE_OMNIMODE) {
                 // should be ignored in omni mode
@@ -199,16 +229,21 @@ void synth_handleMidiEvent(Synth* s, MidiEvent* e) {
             // turn off only if note matches
             if (e->note == state->note) {
                 state->velocity = 0; // ignore velocity value
+                // if not using length, stop the note
+                if (conf->length == 0) synth_stopNote(s, oscid);
             }
-            // TODO: if len==0 stop note
         } else if (e->type == MIDI_EVENT_NOTE_AFTERTOUCH) {
             if (e->note == state->note) {
                 state->velocity = e->velocity;
                 // TODO: if velocity volume enabled, update volume
+                if (conf->applyVelocity) {
+                    // retrigger with updated volume
+                    synth_triggerNote(s, oscid);
+                }
             }
         } else if (e->type == MIDI_EVENT_CONTROLLER_EVENT) {
             if (e->controller == MIDI_CONTROLLER_VOLUME) {
-                synth_setVolume(s, oscid, e->controllerEventValue >> 3); // 7 bits to 4 bits
+                conf->volume = e->controllerEventValue << 1; // 7 bits to 8 bits
             } else if (e->controller == MIDI_CONTROLLER_PAN) {
                 // only support hard-pan settings
                 if (e->controllerEventValue == 0x00) {
@@ -221,7 +256,7 @@ void synth_handleMidiEvent(Synth* s, MidiEvent* e) {
             } else if (e->controller == MIDI_CONTROLLER_ALL_NOTES_OFF) {
                 // if we got here, we aren't in omni mode
                 state->velocity = 0;
-                // TODO: if len==0 stop note (define synth_updateVelocity)
+                if (conf->length == 0) synth_stopNote(s, oscid);
             }
         }
     }

@@ -16,3 +16,7 @@ LFOs:
     pitch
     PWM width
     volume
+
+
+master volume
+master pan

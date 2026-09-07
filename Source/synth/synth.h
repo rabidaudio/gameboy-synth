@@ -15,6 +15,7 @@ extern "C" {
 #define GB_NR12 0xFF12
 #define GB_NR13 0xFF13
 #define GB_NR14 0xFF14
+#define GB_NR15 0xFF15 // not an audio register?
 #define GB_NR21 0xFF16
 #define GB_NR22 0xFF17
 #define GB_NR23 0xFF18
@@ -61,8 +62,6 @@ extern "C" {
 #define SYNTH_ENV_UP (1 << 3)
 #define SYNTH_ENV_DOWN (0 << 3)
 
-#define SYNTH_FULL_VOLUME 0x0F // 4 bits
-
 #define SYNTH_CHANNEL_STATE_OMNIMODE (1 << 7)
 #define SYNTH_CHANNEL_STATE_POLYMODE (1 << 6)
 
@@ -93,7 +92,7 @@ typedef struct {
     uint8_t id;
     // offset the incoming MIDI note
     int8_t transpose;
-    uint8_t volume; // 2 bits for osc3 else 4 bits
+    uint8_t volume; // stored as 8 bits for better resolution. Hardware resolution is 2 bits for osc3 else 4 bits
     uint8_t pan; // 4 bits, see SYNTH_PAN_*
     
     // if 0, keep note active for as long as note is held down
@@ -102,6 +101,7 @@ typedef struct {
     // meaning max length is 250ms or 1s
     uint8_t length; // 6 bits for osc1,2 4. 8 bits for 3
     // TODO: can this bit go elsewhere?
+    // TODO: applyVelocity implies len==0
     bool applyVelocity; // if true, adjust volume by current velocity
     
     // TODO: union
