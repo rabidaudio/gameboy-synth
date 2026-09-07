@@ -82,11 +82,7 @@ void synth_loadDefaults(void) {
     for (uint8_t c = 0; c < MIDI_NUM_CHANNELS; c++) {
         GLOBAL_SYNTH.channelStates[c] = 0;
     }
-    // TODO: useful for testing, probably not good defaults
-    GLOBAL_SYNTH.channelStates[0] = (1 << SYNTH_OSC1) | (1 << SYNTH_OSC2);
-    GLOBAL_SYNTH.confs[SYNTH_OSC2].transpose = 7; // 5th above
-    GLOBAL_SYNTH.confs[SYNTH_OSC1].length = 52;
-    GLOBAL_SYNTH.confs[SYNTH_OSC2].length = 26;
+    GLOBAL_SYNTH.channelStates[0] = (1 << SYNTH_OSC1);
 }
 
 void synth_init(void) {
@@ -130,6 +126,11 @@ void synth_setLength(uint8_t oscid, uint8_t length) {
         length = 63; // clamp to max value
     }
     GLOBAL_SYNTH.confs[oscid].length = length;
+    // NOTE: no register changes, takes effect on next note
+}
+
+void synth_setTranspose(uint8_t oscid, int8_t offset) {
+    GLOBAL_SYNTH.confs[oscid].transpose = offset;
     // NOTE: no register changes, takes effect on next note
 }
 

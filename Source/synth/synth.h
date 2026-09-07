@@ -189,10 +189,21 @@ void synth_setPan(uint8_t oscid, uint8_t pan);
 void synth_setLength(uint8_t oscid, uint8_t length);
 
 /**
+ Transpose an incoming number by a number of chromatic steps. Will wrap around.
+ Note that supported note ranges are 36 to 127 inclusive for osc1-3.  If note after offset is outside
+ this range the note will not sound.
+ 
+ Takes effect on next note.
+ */
+void synth_setTranspose(uint8_t oscid, int8_t offset);
+
+/**
  Set duty cycle for osc1 and 2 to one of `SYNTH_DUTY_*`. Ignored for osc3 and 4.
  Changes immediately, which could cause transient spikes or phasing issues.
  */
 void synth_setDutyCycle(uint8_t oscid, uint8_t dutyCycle);
+
+void synth_setNote(uint8_t oscid, uint8_t note);
 
 void synth_triggerNote(uint8_t oscid);
 
