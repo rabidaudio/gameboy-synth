@@ -11,6 +11,25 @@
 // MIDI: 36 to 127 (C2 to G9)
 #define MIDI_NOTE_LOW 36
 // generate via ruby:
+/*
+# midi notes 0-127. midi note 0 = C-1. A4 is note 69 (nice)
+note_names = (0..127).map { |n| %w(C C# D D# E F F# G G# A A# B)[n % 12] + ((n / 12)-1).to_s }
+# For A4, n = 0 -> 440 * 2^(0/12) = 440 Hz.
+# n = (octave * 12) + semitones[key] - ((4 * 12) + semitones['A'])
+# 440.0 * (2.0 ** (n / 12.0))
+note_pitches = (0..127).map { |n| 440.0 * 2 ** ((n-69)/12.0) }
+# Hz = 131072/(2048-period)
+# period = (-131072.0 / f)+2048
+# where period is a signed 11bit integer (0 to 2042)
+# all_frequencies = (0..2047).map { |p| 131072.0/(2048-p)}
+# hz = 440*2^(n-12) -> hz/440=2^(n-12) -> log2(hz/440)-12=n
+# because the lowest we can go is 64Hz, we'll start the lookup table at C2 (36)
+start = 36
+note_names = note_names[start..]
+note_pitches = note_pitches[start..]
+periods = note_pitches.map { |f| ((-131072.0 / f)+2048).round }
+puts periods.each_with_index.map { |p, i| "#{p}," }.each_slice(12).map { |s| s.join(" ") }.join("\n")
+*/
 const uint16_t MIDI_NOTE_NUM_TO_PERIOD[] = {
     44, /* 36,C2 */ 157, /* 37,C#2 */ 263, /* 38,D2 */ 363, /* 39,D#2 */ 457, /* 40,E2 */ 547, /* 41,F2 */ 631, /* 42,F#2 */ 711, /* 43,G2 */ 786, /* 44,G#2 */ 856, /* 45,A2 */ 923, /* 46,A#2 */ 986, /* 47,B2 */
     1046, /* 48,C3 */ 1102, /* 49,C#3 */ 1155, /* 50,D3 */ 1205, /* 51,D#3 */ 1253, /* 52,E3 */ 1297, /* 53,F3 */ 1339, /* 54,F#3 */ 1379, /* 55,G3 */ 1417, /* 56,G#3 */ 1452, /* 57,A3 */ 1486, /* 58,A#3 */ 1517, /* 59,B3 */
@@ -69,9 +88,9 @@ void synth_loadDefaults(void) {
     // initialize default settings
     for (uint8_t i = 0; i < SYNTH_NUM_OSCS; i++) {
         GLOBAL_SYNTH.confs[i].volume = 0xFF; // full volume
-        GLOBAL_SYNTH.confs[i].applyVelocity = false;
+        GLOBAL_SYNTH.confs[i].channelState = SYNTH_CHANNEL_STATE_HOLD; // enabled=off, poly=off, velocityMode=off
         GLOBAL_SYNTH.confs[i].transpose = 0;
-        GLOBAL_SYNTH.confs[i].length = SYNTH_LENGTH_HOLD; // disable length
+        GLOBAL_SYNTH.confs[i].length = 0;
     }
     GLOBAL_SYNTH.pan = 0xFF; // set pan center for all osc
     apu_writeRegister(GB_NR51, 0xFF);
@@ -80,10 +99,8 @@ void synth_loadDefaults(void) {
     synth_setDutyCycle(SYNTH_OSC2, SYNTH_DUTY_50);
 //    memcpy(synth->osc3_wavetable, WAVE_TABLE_SQUARE, OSC3_WAV_RAM_SIZE);
 
-    for (uint8_t c = 0; c < MIDI_NUM_CHANNELS; c++) {
-        GLOBAL_SYNTH.channelStates[c] = 0;
-    }
-    GLOBAL_SYNTH.channelStates[0] = (1 << SYNTH_OSC1);
+    // turn on osc1 for MIDI channel 1
+    GLOBAL_SYNTH.confs[SYNTH_OSC1].channelState |= SYNTH_CHANNEL_STATE_ENABLED;
 }
 
 void synth_init(void) {
@@ -112,6 +129,10 @@ uint8_t synth_savePreset(uint8_t* data) {
     return 0;
 }
 
+TARGET_INLINE void synth_setChannel(uint8_t oscid, uint8_t channelState) {
+    GLOBAL_SYNTH.confs[oscid].channelState = channelState;
+}
+
 TARGET_INLINE void synth_setVolume(uint8_t oscid, uint8_t volume) {
     GLOBAL_SYNTH.confs[oscid].volume = volume;
     // NOTE: no register changes, takes effect on next note
@@ -136,12 +157,6 @@ TARGET_INLINE void synth_setLength(uint8_t oscid, uint8_t length) {
 TARGET_INLINE void synth_setTranspose(uint8_t oscid, int8_t offset) {
     GLOBAL_SYNTH.confs[oscid].transpose = offset;
     // NOTE: no register changes, takes effect on next note
-}
-
-TARGET_INLINE bool synth_holdMode(uint8_t oscid) {
-    uint8_t len = GLOBAL_SYNTH.confs[oscid].length;
-    if (oscid == SYNTH_OSC3) return len == 0;
-    return (len & 0x1F) == 0;
 }
 
 void synth_setDutyCycle(uint8_t oscid, uint8_t dutyCycle) {
@@ -169,7 +184,7 @@ void synth_triggerNote(uint8_t oscid) {
             period += state->periodOffset;
             // volume
             uint8_t volume = conf->volume;
-            if (conf->applyVelocity) {
+            if (conf->channelState & SYNTH_CHANNEL_STATE_VELOCITY) {
                 // TODO: apply velocity
                 // multiplication/division is too expensive for the gameboy
                 // since we only have 2-4 bits of volume resolution anyway, a precise
@@ -186,7 +201,7 @@ void synth_triggerNote(uint8_t oscid) {
                 // velocity == 0 -> set volume to zero
             }
             // configure length
-            uint8_t lenEnable = synth_holdMode(oscid) ? 0 : (1 << 6);
+            uint8_t lenEnable = (conf->channelState & SYNTH_CHANNEL_STATE_HOLD) ? 0 : (1 << 6);
             if (lenEnable) {
                 apu_writeRegister(NRx1(oscid), conf->length);
             }
@@ -217,13 +232,18 @@ TARGET_INLINE void synth_stopNote(uint8_t oscid) {
 
 void synth_handleMidiEvent(MidiEvent* e) {
     uint8_t channel = e->type & 0x0F;
-    uint8_t channelState = GLOBAL_SYNTH.channelStates[channel];
 
     if (e->type == MIDI_EVENT_CONTROLLER_EVENT) {
         // rather than banks, this controls which oscillators are enabled
         // for this channel
         if (e->controller == MIDI_CONTROLLER_BANK_SELECT) {
-            channelState = (channelState & 0xF0) | (e->controllerEventValue | 0x0F);
+            for (uint8_t oscid = 0; oscid < SYNTH_NUM_OSCS; oscid++) {
+                uint8_t channelState = GLOBAL_SYNTH.confs[oscid].channelState;
+                bool enabled = e->controllerEventValue & (1 << oscid);
+                channelState = (channelState & 0x7F) | (enabled ? SYNTH_CHANNEL_STATE_ENABLED : 0);
+                GLOBAL_SYNTH.confs[oscid].channelState = channelState;
+            }
+            return;
         } else if (e->controller == MIDI_CONTROLLER_ALL_SOUND_OFF) {
             // disable all channels
             apu_writeRegister(GB_NR52, 0x00);
@@ -233,29 +253,17 @@ void synth_handleMidiEvent(MidiEvent* e) {
             }
             // re-enable channels
             apu_writeRegister(GB_NR52, 0x8F);
-        } else if (e->controller == MIDI_CONTROLLER_ALL_NOTES_OFF) {
-            if (channelState & SYNTH_CHANNEL_STATE_OMNIMODE) {
-                // should be ignored in omni mode
-                return;
-            }
-            // otherwise, channel-specific code will turn off
-        } else if (e->controller == MIDI_CONTROLLER_OMNI_MODE_ON) {
-            channelState |= SYNTH_CHANNEL_STATE_OMNIMODE;
-        } else if (e->controller == MIDI_CONTROLLER_OMNI_MODE_OFF) {
-            channelState &= ~SYNTH_CHANNEL_STATE_OMNIMODE;
-        } else if (e->controller == MIDI_CONTROLLER_MONO_MODE) {
-            channelState |= SYNTH_CHANNEL_STATE_POLYMODE;
-        } else if (e->controller == MIDI_CONTROLLER_POLY_MODE) {
-            channelState &= ~SYNTH_CHANNEL_STATE_POLYMODE;
+            return;
         }
-        // update channel state
-        GLOBAL_SYNTH.channelStates[channel] = channelState;
     } else if (e-> type == MIDI_EVENT_PROGRAM_CHANGE) {
         // TODO: switch preset
+        return;
     }
     
     for (uint8_t oscid = 0; oscid < SYNTH_NUM_OSCS; oscid++) {
-        if ((channelState & (1 << oscid)) == 0) {
+        uint8_t channelState = GLOBAL_SYNTH.confs[oscid].channelState;
+
+        if ((channelState & SYNTH_CHANNEL_STATE_ENABLED) == 0) {
             continue; // osc not enabled for this channel
         }
         
@@ -273,14 +281,15 @@ void synth_handleMidiEvent(MidiEvent* e) {
             if (e->note == state->note) {
                 state->velocity = 0; // ignore velocity value
                 // if not using length, stop the note
-                if (synth_holdMode(oscid)) synth_stopNote(oscid);
+                if (conf->channelState & SYNTH_CHANNEL_STATE_HOLD) synth_stopNote(oscid);
             }
         } else if (e->type == MIDI_EVENT_NOTE_AFTERTOUCH) {
             if (e->note == state->note) {
                 state->velocity = e->velocity;
                 // TODO: if velocity volume enabled, update volume
-                if (conf->applyVelocity) {
+                if (channelState & SYNTH_CHANNEL_STATE_VELOCITY) {
                     // retrigger with updated volume
+                    // TODO: re-trigger needs to not apply envelope
                     synth_triggerNote(oscid);
                 }
             }
@@ -297,9 +306,13 @@ void synth_handleMidiEvent(MidiEvent* e) {
                     synth_setPan(oscid, SYNTH_PAN_BOTH);
                 }
             } else if (e->controller == MIDI_CONTROLLER_ALL_NOTES_OFF) {
-                // if we got here, we aren't in omni mode
                 state->velocity = 0;
-                if (synth_holdMode(oscid)) synth_stopNote(oscid);
+                if (channelState & SYNTH_CHANNEL_STATE_HOLD)
+                    synth_stopNote(oscid);
+            } else if (e->controller == MIDI_CONTROLLER_MONO_MODE) {
+                GLOBAL_SYNTH.confs[oscid].channelState &= ~SYNTH_CHANNEL_STATE_POLYMODE; // disable poly
+            } else if (e->controller == MIDI_CONTROLLER_POLY_MODE) {
+                GLOBAL_SYNTH.confs[oscid].channelState |= SYNTH_CHANNEL_STATE_POLYMODE; // enable poly
             }
         }
     }

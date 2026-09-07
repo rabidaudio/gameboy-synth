@@ -69,10 +69,10 @@ extern "C" {
 #define SYNTH_ENV_UP (1 << 3)
 #define SYNTH_ENV_DOWN (0 << 3)
 
-#define SYNTH_CHANNEL_STATE_OMNIMODE (1 << 7)
+#define SYNTH_CHANNEL_STATE_ENABLED (1 << 7)
 #define SYNTH_CHANNEL_STATE_POLYMODE (1 << 6)
-
-#define SYNTH_LENGTH_HOLD 0
+#define SYNTH_CHANNEL_STATE_HOLD (1 << 5)
+#define SYNTH_CHANNEL_STATE_VELOCITY (1 << 4)
 
 // state byte holds note playback state machine:
 // [0] note on or off
@@ -80,11 +80,8 @@ extern "C" {
 // [2] _reserved_
 // [3] if in envelope, is it attack (1) or release (0). matches `SYNTH_ENV_UP/_DOWN`
 // [4] is the note being held until midi release (1), or is it using a fixed length (0)
-#define SYNTH_STATE_OFF 0
-#define SYTNTH_STATE_ON 1
 //#define SYNTH_STATE_ENV_ACTIVE (1 << 1)
 //#define SYNTH_STATE_ENV_UP SYNTH_ENV_UP // or down
-#define SYNTH_STATE_HOLD (1 << 4)
 
 
 /*
@@ -107,14 +104,14 @@ typedef struct {
     // meaning max length is 250ms or 1s
     // includes duty for osc1+2
     uint8_t length; // 6 bits for osc1,2 4. 8 bits for 3
-    // TODO: can this bit go elsewhere?
-    // TODO: applyVelocity implies len==0
-    bool applyVelocity; // if true, adjust volume by current velocity
+
+    // [7] osc enabled [6] poly mode [5] hold mode [4] apply velocity mode [3:0] assigned MIDI channel 1-16
+    uint8_t channelState;
 } OscConfig;
 
 // this is for transient state
 typedef struct {
-    // the note currently played on keys (independant of other pitch offsets)
+    // the note currently played on keys (independent of other pitch offsets)
     uint8_t note;
     uint8_t velocity;
     // envelope state
@@ -128,10 +125,6 @@ typedef struct {
     OscState states[SYNTH_NUM_OSCS];
     // store this here so it isn't duplicated
     uint8_t osc3_wavetable[OSC3_WAV_RAM_SIZE];
-
-    // MIDI Channel State
-    // [7] Omni Mode [6] Poly Mode .. [3] Ch4 enabled [2] Ch3 [1] Ch2 [0] Ch1
-    uint8_t channelStates[MIDI_NUM_CHANNELS];
     
     uint8_t pan; // 4 bits, shifted for each osc, see SYNTH_PAN_*
     uint8_t masterVolume;
@@ -154,14 +147,7 @@ void synth_loadPreset(uint8_t* data);
 // write the current configuration as a preset to the given memory location. Returns number of bytes written
 uint8_t synth_savePreset(uint8_t* data);
 
-/**
- midiChannel: 0-15
- flags:
-    `SYNTH_CHANNEL_STATE_OMNIMODE` allow oscillator to respond to all channels
-    `SYNTH_CHANNEL_STATE_POLYMODE` enable polyphonic playback (notes will be round-robined through assigned oscillators)
-    `(1 << SYNTH_OSCx)` to turn on oscillators for the given MIDI channel. An oscillator assigned to multiple channels
- */
-//void synth_setChannel(Synth*, uint8_t midiChannel, uint8_t flags);
+void synth_setChannel(uint8_t oscid, uint8_t channelState);
 
 /**
  Volume has resolution of 8 bits but will be scaled down to the oscillator's resolution (4 or 2 bits).

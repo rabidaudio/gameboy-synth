@@ -41,3 +41,18 @@ only work in hold mode
 8. finish VST UI
 9. build GB UI
 10. build gamelink->midi interface
+
+key-split mode
+
+
+SEE MIDI Modes http://midi.teragonaudio.com/tech/midispec.htm
+
+Omni-mode is unsupported. Get the same effect by assigning all osc to the same channel
+MultiTimbral mode (poly off, default):
+    each osc is assigned to a MIDI channel. each osc is monophonic, playing the most recent note received
+Poly mode:
+    each osc is assigned to a MIDI channel. within that channel, notes are polyphonic, switching between each assigned osc.
+    if only one osc is assigned to the channel, it's effectively monophonic (mode 1)
+
+SynthConf
+    channelState: [7] enabled [6] poly_mode _ _ [3:0] channel
