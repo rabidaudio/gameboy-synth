@@ -40,14 +40,14 @@ extern "C" {
 #define SYNTH_OSC3 2
 #define SYNTH_OSC4 3
 
-#define REG_OSC1 NR11_REG
-#define REG_OSC2 NR21_REG
+// duty[2]+len[6] for 1,2, len[8] for 3, len[6] for 4
+#define NRx1(oscid) (GB_NR11 + 5*oscid)
 // volume+env for 1,2,4
-#define NRX2(oscid) (GB_NR12 + 5*oscid)
+#define NRx2(oscid) (GB_NR12 + 5*oscid)
 // period-low for 1,2,3
-#define NRX3(oscid) (GB_NR13 + 5*oscid)
+#define NRx3(oscid) (GB_NR13 + 5*oscid)
 // trigger,len-enable, period high for 1,2,3
-#define NRX4(oscid) (GB_NR14 + 5*oscid)
+#define NRx4(oscid) (GB_NR14 + 5*oscid)
 
 #define SYNTH_DUTY_12_5 0x00
 #define SYNTH_DUTY_25 0x01
@@ -64,6 +64,8 @@ extern "C" {
 
 #define SYNTH_CHANNEL_STATE_OMNIMODE (1 << 7)
 #define SYNTH_CHANNEL_STATE_POLYMODE (1 << 6)
+
+#define SYNTH_LENGTH_HOLD 0
 
 // state byte holds note playback state machine:
 // [0] note on or off
@@ -97,15 +99,11 @@ typedef struct {
     // otherwise use the note-length trigger.
     // ticks at 256Hz, counting up to 64 (CH1, CH2, and CH4) or 256 (CH3)
     // meaning max length is 250ms or 1s
+    // includes duty for osc1+2
     uint8_t length; // 6 bits for osc1,2 4. 8 bits for 3
     // TODO: can this bit go elsewhere?
     // TODO: applyVelocity implies len==0
     bool applyVelocity; // if true, adjust volume by current velocity
-    
-    // TODO: union
-    struct {
-        uint8_t duty; // 2 bits
-    } osc12;
 } OscConfig;
 
 // this is for transient state
@@ -159,7 +157,9 @@ uint8_t synth_savePreset(uint8_t* data);
 //void synth_setChannel(Synth*, uint8_t midiChannel, uint8_t flags);
 
 /**
-Volume has resolution of 8 bits but will be scaled down to the oscillator's resolution (4 or 2 bits)
+ Volume has resolution of 8 bits but will be scaled down to the oscillator's resolution (4 or 2 bits).
+ 
+ Takes effect on next note.
  */
 void synth_setVolume(uint8_t oscid, uint8_t volume);
 
@@ -178,6 +178,23 @@ void synth_setPan(uint8_t oscid, uint8_t pan);
  The resolution will be dependant on masterVolume as it's the same register.
  */
 //void synth_setMasterPan(Synth*, uint8_t oscid, int8_t pan);
+
+/**
+ Set the hold time for the note. If set to `SYNTH_LENGTH_HOLD`, is held for as long as the note is held down. Otherwise,
+ for Osc 1, 2, and 4: 6 bits, number of 256Hz ticks (i.e. ~4ms to ~246ms)
+ for Osc 3: 8 bits, number of 256Hz ticks (i.e. ~4ms to ~1s)
+ 
+ Takes effect on next note.
+ */
+void synth_setLength(uint8_t oscid, uint8_t length);
+
+/**
+ Set duty cycle for osc1 and 2 to one of `SYNTH_DUTY_*`. Ignored for osc3 and 4.
+ Changes immediately, which could cause transient spikes or phasing issues.
+ */
+void synth_setDutyCycle(uint8_t oscid, uint8_t dutyCycle);
+
+void synth_triggerNote(uint8_t oscid);
 
 void synth_handleMidiEvent(MidiEvent*);
 

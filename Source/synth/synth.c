@@ -73,11 +73,10 @@ void synth_loadDefaults(void) {
         synth_setPan(i, SYNTH_PAN_BOTH);
         GLOBAL_SYNTH.confs[i].applyVelocity = false;
         GLOBAL_SYNTH.confs[i].transpose = 0;
-        
-        if (i == SYNTH_OSC1 || i == SYNTH_OSC2) {
-            GLOBAL_SYNTH.confs[i].osc12.duty = SYNTH_DUTY_50;
-        }
+        GLOBAL_SYNTH.confs[i].length = SYNTH_LENGTH_HOLD; // disable length
     }
+    synth_setDutyCycle(SYNTH_OSC1, SYNTH_DUTY_50);
+    synth_setDutyCycle(SYNTH_OSC2, SYNTH_DUTY_50);
 //    memcpy(synth->osc3_wavetable, WAVE_TABLE_SQUARE, OSC3_WAV_RAM_SIZE);
 
     for (uint8_t c = 0; c < MIDI_NUM_CHANNELS; c++) {
@@ -86,6 +85,8 @@ void synth_loadDefaults(void) {
     // TODO: useful for testing, probably not good defaults
     GLOBAL_SYNTH.channelStates[0] = (1 << SYNTH_OSC1) | (1 << SYNTH_OSC2);
     GLOBAL_SYNTH.confs[SYNTH_OSC2].transpose = 7; // 5th above
+    GLOBAL_SYNTH.confs[SYNTH_OSC1].length = 52;
+    GLOBAL_SYNTH.confs[SYNTH_OSC2].length = 26;
 }
 
 void synth_init(void) {
@@ -124,22 +125,32 @@ void synth_setPan(uint8_t oscid, uint8_t pan) {
     apu_writeMaskedRegister(GB_NR51, pan << oscid, SYNTH_PAN_BOTH << oscid);
 }
 
-//void synth_setNote(uint8_t oscid, uint8_t note) {
-//    GLOBAL_SYNTH.states[oscid].note = note;
-//    // period is 11 bits for osc1,2,3
-//    if (oscid == SYNTH_OSC4) {
-//        // TODO
-//    } else {
-//        uint8_t trueNote = note + GLOBAL_SYNTH.confs[oscid].transpose;
-//        uint16_t period = MIDI_NOTE_NUM_TO_PERIOD[trueNote];
-//        period += GLOBAL_SYNTH.states[oscid].periodOffset;
-//        // period low
-//        apu_writeRegister(NRX3(oscid), (uint8_t)(period & 0xFF));
-//        // period high and trigger
-//        uint8_t lenEnable = GLOBAL_SYNTH.confs[oscid].length == 0 ? 0 : (1 << 6);
-//        apu_writeRegister(NRX4(oscid), (uint8_t)(period > 8) | lenEnable | (1 << 7) /*trigger*/);
-//    }
-//}
+void synth_setLength(uint8_t oscid, uint8_t length) {
+    if (oscid != SYNTH_OSC3 && length >= 64) {
+        length = 63; // clamp to max value
+    }
+    GLOBAL_SYNTH.confs[oscid].length = length;
+    // NOTE: no register changes, takes effect on next note
+}
+
+bool synth_holdMode(uint8_t oscid) {
+    uint8_t len = GLOBAL_SYNTH.confs[oscid].length;
+    if (oscid == SYNTH_OSC3) return len == 0;
+    return (len & 0x1F) == 0;
+}
+
+void synth_setDutyCycle(uint8_t oscid, uint8_t dutyCycle) {
+    if (oscid > SYNTH_OSC2) return;
+    dutyCycle &= 0x03; // ensure 2 bits
+    uint8_t len = (dutyCycle << 6) | (GLOBAL_SYNTH.confs[oscid].length & 0x1F);
+    GLOBAL_SYNTH.confs[oscid].length = len;
+    apu_writeRegister(NRx1(oscid), len);
+}
+
+void synth_setNote(uint8_t oscid, uint8_t note) {
+    GLOBAL_SYNTH.states[oscid].note = note;
+    // NOTE: doesn't take effect until triggered
+}
 
 void synth_triggerNote(uint8_t oscid) {
     OscState* state = &GLOBAL_SYNTH.states[oscid];
@@ -169,6 +180,11 @@ void synth_triggerNote(uint8_t oscid) {
                 // velocity == 0x01 -> shift 6
                 // velocity == 0 -> set volume to zero
             }
+            // configure length
+            uint8_t lenEnable = synth_holdMode(oscid) ? 0 : (1 << 6);
+            if (lenEnable) {
+                apu_writeRegister(NRx1(oscid), conf->length);
+            }
             if (oscid == SYNTH_OSC3) {
                 // TODO: apply 2 bit velocity
 //                if (volume == 0) synth->confs[SYNTH_OSC3].volume = SYNTH_OSC3_VOLUME_OFF;
@@ -179,20 +195,19 @@ void synth_triggerNote(uint8_t oscid) {
             } else {
                 // TODO: compute envelope
                 uint8_t envelope = 0x00;
-                apu_writeRegister(NRX2(oscid), (volume & 0xF0) | envelope);
+                apu_writeRegister(NRx2(oscid), (volume & 0xF0) | envelope);
             }
             // set period low
-            apu_writeRegister(NRX3(oscid), (uint8_t) (period & 0xFF));
+            apu_writeRegister(NRx3(oscid), (uint8_t) (period & 0xFF));
             // set period high and trigger
-            uint8_t lenEnable = conf->length == 0 ? 0 : (1 << 6);
             uint8_t periodUpper = (uint8_t)(period >> 8) & 0x07;
-            apu_writeRegister(NRX4(oscid), periodUpper|lenEnable|(1<<7) /* trigger */);
+            apu_writeRegister(NRx4(oscid), periodUpper|lenEnable|(1<<7) /* trigger */);
         }
     }
 }
 
 void synth_stopNote(uint8_t oscid) {
-    apu_writeRegister(NRX2(oscid), 0x00);
+    apu_writeRegister(NRx2(oscid), 0x00);
 }
 
 void synth_handleMidiEvent(MidiEvent* e) {
@@ -253,7 +268,7 @@ void synth_handleMidiEvent(MidiEvent* e) {
             if (e->note == state->note) {
                 state->velocity = 0; // ignore velocity value
                 // if not using length, stop the note
-                if (conf->length == 0) synth_stopNote(oscid);
+                if (synth_holdMode(oscid)) synth_stopNote(oscid);
             }
         } else if (e->type == MIDI_EVENT_NOTE_AFTERTOUCH) {
             if (e->note == state->note) {
@@ -279,7 +294,7 @@ void synth_handleMidiEvent(MidiEvent* e) {
             } else if (e->controller == MIDI_CONTROLLER_ALL_NOTES_OFF) {
                 // if we got here, we aren't in omni mode
                 state->velocity = 0;
-                if (conf->length == 0) synth_stopNote(oscid);
+                if (synth_holdMode(oscid)) synth_stopNote(oscid);
             }
         }
     }

@@ -20,3 +20,11 @@ LFOs:
 
 master volume
 master pan
+
+
+setters should clamp values, assign state to minimize compute later
+
+phaser on osc1+2 by alternating 25 and 75 duty cycle
+
+period changes can only take effect after a trigger. thus period lfos, portamento, etc
+only work in hold mode
