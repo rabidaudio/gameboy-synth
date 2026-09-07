@@ -59,22 +59,23 @@ static const uint8_t WAVE_TABLE_NOISE[OSC3_WAV_RAM_SIZE] = {
 
 // TODO: midi note to NR43 (shift,width,div)
 
-void apu_writeMaskedRegister(uint16_t addr, uint8_t val, uint8_t mask) {
-    uint8_t current = apu_readRegister(addr);
-    val = (current & ~mask) | (val & mask); // TODO: is this right?
-    apu_writeRegister(addr, val);
-}
-
+// TARGET_INLINE void apu_writeMaskedRegister(uint16_t addr, uint8_t val, uint8_t mask) {
+//     uint8_t current = apu_readRegister(addr);
+//     val = (current & ~mask) | (val & mask); // TODO: is this right?
+//     apu_writeRegister(addr, val);
+// }
 
 void synth_loadDefaults(void) {
     // initialize default settings
     for (uint8_t i = 0; i < SYNTH_NUM_OSCS; i++) {
         GLOBAL_SYNTH.confs[i].volume = 0xFF; // full volume
-        synth_setPan(i, SYNTH_PAN_BOTH);
         GLOBAL_SYNTH.confs[i].applyVelocity = false;
         GLOBAL_SYNTH.confs[i].transpose = 0;
         GLOBAL_SYNTH.confs[i].length = SYNTH_LENGTH_HOLD; // disable length
     }
+    GLOBAL_SYNTH.pan = 0xFF; // set pan center for all osc
+    apu_writeRegister(GB_NR51, 0xFF);
+
     synth_setDutyCycle(SYNTH_OSC1, SYNTH_DUTY_50);
     synth_setDutyCycle(SYNTH_OSC2, SYNTH_DUTY_50);
 //    memcpy(synth->osc3_wavetable, WAVE_TABLE_SQUARE, OSC3_WAV_RAM_SIZE);
@@ -111,17 +112,20 @@ uint8_t synth_savePreset(uint8_t* data) {
     return 0;
 }
 
-void synth_setVolume(uint8_t oscid, uint8_t volume) {
+TARGET_INLINE void synth_setVolume(uint8_t oscid, uint8_t volume) {
     GLOBAL_SYNTH.confs[oscid].volume = volume;
     // NOTE: no register changes, takes effect on next note
 }
 
-void synth_setPan(uint8_t oscid, uint8_t pan) {
-    GLOBAL_SYNTH.confs[oscid].pan = pan;
-    apu_writeMaskedRegister(GB_NR51, pan << oscid, SYNTH_PAN_BOTH << oscid);
+TARGET_INLINE void synth_setPan(uint8_t oscid, uint8_t pan) {
+    pan = (pan << oscid);
+    uint8_t mask = (SYNTH_PAN_BOTH << oscid);
+    uint8_t gPan = (GLOBAL_SYNTH.pan & ~mask) | (pan & mask);
+    GLOBAL_SYNTH.pan = gPan;
+    apu_writeRegister(GB_NR51, gPan);
 }
 
-void synth_setLength(uint8_t oscid, uint8_t length) {
+TARGET_INLINE void synth_setLength(uint8_t oscid, uint8_t length) {
     if (oscid != SYNTH_OSC3 && length >= 64) {
         length = 63; // clamp to max value
     }
@@ -129,12 +133,12 @@ void synth_setLength(uint8_t oscid, uint8_t length) {
     // NOTE: no register changes, takes effect on next note
 }
 
-void synth_setTranspose(uint8_t oscid, int8_t offset) {
+TARGET_INLINE void synth_setTranspose(uint8_t oscid, int8_t offset) {
     GLOBAL_SYNTH.confs[oscid].transpose = offset;
     // NOTE: no register changes, takes effect on next note
 }
 
-bool synth_holdMode(uint8_t oscid) {
+TARGET_INLINE bool synth_holdMode(uint8_t oscid) {
     uint8_t len = GLOBAL_SYNTH.confs[oscid].length;
     if (oscid == SYNTH_OSC3) return len == 0;
     return (len & 0x1F) == 0;
@@ -148,7 +152,7 @@ void synth_setDutyCycle(uint8_t oscid, uint8_t dutyCycle) {
     apu_writeRegister(NRx1(oscid), len);
 }
 
-void synth_setNote(uint8_t oscid, uint8_t note) {
+TARGET_INLINE void synth_setNote(uint8_t oscid, uint8_t note) {
     GLOBAL_SYNTH.states[oscid].note = note;
     // NOTE: doesn't take effect until triggered
 }
@@ -207,7 +211,7 @@ void synth_triggerNote(uint8_t oscid) {
     }
 }
 
-void synth_stopNote(uint8_t oscid) {
+TARGET_INLINE void synth_stopNote(uint8_t oscid) {
     apu_writeRegister(NRx2(oscid), 0x00);
 }
 
@@ -301,6 +305,6 @@ void synth_handleMidiEvent(MidiEvent* e) {
     }
 }
 
-void synth_stop() {
+TARGET_INLINE void synth_stop(void) {
     apu_writeRegister(GB_NR52, 0x00); // audio off
 }

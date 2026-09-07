@@ -5,6 +5,13 @@
 extern "C" {
 #endif
 
+// inline small functions only on GB target
+#if defined(TARGET_GBDK)
+    #define TARGET_INLINE inline
+#else
+    #define TARGET_INLINE
+#endif
+
 #include "midi.h"
 
 #define GB_NR50 0xFF24
@@ -93,7 +100,6 @@ typedef struct {
     // offset the incoming MIDI note
     int8_t transpose;
     uint8_t volume; // stored as 8 bits for better resolution. Hardware resolution is 2 bits for osc3 else 4 bits
-    uint8_t pan; // 4 bits, see SYNTH_PAN_*
     
     // if 0, keep note active for as long as note is held down
     // otherwise use the note-length trigger.
@@ -127,6 +133,7 @@ typedef struct {
     // [7] Omni Mode [6] Poly Mode .. [3] Ch4 enabled [2] Ch3 [1] Ch2 [0] Ch1
     uint8_t channelStates[MIDI_NUM_CHANNELS];
     
+    uint8_t pan; // 4 bits, shifted for each osc, see SYNTH_PAN_*
     uint8_t masterVolume;
     int8_t masterPan;
 } Synth;
@@ -134,7 +141,7 @@ typedef struct {
 // By declaring a single instance, we keep the gameboy arguments minimal.
 // by declaring as extern, we allow the calling code to configure it's memory location
 extern Synth GLOBAL_SYNTH;
-// // this is the interface this library uses to control the APU
+// this is the interface this library uses to control the APU.
 extern void apu_writeRegister(uint16_t addr, uint8_t val);
 extern uint8_t apu_readRegister(uint16_t addr);
 

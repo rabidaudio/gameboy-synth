@@ -10,7 +10,9 @@ endif
 
 LCC = $(GBDK_HOME)/bin/lcc
 
-LCCFLAGS += -std-c11
+LCCFLAGS += -std-c11 -O3
+
+# LCCFLAGS += -DTARGET_GBDK
 
 GBDK_DEBUG = ON
 ifdef GBDK_DEBUG
@@ -23,8 +25,8 @@ PROJECTNAME    = gbhwsynth
 
 BUILD_DIR = build
 BINS	    = $(PROJECTNAME).gb
-CSOURCES   := $(wildcard src/*.c)
-ASMSOURCES := $(wildcard src/*.s)
+CSOURCES   := src/main.c $(wildcard src/synth/*.c)
+ASMSOURCES := $(wildcard src/synth/*.s)
 
 all:	$(BINS)
 
@@ -34,3 +36,6 @@ $(BINS):	$(CSOURCES) $(ASMSOURCES)
 
 clean:
 	rm -f build/*
+
+run:
+	emulicious build/gbhwsynth.gb

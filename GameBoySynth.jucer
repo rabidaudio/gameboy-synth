@@ -12,9 +12,10 @@
     <FILE id="ZmNejr" name="README.md" compile="0" resource="1" file="README.md"/>
     <GROUP id="{547F6CC2-A1E7-5511-1621-1739E99809BE}" name="Source">
       <GROUP id="{E423D76D-8B57-EB57-1EBA-2C3FC8D2503A}" name="synth">
-        <FILE id="FqHB4Y" name="midi.h" compile="0" resource="0" file="Source/synth/midi.h"/>
-        <FILE id="WRU90U" name="synth.c" compile="1" resource="0" file="Source/synth/synth.c"/>
-        <FILE id="hvBIwW" name="synth.h" compile="0" resource="0" file="Source/synth/synth.h"/>
+        <FILE id="HkIy9H" name="midi.h" compile="0" resource="0" file="Source/synth/midi.h"/>
+        <FILE id="PUg2l0" name="notes.rb" compile="0" resource="1" file="Source/synth/notes.rb"/>
+        <FILE id="WMCYJS" name="synth.c" compile="1" resource="0" file="Source/synth/synth.c"/>
+        <FILE id="NEK27i" name="synth.h" compile="0" resource="0" file="Source/synth/synth.h"/>
       </GROUP>
       <FILE id="ypnPvj" name="SynthWrapper.cpp" compile="1" resource="0"
             file="Source/SynthWrapper.cpp"/>
@@ -42,13 +43,6 @@
             file="Source/SquareOscComponent.cpp"/>
       <FILE id="tBkKQ9" name="SquareOscComponent.h" compile="0" resource="0"
             file="Source/SquareOscComponent.h"/>
-      <GROUP id="{D33F0277-B008-DA3D-6E61-5B48C4FF6F51}" name="midimanager">
-        <FILE id="ow6Mpg" name="midimanager.cpp" compile="1" resource="0" file="Source/midimanager/midimanager.cpp"/>
-        <FILE id="QfIIyR" name="midimanager.h" compile="0" resource="0" file="Source/midimanager/midimanager.h"/>
-        <FILE id="luAWNP" name="staticlinkedlist.h" compile="0" resource="0"
-              file="Source/midimanager/staticlinkedlist.h"/>
-        <FILE id="zKizms" name="types.h" compile="0" resource="0" file="Source/midimanager/types.h"/>
-      </GROUP>
       <GROUP id="{B274B02E-3093-3768-AC80-8F364BCD1F7D}" name="Gb_Snd_Emu-0.1.4-patched">
         <GROUP id="{AB038AF8-1EEE-6F41-6BC1-C9066048A005}" name="boost">
           <FILE id="tj4uUh" name="config.hpp" compile="0" resource="0" file="Source/Gb_Snd_Emu-0.1.4-patched/boost/config.hpp"/>
