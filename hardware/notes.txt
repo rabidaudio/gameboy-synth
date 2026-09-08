@@ -29,21 +29,22 @@ phaser on osc1+2 by alternating 25 and 75 duty cycle
 period changes can only take effect after a trigger. thus period lfos, portamento, etc
 only work in hold mode
 
+TODO: try all combinations of LFSR, see if we can create a mental model for their sounds
 
-1. get working in ROM
-2. rework channel assignments (considering poly+omni)
+
 2. implement envelopes
 3. implement noise osc
 4. implement wave osc
-5. implement poly/omni modes
+5. implement poly mode
 6. implement master volume/pan
 6. implement LFOs
 8. finish VST UI
 9. build GB UI
 10. build gamelink->midi interface
 
-key-split mode
+invert hold state to len state?
 
+key-split mode?
 
 SEE MIDI Modes http://midi.teragonaudio.com/tech/midispec.htm
 

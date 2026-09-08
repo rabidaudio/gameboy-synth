@@ -76,7 +76,34 @@ static const uint8_t WAVE_TABLE_NOISE[OSC3_WAV_RAM_SIZE] = {
 
 // OSC4
 
-// TODO: midi note to NR43 (shift,width,div)
+// generated with ruby:
+/*
+reg = (0..255)
+clock_shift = reg.map { |r| r >> 4 }
+width = reg.map { |r| (r >> 3) & 0x01 }
+clock_div = reg.map { |r| r & 0x07 }.map { |c| c == 0 ? 0.5 : c }
+# =262144/(IF(D2=0,0.5,D2)*POW(2,B2))
+freq = reg.map { |r| clock_shift[r] >= 14 ? 0 : 262144.0 / (clock_div[r] * (2 ** clock_shift[r])) }
+freq_map = reg.zip(freq).to_h
+all_freqs = freq.uniq.sort
+# freq.uniq.count = 61
+seq_regs = all_freqs.map { |f| freq_map.find { |k, v| (k & 8) == 0 && v == f} }.map(&:first)
+puts [0, (1 << 3)].map { |width| seq_regs.map { |r| r | width } }.flatten.map { |v| "#{v}, " }.each_slice(10).map(&:join).join("\n")
+*/
+const uint16_t MIDI_NOTE_NUM_TO_OSC4_LFSR[128] = {
+    224, 215, 214, 213, 212, 199, 198, 197, 196, 183, 
+    182, 181, 180, 167, 166, 165, 164, 151, 150, 149, 
+    148, 135, 134, 133, 132, 119, 118, 117, 116, 103, 
+    102, 101, 100, 87, 86, 85, 84, 71, 70, 69, 
+    68, 55, 54, 53, 52, 39, 38, 37, 36, 23, 
+    22, 21, 20, 7, 6, 5, 4, 3, 2, 1, 
+    0, 232, 223, 222, 221, 220, 207, 206, 205, 204, 
+    191, 190, 189, 188, 175, 174, 173, 172, 159, 158, 
+    157, 156, 143, 142, 141, 140, 127, 126, 125, 124, 
+    111, 110, 109, 108, 95, 94, 93, 92, 79, 78, 
+    77, 76, 63, 62, 61, 60, 47, 46, 45, 44, 
+    31, 30, 29, 28, 15, 14, 13, 12, 11, 10, 9, 8, 
+};
 
 // TARGET_INLINE void apu_writeMaskedRegister(uint16_t addr, uint8_t val, uint8_t mask) {
 //     uint8_t current = apu_readRegister(addr);
@@ -147,8 +174,8 @@ TARGET_INLINE void synth_setPan(uint8_t oscid, uint8_t pan) {
 }
 
 TARGET_INLINE void synth_setLength(uint8_t oscid, uint8_t length) {
-    if (oscid != SYNTH_OSC3 && length >= 64) {
-        length = 63; // clamp to max value
+    if (oscid != SYNTH_OSC3 && length > 0x1F) {
+        length = 0x1F; // clamp to max value
     }
     GLOBAL_SYNTH.confs[oscid].length = length;
     // NOTE: no register changes, takes effect on next note
@@ -175,55 +202,64 @@ TARGET_INLINE void synth_setNote(uint8_t oscid, uint8_t note) {
 void synth_triggerNote(uint8_t oscid) {
     OscState* state = &GLOBAL_SYNTH.states[oscid];
     OscConfig* conf = &GLOBAL_SYNTH.confs[oscid];
-    uint8_t trueNote =state->note + conf->transpose;
-    if (oscid == SYNTH_OSC4) {
-        // TODO
-    } else {
-        if (trueNote >= MIDI_NOTE_LOW && trueNote <= 127) {
-            uint16_t period = MIDI_NOTE_NUM_TO_PERIOD[trueNote - MIDI_NOTE_LOW];
-            period += state->periodOffset;
-            // volume
-            uint8_t volume = conf->volume;
-            if (conf->channelState & SYNTH_CHANNEL_STATE_VELOCITY) {
-                // TODO: apply velocity
-                // multiplication/division is too expensive for the gameboy
-                // since we only have 2-4 bits of volume resolution anyway, a precise
-                // scaling is not important.
-                // instead, we can take the source volume and divide it by 2
-                // for the most significant bit of velocity.
-                // velocity == 0x7F -> no shift
-                // velocity == 0x3F -> shift 1
-                // velocity == 0x1F -> shift 2
-                // velocity == 0x0F -> shift 3
-                // velocity == 0x07 -> shift 4
-                // velocity == 0x03 -> shift 5
-                // velocity == 0x01 -> shift 6
-                // velocity == 0 -> set volume to zero
-            }
-            // configure length
-            uint8_t lenEnable = (conf->channelState & SYNTH_CHANNEL_STATE_HOLD) ? 0 : (1 << 6);
-            if (lenEnable) {
-                apu_writeRegister(NRx1(oscid), conf->length);
-            }
-            if (oscid == SYNTH_OSC3) {
-                // TODO: apply 2 bit velocity
+    uint8_t trueNote = state->note + conf->transpose;
+    // ignore out-of-bounds notes
+    if (trueNote > 127) return;
+    if (oscid != SYNTH_OSC4 && trueNote < MIDI_NOTE_LOW) return;
+
+    // configure length
+    uint8_t lenEnable = (conf->channelState & SYNTH_CHANNEL_STATE_HOLD) ? 0 : (1 << 6);
+    if (lenEnable) {
+        apu_writeRegister(NRx1(oscid), conf->length);
+    }
+
+    // volume/velocity/envelope
+    // volume
+    uint8_t volume = conf->volume;
+    if (conf->channelState & SYNTH_CHANNEL_STATE_VELOCITY) {
+        // TODO: apply velocity
+        // multiplication/division is too expensive for the gameboy
+        // since we only have 2-4 bits of volume resolution anyway, a precise
+        // scaling is not important.
+        // instead, we can take the source volume and divide it by 2
+        // for the most significant bit of velocity.
+        // velocity == 0x7F -> no shift
+        // velocity == 0x3F -> shift 1
+        // velocity == 0x1F -> shift 2
+        // velocity == 0x0F -> shift 3
+        // velocity == 0x07 -> shift 4
+        // velocity == 0x03 -> shift 5
+        // velocity == 0x01 -> shift 6
+        // velocity == 0 -> set volume to zero
+    }
+    if (oscid == SYNTH_OSC3) {
+        // TODO: apply 2 bit velocity
 //                if (volume == 0) synth->confs[SYNTH_OSC3].volume = SYNTH_OSC3_VOLUME_OFF;
 //                else if (volume == 1) synth->confs[SYNTH_OSC3].volume = SYNTH_OSC3_VOLUME_25;
 //                else if (volume == 2) synth->confs[SYNTH_OSC3].volume = SYNTH_OSC3_VOLUME_50;
 //                else synth->confs[SYNTH_OSC3].volume = SYNTH_OSC3_VOLUME_FULL;
 //                synth->writeRegister(GB_NR32, synth->confs[SYNTH_OSC3].volume << 5);
-            } else {
-                // TODO: compute envelope
-                uint8_t envelope = 0x00;
-                apu_writeRegister(NRx2(oscid), (volume & 0xF0) | envelope);
-            }
-            // set period low
-            apu_writeRegister(NRx3(oscid), (uint8_t) (period & 0xFF));
-            // set period high and trigger
-            uint8_t periodUpper = (uint8_t)(period >> 8) & 0x07;
-            apu_writeRegister(NRx4(oscid), periodUpper|lenEnable|(1<<7) /* trigger */);
-        }
+    } else {
+        // TODO: compute envelope
+        uint8_t envelope = 0x00;
+        apu_writeRegister(NRx2(oscid), (volume & 0xF0) | envelope);
     }
+
+    // pitch and trigger
+    uint8_t periodUpper = 0;
+    if (oscid == SYNTH_OSC4) {
+        uint8_t lfsrSetting = MIDI_NOTE_NUM_TO_OSC4_LFSR[trueNote];
+        apu_writeRegister(GB_NR42, lfsrSetting);
+    } else { // osc 1-3
+        uint16_t period = MIDI_NOTE_NUM_TO_PERIOD[trueNote - MIDI_NOTE_LOW];
+        period += state->periodOffset;
+        // set period low
+        apu_writeRegister(NRx3(oscid), (uint8_t) (period & 0xFF));
+        // set period high and trigger
+        periodUpper = (uint8_t)(period >> 8) & 0x07;
+    }
+    // trigger
+    apu_writeRegister(NRx4(oscid), periodUpper|lenEnable|(1<<7) /* trigger */);
 }
 
 TARGET_INLINE void synth_stopNote(uint8_t oscid) {

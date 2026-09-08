@@ -588,30 +588,8 @@ static const unsigned char temp_binary_data_1[] =
 
 const char* README_md = (const char*) temp_binary_data_1;
 
-//================== notes.rb ==================
-static const unsigned char temp_binary_data_2[] =
-"# midi notes 0-127. midi note 0 = C-1. A4 is note 69 (nice)\n"
-"note_names = (0..127).map { |n| %w(C C# D D# E F F# G G# A A# B)[n % 12] + ((n / 12)-1).to_s }\n"
-"# For A4, n = 0 -> 440 * 2^(0/12) = 440 Hz.\n"
-"# n = (octave * 12) + semitones[key] - ((4 * 12) + semitones['A'])\n"
-"# 440.0 * (2.0 ** (n / 12.0))\n"
-"note_pitches = (0..127).map { |n| 440.0 * 2 ** ((n-69)/12.0) }\n"
-"# Hz = 131072/(2048-period)\n"
-"# period = (-131072.0 / f)+2048\n"
-"# where period is a signed 11bit integer (0 to 2042)\n"
-"# all_frequencies = (0..2047).map { |p| 131072.0/(2048-p)}\n"
-"# hz = 440*2^(n-12) -> hz/440=2^(n-12) -> log2(hz/440)-12=n\n"
-"# because the lowest we can go is 64Hz, we'll start the lookup table at C2 (36)\n"
-"start = 36\n"
-"note_names = note_names[start..]\n"
-"note_pitches = note_pitches[start..]\n"
-"periods = note_pitches.map { |f| ((-131072.0 / f)+2048).round }\n"
-"puts periods.each_with_index.map { |p, i| \"#{p}, \\/* #{i+start},#{note_names[i]} *\\/\" }.each_slice(12).map { |s| s.join(\" \") }.join(\"\\n\")\n";
-
-const char* notes_rb = (const char*) temp_binary_data_2;
-
 //================== WaveOscComponent.h ==================
-static const unsigned char temp_binary_data_3[] =
+static const unsigned char temp_binary_data_2[] =
 "/*\n"
 "  ==============================================================================\n"
 "\n"
@@ -654,7 +632,7 @@ static const unsigned char temp_binary_data_3[] =
 "    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (WaveOscComponent)\n"
 "};\n";
 
-const char* WaveOscComponent_h = (const char*) temp_binary_data_3;
+const char* WaveOscComponent_h = (const char*) temp_binary_data_2;
 
 
 const char* getNamedResource (const char* resourceNameUTF8, int& numBytes);
@@ -670,7 +648,6 @@ const char* getNamedResource (const char* resourceNameUTF8, int& numBytes)
     {
         case 0x34bc1021:  numBytes = 35147; return LICENSE;
         case 0x64791dc8:  numBytes = 3940; return README_md;
-        case 0x5e4c206e:  numBytes = 954; return notes_rb;
         case 0xc563c4a0:  numBytes = 1103; return WaveOscComponent_h;
         default: break;
     }
@@ -683,7 +660,6 @@ const char* namedResourceList[] =
 {
     "LICENSE",
     "README_md",
-    "notes_rb",
     "WaveOscComponent_h"
 };
 
@@ -691,7 +667,6 @@ const char* originalFilenames[] =
 {
     "LICENSE",
     "README.md",
-    "notes.rb",
     "WaveOscComponent.h"
 };
 

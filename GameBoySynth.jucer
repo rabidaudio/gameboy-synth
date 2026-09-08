@@ -13,7 +13,6 @@
     <GROUP id="{547F6CC2-A1E7-5511-1621-1739E99809BE}" name="Source">
       <GROUP id="{E423D76D-8B57-EB57-1EBA-2C3FC8D2503A}" name="synth">
         <FILE id="HkIy9H" name="midi.h" compile="0" resource="0" file="Source/synth/midi.h"/>
-        <FILE id="PUg2l0" name="notes.rb" compile="0" resource="1" file="Source/synth/notes.rb"/>
         <FILE id="WMCYJS" name="synth.c" compile="1" resource="0" file="Source/synth/synth.c"/>
         <FILE id="NEK27i" name="synth.h" compile="0" resource="0" file="Source/synth/synth.h"/>
       </GROUP>

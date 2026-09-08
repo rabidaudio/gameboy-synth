@@ -22,23 +22,24 @@ void main(void)
 {
     synth_init();
 
-    synth_setTranspose(SYNTH_OSC2, 7); // 5th above
-    synth_setLength(SYNTH_OSC1, 52);
-    synth_setLength(SYNTH_OSC2, 26);
+    // synth_setTranspose(SYNTH_OSC2, 7); // 5th above
+    // synth_setLength(SYNTH_OSC1, 52);
+    // synth_setLength(SYNTH_OSC2, 26);
+    synth_setChannel(SYNTH_OSC1, 0); // disabled
+    synth_setChannel(SYNTH_OSC4, SYNTH_CHANNEL_STATE_ENABLED);
+    synth_setLength(SYNTH_OSC4, 60);
 
     uint8_t x = 0;
-    uint8_t note = 36;
+    uint8_t note = 0;
     uint16_t period = 0;
 
     // Loop forever
     while(1) {
         if (x == 0) {
-            synth_setNote(SYNTH_OSC1, note);
-            synth_setNote(SYNTH_OSC2, note);
-            synth_triggerNote(SYNTH_OSC1);
-            synth_triggerNote(SYNTH_OSC2);
+            synth_setNote(SYNTH_OSC4, note);
+            synth_triggerNote(SYNTH_OSC4);
             note++;
-            if (note >= 128) note = 36;
+            if (note >= 128) note = 0;
         }
         x++;
         if (x == 30) x = 0;

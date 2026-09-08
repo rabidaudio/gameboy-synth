@@ -43,6 +43,11 @@ void SynthWrapper::configure(double sampleRate, int channels) {
     apu_.treble_eq(-20.0); // lower values muffle it more
     buf_->bass_freq(461); // higher values simulate smaller speaker
     synth_init();
+    
+    // STOPSHIP
+    synth_setChannel(SYNTH_OSC1, 0);
+    synth_setChannel(SYNTH_OSC4, SYNTH_CHANNEL_STATE_ENABLED);
+    synth_setLength(SYNTH_OSC4, 50);
 }
 
 inline long SynthWrapper::samplesAvailable() {
