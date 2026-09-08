@@ -11,13 +11,15 @@ endif
 LCC = $(GBDK_HOME)/bin/lcc
 GCC = /usr/bin/gcc
 
-LCCFLAGS += -std-c11 -O3
+LCCFLAGS += -std-c11
 
 LCCFLAGS += -DTARGET_GBDK
 
 GBDK_DEBUG = ON
 ifdef GBDK_DEBUG
 	LCCFLAGS += -debug -v
+else
+	LCCFLAGS += -O3
 endif
 
 

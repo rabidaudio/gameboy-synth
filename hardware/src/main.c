@@ -3,8 +3,9 @@
 
 #include "synth/synth.h"
 
+#include <stdio.h>
+
 // a global instance of synth state
-// TODO: fit in hiram?
 Synth GLOBAL_SYNTH;
 
 // by doing this as a macro it should get compiled down to a direct write
@@ -18,8 +19,7 @@ inline uint8_t apu_readRegister(uint16_t addr) {
     return GETREG(addr);
 }
 
-
-void tim(void) __nonbanked
+void tim(void)
 {
     synth_handleTimer();
 }
@@ -28,15 +28,15 @@ void main(void)
 {
     synth_init();
 
-    CRITICAL {
-        synth_configureTimers();
+    CRITICAL {        
         add_TIM(tim);
         set_interrupts(VBL_IFLAG | TIM_IFLAG);
+        synth_configureTimers();
     }
 
-    synth_setChannel(SYNTH_OSC1, SYNTH_CHANNEL_STATE_FIXEDLEN);
+    // synth_setChannel(SYNTH_OSC1, SYNTH_CHANNEL_STATE_FIXEDLEN);
     synth_setLength(SYNTH_OSC1, 60);
-    synth_setEnvelope(SYNTH_OSC1, 3, 7);
+    synth_setEnvelope(SYNTH_OSC1, 0, 0);
 
     // synth_setTranspose(SYNTH_OSC2, 7); // 5th above
     // synth_setLength(SYNTH_OSC2, 26);
@@ -45,21 +45,22 @@ void main(void)
     // synth_setLength(SYNTH_OSC4, 60);
 
     uint8_t x = 0;
-    uint8_t note = 36;
-    uint16_t period = 0;
+    uint8_t note = 69;
+    bool y = false;
 
     // Loop forever
     while(1) {
         if (x == 0) {
-            if (note % 2 == 0) {
+            if (y) {
                 synth_setNote(SYNTH_OSC1, note);
                 synth_triggerNote(SYNTH_OSC1);
             } else {
                 synth_stopNote(SYNTH_OSC1);
             }
+            y = !y;
 
-            note++;
-            if (note >= 128) note = 26;
+            // note++;
+            // if (note >= 128) note = 26;
         }
         x++;
         if (x == 90) x = 0;
