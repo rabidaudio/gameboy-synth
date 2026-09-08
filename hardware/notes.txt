@@ -19,30 +19,82 @@ LFOs:
 
 
 master volume
-master pan
-
 
 setters should clamp values, assign state to minimize compute later
 
 phaser on osc1+2 by alternating 25 and 75 duty cycle
 
-period changes can only take effect after a trigger. thus period lfos, portamento, etc
-only work in hold mode
+envelopes
+computed using timer interrupt
+https://gbdev.io/pandocs/Timer_and_Divider_Registers.html
+TAC = 00, TMA=0xFF-16 will create a 256Hz interrupt
+
+
+envelope state:
+STATE_OFF, STATE_ATTACK, STATE_ON, STATE_RELEASE
+
+attack: 3 bits (@ 64Hz timer per volume tick. For full volume, ~250ms to 1.7s)
+- if sweep_pace is zero: go straight to STATE_ON with volume set. else:
+- STATE_OFF -> STATE_ATTACK
+- NRx2: initial volume = 0, env dir = up, sweep pace [3 bits]
+- NRx4: len=disabled, trigger
+- attack complete after sweep_pace*4*volume interrupt ticks (max 8*4*16=512. Or if use 64Hz timer, 128)
+
+on:
+- if hold mode, ignore timer. next state from NOTE_OFF. else:
+- STATE_ATTACK -> STATE_ON
+- NRx2: initial volume = <vol>, sweep pace = 0 (disabled)
+- NRx1: len=<len>
+- NRx4: len=enabled, trigger
+- length=8bits for osc3, else 6 bits. ticks at 256Hz
+- hold complete after len interrupt ticks (max 256)
+
+release:
+- same settings as attack, but reversed
+- STATE_ON -> STATE_RELEASE
+- NRx2: initial volume = <vol> env dir = down, sweep pace [3 bits]
+- NRx4: len=disabled, trigger
+
+
+portamento:
+based on NR10, but implemented on all oscillators using timers
+pace = 3 bits, direction, step [3 bits]
+update period by 2^<step> every <pace> ticks of 128Hz timer (~8ms to ~55ms)
+tics to complete: ~~~(period(N2) - period(N1)) / (1 << step) * pace (max=2048*)~~~ no, doesn't step by constant amount
+PORT_STATE = { direction:, targetPeriod: }
+- every 128Hz tick:
+- if remaining:
+    offset = period +/- (1 << step)
+    if period within offset of target, set to target. else period += offset
+
+
+LFO
+shape: ramp, triangle (sin with lookup table, square?)
+clock_div: 0-15 (256Hz to 64Hz update rate)
+counter: 0-255
+magnitude: 0-7 // 0=disabled, 7 max control (-7 to 7)
+output value: 4bit signed (thus zero-centered)
+control:
+    - period (+/- period/2^(output>>1) )
+    - volume ( volume += (output<<4) )
+    - pwm [osc1+2 only] ( duty += (output>>3) )
+    - <one more?>
+    u8: PERIOD|VOLUME|PWM|x |OSC4|OSC3|OSC2|OSC1
+1-4 LFOs (depends on performance)
+
 
 TODO: try all combinations of LFSR, see if we can create a mental model for their sounds
+TODO: avoid LFSR lockup
 
-
-2. implement envelopes
-3. implement noise osc
-4. implement wave osc
-5. implement poly mode
-6. implement master volume/pan
-6. implement LFOs
-8. finish VST UI
-9. build GB UI
-10. build gamelink->midi interface
-
-invert hold state to len state?
+1. implement envelopes
+2. implement noise osc
+3. implement wave osc
+4. implement poly mode
+5. implement LFOs
+fix sound bug with noise in VST
+6. redo VST UI - modeled off GB
+7. build GB UI
+8. build gamelink->midi interface
 
 key-split mode?
 
@@ -57,3 +109,43 @@ Poly mode:
 
 SynthConf
     channelState: [7] enabled [6] poly_mode _ _ [3:0] channel
+
+
+
+
+UI
+
+PRESET < XX* >  [SAVE]
+
+VOLUME LEFT <____ (0-7) RIGHT <____ (0-7)
+VISUALIZER ??
+LFOs ??
+
+OSC 1 [ON|OFF]
+MIDI [1-16] POLY [ON|OFF]
+VOLUME <____ (0-15) VELOCITY [OFF]
+PAN [LCR]
+ATTACK |----____| (0-7)
+HOLD [UNLIMITED] |----____| (0-64)
+RELEASE |----____| (0-7)
+PORTAMENTO [OFF] |---____| ?? 3x3 bits. 0-64? ??
+DUTY -_______ (0-3)
+
+2 the same
+
+OSC 3
+MIDI...
+VOLUME <__ (0-3) VELOCITY [OFF]
+PAN...
+SHAPE [square|sine|ramp|custom] [EDIT] -> new window
+
+OSC 4
+MIDI...
+VOLUME...
+PAN...
+ATTACK...
+HOLD...
+RELEASE...
+
+
+https://opengameart.org/content/8x8-font-chomps-wacky-worlds-beta

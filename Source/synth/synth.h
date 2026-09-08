@@ -14,6 +14,7 @@ extern "C" {
 
 #include "midi.h"
 
+// audio registers
 #define GB_NR50 0xFF24
 #define GB_NR51 0xFF25
 #define GB_NR52 0xFF26
@@ -22,7 +23,6 @@ extern "C" {
 #define GB_NR12 0xFF12
 #define GB_NR13 0xFF13
 #define GB_NR14 0xFF14
-#define GB_NR15 0xFF15 // not an audio register?
 #define GB_NR21 0xFF16
 #define GB_NR22 0xFF17
 #define GB_NR23 0xFF18
@@ -36,6 +36,14 @@ extern "C" {
 #define GB_NR42 0xFF21 
 #define GB_NR43 0xFF22
 #define GB_NR44 0xFF23
+
+// timer registers
+// https://gbdev.io/pandocs/Timer_and_Divider_Registers.html
+#define GB_DIV 0xFF04
+#define GB_TIMA 0xFF05
+#define GB_TMA 0xFF06
+#define GB_TAC 0xFF07
+
 
 #define SYNTH_NUM_OSCS 4
 
@@ -66,13 +74,20 @@ extern "C" {
 #define SYNTH_PAN_R (1 << 0)
 #define SYNTH_PAN_BOTH (SYNTH_PAN_L | SYNTH_PAN_R)
 
+#define SYNTH_CHANNEL_STATE_ENABLED (1 << 7)
+#define SYNTH_CHANNEL_STATE_POLYMODE (1 << 6)
+#define SYNTH_CHANNEL_STATE_FIXEDLEN (1 << 5)
+#define SYNTH_CHANNEL_STATE_VELOCITY (1 << 4)
+
 #define SYNTH_ENV_UP (1 << 3)
 #define SYNTH_ENV_DOWN (0 << 3)
 
-#define SYNTH_CHANNEL_STATE_ENABLED (1 << 7)
-#define SYNTH_CHANNEL_STATE_POLYMODE (1 << 6)
-#define SYNTH_CHANNEL_STATE_HOLD (1 << 5)
-#define SYNTH_CHANNEL_STATE_VELOCITY (1 << 4)
+// [3] direction attack=1 release=0 [2] envelope in progress [1] note on/off
+#define SYNTH_ENV_STATE_OFF 0
+#define SYNTH_ENV_STATE_ON 1
+#define SYNTH_ENV_STATE_ATTACK (SYNTH_ENV_STATE_ON | (1<<1) | SYNTH_ENV_UP)
+#define SYNTH_ENV_STATE_RELEASE (SYNTH_ENV_STATE_ON | (1<<1) | SYNTH_ENV_DOWN)
+
 
 // state byte holds note playback state machine:
 // [0] note on or off
@@ -105,19 +120,25 @@ typedef struct {
     // includes duty for osc1+2
     uint8_t length; // 6 bits for osc1,2 4. 8 bits for 3
 
-    // [7] osc enabled [6] poly mode [5] hold mode [4] apply velocity mode [3:0] assigned MIDI channel 1-16
+    // [7] osc enabled [6] poly mode [5] length mode [4] apply velocity mode [3:0] assigned MIDI channel 1-16
     uint8_t channelState;
+
+    // 3 bits each, [6:4] attack [3:0] release. units of 64Hz steps (~250ms to 1.7s for full volume)
+    uint8_t envelopeSweepPace;
 } OscConfig;
 
 // this is for transient state
 typedef struct {
     // the note currently played on keys (independent of other pitch offsets)
     uint8_t note;
-    uint8_t velocity;
-    // envelope state
-    
+    uint8_t velocity;    
     // need to store this separately for pitch bends, portamento, lfos, etc
-    int16_t periodOffset;    
+    int16_t periodOffset;
+
+    struct {
+        uint8_t state; // `SYNTH_ENV_STATE_*`
+        uint8_t ticksRem; // 64Hz ticks until the next state transition
+    } envelope;
 } OscState;
 
 typedef struct {
@@ -127,8 +148,10 @@ typedef struct {
     uint8_t osc3_wavetable[OSC3_WAV_RAM_SIZE];
     
     uint8_t pan; // 4 bits, shifted for each osc, see SYNTH_PAN_*
+    // 3 bits for each left and right, L [6:4] R [2:0]. Exposing pan directly
+    // is kinda pointless, it cuts audio quality significantly and could
+    // be better implemented externally. (GB hardware is mono anyway)
     uint8_t masterVolume;
-    int8_t masterPan;
 } Synth;
 
 
@@ -178,19 +201,11 @@ void synth_setVolume(uint8_t oscid, uint8_t volume);
  */
 void synth_setPan(uint8_t oscid, uint8_t pan);
 
-/**
- Volume has a set resolution of 8 bits. Actual resolution is at most 3 bits, but will be dependant on masterPan as it's the same register.
- */
-//void synth_setMasterVolume(Synth*, uint8_t volume);
+// each channel is 3 bits
+void synth_setMasterVolume(uint8_t volumeL, uint8_t volumeR);
 
 /**
- Unlike per-oscillator pan, this has a resolution of 4 bits signed. 0=center, -7 = full left, 7=full right.
- The resolution will be dependant on masterVolume as it's the same register.
- */
-//void synth_setMasterPan(Synth*, uint8_t oscid, int8_t pan);
-
-/**
- Set the hold time for the note. If set to `SYNTH_LENGTH_HOLD`, is held for as long as the note is held down. Otherwise,
+ Set the hold time for the note. Oscillator must have state `SYNTH_CHANNEL_STATE_FIXEDLEN` set.
  for Osc 1, 2, and 4: 6 bits, number of 256Hz ticks (i.e. ~4ms to ~246ms)
  for Osc 3: 8 bits, number of 256Hz ticks (i.e. ~4ms to ~1s)
  
@@ -217,9 +232,21 @@ void synth_setNote(uint8_t oscid, uint8_t note);
 
 void synth_triggerNote(uint8_t oscid);
 
+void synth_stopNote(uint8_t oscid);
+
+void synth_setEnvelope(uint8_t oscid, uint8_t attackRate, uint8_t releaseRate);
+
 void synth_handleMidiEvent(MidiEvent*);
 
-// TODO: getter and setter methods for synth params
+/**
+ * To use the interrupts
+ */
+void synth_configureTimers(void);
+
+/**
+ * Set up a timer and call this method every 256Hz tick
+ */
+void synth_handleTimer(void);
 
 void synth_stop(void);
 

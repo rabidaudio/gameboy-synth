@@ -30,7 +30,7 @@ note_pitches = note_pitches[start..]
 periods = note_pitches.map { |f| ((-131072.0 / f)+2048).round }
 puts periods.each_with_index.map { |p, i| "#{p}," }.each_slice(12).map { |s| s.join(" ") }.join("\n")
 */
-const uint16_t MIDI_NOTE_NUM_TO_PERIOD[] = {
+static const uint16_t MIDI_NOTE_NUM_TO_PERIOD[] = {
     44, /* 36,C2 */ 157, /* 37,C#2 */ 263, /* 38,D2 */ 363, /* 39,D#2 */ 457, /* 40,E2 */ 547, /* 41,F2 */ 631, /* 42,F#2 */ 711, /* 43,G2 */ 786, /* 44,G#2 */ 856, /* 45,A2 */ 923, /* 46,A#2 */ 986, /* 47,B2 */
     1046, /* 48,C3 */ 1102, /* 49,C#3 */ 1155, /* 50,D3 */ 1205, /* 51,D#3 */ 1253, /* 52,E3 */ 1297, /* 53,F3 */ 1339, /* 54,F#3 */ 1379, /* 55,G3 */ 1417, /* 56,G#3 */ 1452, /* 57,A3 */ 1486, /* 58,A#3 */ 1517, /* 59,B3 */
     1547, /* 60,C4 */ 1575, /* 61,C#4 */ 1602, /* 62,D4 */ 1627, /* 63,D#4 */ 1650, /* 64,E4 */ 1673, /* 65,F4 */ 1694, /* 66,F#4 */ 1714, /* 67,G4 */ 1732, /* 68,G#4 */ 1750, /* 69,A4 */ 1767, /* 70,A#4 */ 1783, /* 71,B4 */
@@ -90,7 +90,7 @@ all_freqs = freq.uniq.sort
 seq_regs = all_freqs.map { |f| freq_map.find { |k, v| (k & 8) == 0 && v == f} }.map(&:first)
 puts [0, (1 << 3)].map { |width| seq_regs.map { |r| r | width } }.flatten.map { |v| "#{v}, " }.each_slice(10).map(&:join).join("\n")
 */
-const uint16_t MIDI_NOTE_NUM_TO_OSC4_LFSR[128] = {
+static const uint16_t MIDI_NOTE_NUM_TO_OSC4_LFSR[128] = {
     224, 215, 214, 213, 212, 199, 198, 197, 196, 183, 
     182, 181, 180, 167, 166, 165, 164, 151, 150, 149, 
     148, 135, 134, 133, 132, 119, 118, 117, 116, 103, 
@@ -113,11 +113,13 @@ const uint16_t MIDI_NOTE_NUM_TO_OSC4_LFSR[128] = {
 
 void synth_loadDefaults(void) {
     // initialize default settings
+    OscConfig* conf = GLOBAL_SYNTH.confs;
     for (uint8_t i = 0; i < SYNTH_NUM_OSCS; i++) {
-        GLOBAL_SYNTH.confs[i].volume = 0xFF; // full volume
-        GLOBAL_SYNTH.confs[i].channelState = SYNTH_CHANNEL_STATE_HOLD; // enabled=off, poly=off, velocityMode=off
-        GLOBAL_SYNTH.confs[i].transpose = 0;
-        GLOBAL_SYNTH.confs[i].length = 0;
+        conf->volume = 0xFF; // full volume
+        conf->channelState = 0; // enabled=off, poly=off, len=off, velocityMode=off
+        conf->transpose = 0;
+        conf->length = 0;
+        conf++;
     }
     GLOBAL_SYNTH.pan = 0xFF; // set pan center for all osc
     apu_writeRegister(GB_NR51, 0xFF);
@@ -125,6 +127,9 @@ void synth_loadDefaults(void) {
     synth_setDutyCycle(SYNTH_OSC1, SYNTH_DUTY_50);
     synth_setDutyCycle(SYNTH_OSC2, SYNTH_DUTY_50);
 //    memcpy(synth->osc3_wavetable, WAVE_TABLE_SQUARE, OSC3_WAV_RAM_SIZE);
+
+    GLOBAL_SYNTH.masterVolume = 0x77; // full volume
+    apu_writeRegister(GB_NR50, GLOBAL_SYNTH.masterVolume);
 
     // turn on osc1 for MIDI channel 1
     GLOBAL_SYNTH.confs[SYNTH_OSC1].channelState |= SYNTH_CHANNEL_STATE_ENABLED;
@@ -138,8 +143,17 @@ void synth_init(void) {
     apu_writeRegister(GB_NR52, 0x8F); // audio on
     //  NR50: Master volume & VIN panning
     // [7] VIN Left [6:4] Left Volume [3] VIN Right [2:0] Right Volume
-    apu_writeRegister(GB_NR50, 0x77); // full volume L+R, VIN disabled
     synth_loadDefaults();
+
+    // reset states
+    for (uint8_t oscid = 0; oscid < SYNTH_NUM_OSCS; oscid++) {
+        // TODO: memset zero instead?
+        GLOBAL_SYNTH.states[oscid].envelope.state = SYNTH_ENV_STATE_OFF;
+        GLOBAL_SYNTH.states[oscid].envelope.ticksRem = 0;
+        GLOBAL_SYNTH.states[oscid].note = 0;
+        GLOBAL_SYNTH.states[oscid].periodOffset = 0;
+        GLOBAL_SYNTH.states[oscid].velocity = 0;
+    }
 }
 
 void synth_loadPreset(uint8_t* data) {
@@ -154,6 +168,13 @@ void synth_loadPreset(uint8_t* data) {
 uint8_t synth_savePreset(uint8_t* data) {
     // TODO: implement after other functionality
     return 0;
+}
+
+TARGET_INLINE void synth_setMasterVolume(uint8_t volumeL, uint8_t volumeR) {
+    volumeL &= 0x07;
+    volumeR &= 0x07;
+    GLOBAL_SYNTH.masterVolume = volumeL << 4 | volumeR;
+    apu_writeRegister(GB_NR50, GLOBAL_SYNTH.masterVolume);
 }
 
 TARGET_INLINE void synth_setChannel(uint8_t oscid, uint8_t channelState) {
@@ -194,6 +215,11 @@ void synth_setDutyCycle(uint8_t oscid, uint8_t dutyCycle) {
     apu_writeRegister(NRx1(oscid), len);
 }
 
+TARGET_INLINE void synth_setEnvelope(uint8_t oscid, uint8_t attackRate, uint8_t releaseRate) {
+    uint8_t pace = ((attackRate & 0x07) << 4) | (releaseRate & 0x07);
+    GLOBAL_SYNTH.confs[oscid].envelopeSweepPace = pace;
+}
+
 TARGET_INLINE void synth_setNote(uint8_t oscid, uint8_t note) {
     GLOBAL_SYNTH.states[oscid].note = note;
     // NOTE: doesn't take effect until triggered
@@ -202,19 +228,20 @@ TARGET_INLINE void synth_setNote(uint8_t oscid, uint8_t note) {
 void synth_triggerNote(uint8_t oscid) {
     OscState* state = &GLOBAL_SYNTH.states[oscid];
     OscConfig* conf = &GLOBAL_SYNTH.confs[oscid];
+
     uint8_t trueNote = state->note + conf->transpose;
     // ignore out-of-bounds notes
     if (trueNote > 127) return;
+    // OSC4 supports down to note 0 but 1+2 support down to MIDI_NOTE_LOW
     if (oscid != SYNTH_OSC4 && trueNote < MIDI_NOTE_LOW) return;
 
     // configure length
-    uint8_t lenEnable = (conf->channelState & SYNTH_CHANNEL_STATE_HOLD) ? 0 : (1 << 6);
+    uint8_t lenEnable = (conf->channelState & SYNTH_CHANNEL_STATE_FIXEDLEN) ? (1 << 6) : 0;
     if (lenEnable) {
         apu_writeRegister(NRx1(oscid), conf->length);
     }
 
     // volume/velocity/envelope
-    // volume
     uint8_t volume = conf->volume;
     if (conf->channelState & SYNTH_CHANNEL_STATE_VELOCITY) {
         // TODO: apply velocity
@@ -233,6 +260,8 @@ void synth_triggerNote(uint8_t oscid) {
         // velocity == 0 -> set volume to zero
     }
     if (oscid == SYNTH_OSC3) {
+        // osc3 doesn't support envelopes, and only supports 2 bit volumes
+
         // TODO: apply 2 bit velocity
 //                if (volume == 0) synth->confs[SYNTH_OSC3].volume = SYNTH_OSC3_VOLUME_OFF;
 //                else if (volume == 1) synth->confs[SYNTH_OSC3].volume = SYNTH_OSC3_VOLUME_25;
@@ -240,16 +269,37 @@ void synth_triggerNote(uint8_t oscid) {
 //                else synth->confs[SYNTH_OSC3].volume = SYNTH_OSC3_VOLUME_FULL;
 //                synth->writeRegister(GB_NR32, synth->confs[SYNTH_OSC3].volume << 5);
     } else {
-        // TODO: compute envelope
-        uint8_t envelope = 0x00;
-        apu_writeRegister(NRx2(oscid), (volume & 0xF0) | envelope);
+        if (state->envelope.state == SYNTH_ENV_STATE_ATTACK) {
+            // attack just finished, so play main note
+            apu_writeRegister(NRx2(oscid), (volume & 0xF0));
+        } else {
+            // this must be the start of a new note. set up the attack envelope
+            uint8_t attackRate = (conf->envelopeSweepPace >> 4) & 0x07;
+            if (attackRate == 0) {
+                // skip attack, just play the note
+                state->envelope.state = SYNTH_ENV_STATE_ON;
+                state->envelope.ticksRem = lenEnable ? conf->length : 0;
+                apu_writeRegister(NRx2(oscid), (volume & 0xF0));
+            } else {
+                // start attack
+                // ticksRem is the number of ticks to reach volume, attackRate*volume
+                // multiplying 4bits by 3 bits, worst case loop = 7 cycles
+                uint8_t ticksRem = 0;
+                for (uint8_t i = 0; i < attackRate; i++) {
+                    ticksRem += (volume >> 4);
+                }
+                state->envelope.state = SYNTH_ENV_STATE_ATTACK;
+                state->envelope.ticksRem = ticksRem;
+                apu_writeRegister(NRx2(oscid), (0 & 0xF0) /* initial volume=0 */ | SYNTH_ENV_UP | attackRate);
+            }
+        }
     }
 
     // pitch and trigger
     uint8_t periodUpper = 0;
     if (oscid == SYNTH_OSC4) {
         uint8_t lfsrSetting = MIDI_NOTE_NUM_TO_OSC4_LFSR[trueNote];
-        apu_writeRegister(GB_NR42, lfsrSetting);
+        apu_writeRegister(GB_NR43, lfsrSetting);
     } else { // osc 1-3
         uint16_t period = MIDI_NOTE_NUM_TO_PERIOD[trueNote - MIDI_NOTE_LOW];
         period += state->periodOffset;
@@ -263,6 +313,8 @@ void synth_triggerNote(uint8_t oscid) {
 }
 
 TARGET_INLINE void synth_stopNote(uint8_t oscid) {
+    GLOBAL_SYNTH.states[oscid].envelope.state = SYNTH_ENV_STATE_OFF;
+    GLOBAL_SYNTH.states[oscid].envelope.ticksRem = 0;
     apu_writeRegister(NRx2(oscid), 0x00);
 }
 
@@ -296,17 +348,18 @@ void synth_handleMidiEvent(MidiEvent* e) {
         return;
     }
     
+    OscState* state = GLOBAL_SYNTH.states;
+    OscConfig* conf = GLOBAL_SYNTH.confs;
     for (uint8_t oscid = 0; oscid < SYNTH_NUM_OSCS; oscid++) {
-        uint8_t channelState = GLOBAL_SYNTH.confs[oscid].channelState;
+        uint8_t channelState = conf->channelState;
 
         if ((channelState & SYNTH_CHANNEL_STATE_ENABLED) == 0) {
+            conf++; state++;
             continue; // osc not enabled for this channel
         }
         
         // TODO: handle polyphony
         // TODO: handle voice memory
-        OscState* state = &GLOBAL_SYNTH.states[oscid];
-        OscConfig* conf = &GLOBAL_SYNTH.confs[oscid];
         if (e->type == MIDI_EVENT_NOTE_ON) {
             // immediately change notes
             state->note = e->note;
@@ -317,7 +370,8 @@ void synth_handleMidiEvent(MidiEvent* e) {
             if (e->note == state->note) {
                 state->velocity = 0; // ignore velocity value
                 // if not using length, stop the note
-                if (conf->channelState & SYNTH_CHANNEL_STATE_HOLD) synth_stopNote(oscid);
+                if ((conf->channelState & SYNTH_CHANNEL_STATE_FIXEDLEN) == 0)
+                    synth_stopNote(oscid);
             }
         } else if (e->type == MIDI_EVENT_NOTE_AFTERTOUCH) {
             if (e->note == state->note) {
@@ -343,7 +397,7 @@ void synth_handleMidiEvent(MidiEvent* e) {
                 }
             } else if (e->controller == MIDI_CONTROLLER_ALL_NOTES_OFF) {
                 state->velocity = 0;
-                if (channelState & SYNTH_CHANNEL_STATE_HOLD)
+                if ((conf->channelState & SYNTH_CHANNEL_STATE_FIXEDLEN) == 0)
                     synth_stopNote(oscid);
             } else if (e->controller == MIDI_CONTROLLER_MONO_MODE) {
                 GLOBAL_SYNTH.confs[oscid].channelState &= ~SYNTH_CHANNEL_STATE_POLYMODE; // disable poly
@@ -351,7 +405,90 @@ void synth_handleMidiEvent(MidiEvent* e) {
                 GLOBAL_SYNTH.confs[oscid].channelState |= SYNTH_CHANNEL_STATE_POLYMODE; // enable poly
             }
         }
+        conf++;
+        state++;
     }
+}
+
+void synth_configureTimers() {
+    apu_writeRegister(GB_TAC, 0); // slow (4096Hz) clock divider
+    apu_writeRegister(GB_TMA, 0xFF-16); // clock divide additional 16 -> 256Hz
+    apu_writeRegister(GB_TIMA, 0); // restart clock
+    apu_writeRegister(GB_TAC, (1<<3)); // start timer
+
+    // TODO: synchronize timer with audio timer
+}
+
+uint8_t timerTick = 0;
+
+void synth_handleTimer(void) {
+    timerTick++;
+    
+    OscConfig* conf = GLOBAL_SYNTH.confs;
+    OscState* state = GLOBAL_SYNTH.states;
+    uint8_t envState;
+    // 256Hz - LFOs, Env state ON
+
+    for (uint8_t oscid = 0; oscid < SYNTH_NUM_OSCS; oscid++) {
+        if (oscid == SYNTH_OSC3) {
+            // osc3 doesn't support envelopes
+            goto ENV_EXIT_LOOP;
+        }
+
+        envState = state->envelope.state;
+        // if ticksRem is 0, envelope is complete or disabled
+        if (state->envelope.ticksRem == 0) {
+            goto ENV_EXIT_LOOP;
+        }
+        // if state is off, we're waiting for the next trigger
+        if (envState == SYNTH_ENV_STATE_OFF) {
+            goto ENV_EXIT_LOOP;
+        }
+        if (timerTick % 4 != 0 && state->envelope.state != SYNTH_ENV_STATE_ON) {
+            // attack/release tick at 64Hz (so it's not time), but len state ticks at 256Hz
+            goto ENV_EXIT_LOOP;
+        }
+        // tick down, and check for state change
+        if (--state->envelope.ticksRem == 0) {
+            // trigger envelope change
+            if (envState == SYNTH_ENV_STATE_ATTACK) {
+                // if hold mode, envelope stops
+                if ((conf->channelState & SYNTH_CHANNEL_STATE_FIXEDLEN) == 0) {
+                    state->envelope.ticksRem = 0; // set to zero to disable counter
+                } else {
+                    state->envelope.ticksRem = conf->length; // ticksRem is now a count of 256Hz ticks
+                }
+                // state->envelope.state = SYNTH_ENV_STATE_ON; // triggerNote will set state
+                synth_triggerNote(oscid);
+            } else if (envState == SYNTH_ENV_STATE_ON) {
+                // if we got here, ticksRem was previously non-zero so we must be in FIXDLEN mode
+                uint8_t releaseRate = conf->envelopeSweepPace & 0x0F;
+                if (releaseRate == 0) {
+                    // skip release state
+                    synth_stopNote(oscid);
+                } else {
+                    state->envelope.state = SYNTH_ENV_STATE_RELEASE; // triggerNote will set state
+                    uint8_t volume = conf->volume >> 4;
+                    uint8_t ticksRem = 0;
+                    for (uint8_t i = 0; i < releaseRate; i++) { // volume*releaseRate, worst case 7 cycles
+                        ticksRem += volume;
+                    }
+                    state->envelope.ticksRem = ticksRem;
+                    apu_writeRegister(NRx2(oscid), (volume << 4) | SYNTH_ENV_DOWN | releaseRate);
+                }
+            } else if (envState == SYNTH_ENV_STATE_RELEASE) {
+                synth_stopNote(oscid);
+            }
+        }
+
+        ENV_EXIT_LOOP:
+        state++;
+        conf++;
+    }
+
+    // if (timerTick % 2 == 0) {
+    //     // 128Hz - period sweeps (portamento)
+    // }
 }
 
 TARGET_INLINE void synth_stop(void) {
