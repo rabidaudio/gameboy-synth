@@ -131,12 +131,29 @@ typedef struct {
     int8_t masterPan;
 } Synth;
 
+
+#ifdef PYTEST
+// set up for compiling as a testable library
+Synth GLOBAL_SYNTH;
+
+uint8_t REGISTERS[40] = {0};
+
+void apu_writeRegister(uint16_t addr, uint8_t val) {
+    REGISTERS[(uint8_t) addr] = val;
+}
+uint8_t apu_readRegister(uint16_t addr) {
+    return REGISTERS[(uint8_t) addr];
+}
+#else
 // By declaring a single instance, we keep the gameboy arguments minimal.
-// by declaring as extern, we allow the calling code to configure it's memory location
+// by declaring as extern, we allow the calling code to configure its memory location.
 extern Synth GLOBAL_SYNTH;
 // this is the interface this library uses to control the APU.
 extern void apu_writeRegister(uint16_t addr, uint8_t val);
 extern uint8_t apu_readRegister(uint16_t addr);
+#endif
+
+
 
 void synth_init(void);
 
