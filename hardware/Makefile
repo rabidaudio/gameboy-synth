@@ -13,7 +13,7 @@ GCC = /usr/bin/gcc
 
 LCCFLAGS += -std-c11 -O3
 
-# LCCFLAGS += -DTARGET_GBDK
+LCCFLAGS += -DTARGET_GBDK
 
 GBDK_DEBUG = ON
 ifdef GBDK_DEBUG
@@ -34,18 +34,20 @@ TESTFLAGS = -shared -v -DPYTEST
 all:	$(BINS)
 
 # Compile and link all source files in a single call to LCC
-$(BINS):	$(CSOURCES) $(ASMSOURCES)
+$(BINS):	assets $(CSOURCES) $(ASMSOURCES)
 	$(LCC) $(LCCFLAGS) -o build/$@ $(CSOURCES) $(ASMSOURCES)
 
+assets:
+	png2asset assets/font_10.png -o src/assets/font.c -spr8x8
 
 testobj:
 	$(GCC) $(TESTFLAGS) -o build/test/synth.so -fPIC src/synth/synth.c
 
 test: testobj
-	tests/.venv/bin/pytest --rootdir tests tests/*
+	.venv/bin/pytest --rootdir tests tests/*
 
 clean:
-	rm -f build/*
+	rm -rf build/* src/assets/*
 
 run:
 	emulicious build/gbhwsynth.gb

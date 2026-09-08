@@ -1,0 +1,6 @@
+assets:
+  tiles:
+    - path: font_10.png
+      size: [8, 8]
+      name: FONT
+      # count: 37
