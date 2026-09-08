@@ -51,5 +51,5 @@ test: testobj
 clean:
 	rm -rf build/* src/assets/*
 
-run:
-	emulicious build/gbhwsynth.gb
+run: $(BINS)
+	emulicious build/$(BINS)

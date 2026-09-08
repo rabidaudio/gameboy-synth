@@ -35,8 +35,8 @@ void main(void)
     }
 
     // synth_setChannel(SYNTH_OSC1, SYNTH_CHANNEL_STATE_FIXEDLEN);
-    synth_setLength(SYNTH_OSC1, 60);
-    synth_setEnvelope(SYNTH_OSC1, 0, 0);
+    // synth_setLength(SYNTH_OSC1, 63);
+    synth_setEnvelope(SYNTH_OSC1, 7, 0);
 
     // synth_setTranspose(SYNTH_OSC2, 7); // 5th above
     // synth_setLength(SYNTH_OSC2, 26);
@@ -55,7 +55,7 @@ void main(void)
                 synth_setNote(SYNTH_OSC1, note);
                 synth_triggerNote(SYNTH_OSC1);
             } else {
-                synth_stopNote(SYNTH_OSC1);
+                synth_detriggerNote(SYNTH_OSC1);
             }
             y = !y;
 
@@ -63,7 +63,7 @@ void main(void)
             // if (note >= 128) note = 26;
         }
         x++;
-        if (x == 90) x = 0;
+        if (x == 200) x = 0;
 
 		// Done processing, yield CPU and wait for start of next frame
         vsync();

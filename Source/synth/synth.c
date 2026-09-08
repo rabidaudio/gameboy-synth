@@ -229,6 +229,8 @@ void synth_triggerNote(uint8_t oscid) {
     OscState* state = &GLOBAL_SYNTH.states[oscid];
     OscConfig* conf = &GLOBAL_SYNTH.confs[oscid];
 
+    // this method pre-computes all register values necessary for future states
+
     uint8_t trueNote = state->note + conf->transpose;
     // ignore out-of-bounds notes
     if (trueNote > 127) return;
@@ -237,6 +239,7 @@ void synth_triggerNote(uint8_t oscid) {
 
     // configure length
     uint8_t lenEnable = (conf->channelState & SYNTH_CHANNEL_STATE_FIXEDLEN) ? (1 << 6) : 0;
+    state->lenReg = lenEnable ? conf->length : 0;
     if (lenEnable) {
         apu_writeRegister(NRx1(oscid), conf->length);
     }
@@ -269,30 +272,38 @@ void synth_triggerNote(uint8_t oscid) {
 //                else synth->confs[SYNTH_OSC3].volume = SYNTH_OSC3_VOLUME_FULL;
 //                synth->writeRegister(GB_NR32, synth->confs[SYNTH_OSC3].volume << 5);
     } else {
-        if (state->envelope.state == SYNTH_ENV_STATE_ATTACK) {
-            // attack just finished, so play main note
-            apu_writeRegister(NRx2(oscid), (volume & 0xF0));
+        uint8_t attackRate = (conf->envelopeSweepPace >> 4) & 0x07;
+
+        state->onEnvReg = (volume & 0xF0);
+        state->onStateTicks = lenEnable ? conf->length : 0;
+        // start attack
+        // ticksRem is the number of ticks to reach volume, attackRate*volume
+        // multiplying 4bits by 3 bits, worst case loop = 7 cycles
+        if (attackRate == 0) {
+            // jump straight to on state
             state->envelope.state = SYNTH_ENV_STATE_ON;
+            state->envelope.ticksRem = state->onStateTicks;
+            apu_writeRegister(NRx2(oscid), (volume & 0xF0));
         } else {
-            // this must be the start of a new note. set up the attack envelope
-            uint8_t attackRate = (conf->envelopeSweepPace >> 4) & 0x07;
-            if (attackRate == 0) {
-                // skip attack, just play the note
-                state->envelope.state = SYNTH_ENV_STATE_ON;
-                state->envelope.ticksRem = lenEnable ? conf->length : 0;
-                apu_writeRegister(NRx2(oscid), (volume & 0xF0));
-            } else {
-                // start attack
-                // ticksRem is the number of ticks to reach volume, attackRate*volume
-                // multiplying 4bits by 3 bits, worst case loop = 7 cycles
-                uint8_t ticksRem = 0;
-                for (uint8_t i = 0; i < attackRate; i++) {
-                    ticksRem += (volume >> 4);
-                }
-                state->envelope.state = SYNTH_ENV_STATE_ATTACK;
-                state->envelope.ticksRem = ticksRem;
-                apu_writeRegister(NRx2(oscid), (0 & 0xF0) /* initial volume=0 */ | SYNTH_ENV_UP | attackRate);
+            uint8_t attackTicksRem = 0;
+            for (uint8_t i = 0; i < attackRate; i++) {
+                attackTicksRem += (volume >> 4);
             }
+            state->envelope.state = SYNTH_ENV_STATE_ATTACK;
+            state->envelope.ticksRem = attackTicksRem;
+            apu_writeRegister(NRx2(oscid), (0 & 0xF0) /* initial volume=0 */ | SYNTH_ENV_UP | attackRate);
+        }
+
+        uint8_t releaseRate = (conf->envelopeSweepPace & 0x07);
+        uint8_t releaseTicksRem = 0;
+        for (uint8_t i = 0; i < releaseRate; i++) {
+            releaseTicksRem += (volume >> 4);
+        }
+        state->releaseStateTicks = releaseTicksRem;
+        if (releaseRate == 0) {
+            state->releaseEnvReg = 0;
+        } else {
+            state->releaseEnvReg = (volume & 0xF0) | SYNTH_ENV_DOWN | releaseRate;
         }
     }
 
@@ -305,15 +316,34 @@ void synth_triggerNote(uint8_t oscid) {
         uint16_t period = MIDI_NOTE_NUM_TO_PERIOD[trueNote - MIDI_NOTE_LOW];
         period += state->periodOffset;
         // set period low
-        apu_writeRegister(NRx3(oscid), (uint8_t) (period & 0xFF));
+        uint8_t periodLow = (uint8_t) (period & 0xFF);
+        state->periodLowReg = periodLow;
+        apu_writeRegister(NRx3(oscid), periodLow);
         // set period high and trigger
         periodUpper = (uint8_t)(period >> 8) & 0x07;
     }
     // by resetting DIV, we synchronize the oscillator timers with the interrupt timer,
     // at the cost of a timing stutter of up-to 61us
-    apu_writeRegister(GB_DIV, 0);
+    // apu_writeRegister(GB_DIV, 0);
     // trigger
-    apu_writeRegister(NRx4(oscid), periodUpper|lenEnable|(1<<7) /* trigger */);
+    apu_writeRegister(NRx4(oscid), periodUpper|lenEnable|(1<<7));
+    state->periodHighReg = periodUpper|lenEnable|(1<<7);
+}
+
+TARGET_INLINE void synth_detriggerNote(uint8_t oscid) {
+    OscState* state = &GLOBAL_SYNTH.states[oscid];
+    if (state->releaseStateTicks == 0) {
+        // skip release state, stop
+        synth_stopNote(oscid);
+    } else {
+        state->envelope.ticksRem = state->releaseStateTicks;
+        state->envelope.state = SYNTH_ENV_STATE_RELEASE;
+
+        apu_writeRegister(NRx2(oscid), state->releaseEnvReg);
+        apu_writeRegister(NRx3(oscid), state->periodLowReg);
+        apu_writeRegister(NRx4(oscid), state->periodHighReg);
+        // apu_writeRegister(GB_DIV, 0); // reset lock
+    }   
 }
 
 TARGET_INLINE void synth_stopNote(uint8_t oscid) {
@@ -439,15 +469,16 @@ void synth_handleTimer(void) {
         }
 
         envState = state->envelope.state;
-        // if ticksRem is 0, envelope is complete or disabled
-        if (state->envelope.ticksRem == 0) {
-            goto ENV_EXIT_LOOP;
-        }
         // if state is off, we're waiting for the next trigger
         if (envState == SYNTH_ENV_STATE_OFF) {
             goto ENV_EXIT_LOOP;
         }
-        if (timerTick % 4 != 0 && state->envelope.state != SYNTH_ENV_STATE_ON) {
+        // if ticksRem is 0, envelope is complete or disabled
+        if (state->envelope.ticksRem == 0) {
+            goto ENV_EXIT_LOOP;
+        }
+        // TODO: this timer is not synchronized properly
+        if ((timerTick % 8) != 0 && state->envelope.state != SYNTH_ENV_STATE_ON) {
             // attack/release tick at 64Hz (so it's not time), but len state ticks at 256Hz
             goto ENV_EXIT_LOOP;
         }
@@ -456,31 +487,20 @@ void synth_handleTimer(void) {
         if (state->envelope.ticksRem == 0) {
             // trigger envelope change
             if (envState == SYNTH_ENV_STATE_ATTACK) {
-                // if hold mode, envelope stops
-                if ((conf->channelState & SYNTH_CHANNEL_STATE_FIXEDLEN) == 0) {
-                    state->envelope.ticksRem = 0; // set to zero to disable counter
-                } else {
-                    state->envelope.ticksRem = conf->length; // ticksRem is now a count of 256Hz ticks
+                state->envelope.ticksRem = state->onStateTicks;
+                state->envelope.state = SYNTH_ENV_STATE_ON;
+                
+                // trigger the note
+                if (state->lenReg) {
+                    apu_writeRegister(NRx1(oscid), state->lenReg);
                 }
-                // state->envelope.state = SYNTH_ENV_STATE_ON; // triggerNote will set state
-                synth_triggerNote(oscid);
+                apu_writeRegister(NRx2(oscid), state->onEnvReg);
+                apu_writeRegister(NRx3(oscid), state->periodLowReg);
+                apu_writeRegister(NRx4(oscid), state->periodHighReg);
+                // apu_writeRegister(GB_DIV, 0); // reset lock
+
             } else if (envState == SYNTH_ENV_STATE_ON) {
-                // if we got here, ticksRem was previously non-zero so we must be in FIXDLEN mode
-                uint8_t releaseRate = conf->envelopeSweepPace & 0x0F;
-                if (releaseRate == 0) {
-                    // skip release state
-                    synth_stopNote(oscid);
-                } else {
-                    state->envelope.state = SYNTH_ENV_STATE_RELEASE; // triggerNote will set state
-                    uint8_t volume = conf->volume >> 4;
-                    uint8_t ticksRem = 0;
-                    for (uint8_t i = 0; i < releaseRate; i++) { // volume*releaseRate, worst case 7 cycles
-                        ticksRem += volume;
-                    }
-                    state->envelope.ticksRem = ticksRem;
-                    apu_writeRegister(GB_DIV, 0); // sync timers
-                    apu_writeRegister(NRx2(oscid), (volume << 4) | SYNTH_ENV_DOWN | releaseRate);
-                }
+                synth_detriggerNote(oscid);
             } else if (envState == SYNTH_ENV_STATE_RELEASE) {
                 synth_stopNote(oscid);
             }

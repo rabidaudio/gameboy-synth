@@ -139,6 +139,15 @@ typedef struct {
         uint8_t state; // `SYNTH_ENV_STATE_*`
         uint8_t ticksRem; // 64Hz ticks until the next state transition
     } envelope;
+
+    // register values, pre-computed during triggerNote for faster interrupt handlers
+    uint8_t lenReg;
+    uint8_t periodLowReg;
+    uint8_t periodHighReg;
+    uint8_t onEnvReg;
+    uint8_t onStateTicks;
+    uint8_t releaseEnvReg;
+    uint8_t releaseStateTicks;
 } OscState;
 
 typedef struct {
@@ -232,6 +241,10 @@ void synth_setNote(uint8_t oscid, uint8_t note);
 
 void synth_triggerNote(uint8_t oscid);
 
+// stop playing the current note
+void synth_detriggerNote(uint8_t oscid);
+
+// immediately stop the current note (ignore release envelope)
 void synth_stopNote(uint8_t oscid);
 
 void synth_setEnvelope(uint8_t oscid, uint8_t attackRate, uint8_t releaseRate);
